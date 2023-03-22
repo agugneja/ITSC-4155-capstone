@@ -51,7 +51,7 @@ class Geography:
 
                 myList.append(profileDict)
 
-            except:
+            except Exception:
                 print("Error: Doesn't have profile page or has incompatible format")
                 print(i)
         

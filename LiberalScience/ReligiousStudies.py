@@ -13,7 +13,7 @@ class ReligiousStudies:
             text = str(i)
             try:
                 text = text.split("href=")[2].split(" ")[0].replace('"', '')
-            except:
+            except Exception:
                 text = text.split("href=")[1].split(" ")[0].replace('"', '')
             if 'pages' in text:
                 URLs.append(text)
@@ -54,7 +54,7 @@ class ReligiousStudies:
 
                 myList.append(profileDict)
 
-            except:
+            except Exception: 
                 print("Error: Doesn't have profile page or has incompatible format")
                 print(i)
         

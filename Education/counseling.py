@@ -27,7 +27,7 @@ class Counseling:
                     'Content': items,
                 }
                 myList.append(profileDict)
-            except:
+            except Exception:
                 print("Error: Doesn't have profile page or has incompatible format")
         
         return myList
@@ -72,7 +72,7 @@ def getProfilePage(facultyURLs):
                 'Content': items,
             }
             myList.append(profileDict)
-        except:
+        except Exception:
             print("Error: Doesn't have profile page or has incompatible format")
     
     return myList

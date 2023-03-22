@@ -2,7 +2,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-class PsychologicalSciences:
+class PsychologicalScience:
 
     #This page has the full url not extensions
     def getFacultyURLs(self, soup, baseURL):
@@ -13,7 +13,7 @@ class PsychologicalSciences:
             text = str(i)
             try:
                 text = text.split("href=")[2].split(" ")[0].replace('"', '')
-            except:
+            except Exception:
                 text = text.split("href=")[1].split(" ")[0].replace('"', '')
             if 'pages' in text:
                 URLs.append(text)
@@ -55,7 +55,7 @@ class PsychologicalSciences:
 
                 myList.append(profileDict)
 
-            except:
+            except Exception:
                 print("Error: Doesn't have profile page or has incompatible format: " + i)
         
         return myList

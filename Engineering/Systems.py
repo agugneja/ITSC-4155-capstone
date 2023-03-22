@@ -28,7 +28,7 @@ class Systems:
                     'Content': items,
                 }
                 myList.append(profileDict)
-            except:
+            except Exception:
                 print("Error: Doesn't have profile page")
 
         return myList

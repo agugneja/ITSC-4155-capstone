@@ -50,7 +50,7 @@ class AfricanaStudies:
 
                 myList.append(profileDict)
 
-            except:
+            except Exception:
                 print("Error: Doesn't have profile page or has incompatible format: " + i)
         
         return myList
