@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %} - Faculty connections</title>
+    <link rel="stylesheet" href="/static/style.css">
+    {% endblock %}
+</head>
+<body>
+    <header>
+        <div>
+            <img alt="UNC Charlotte" class="logo" src="https://www.charlotte.edu/sites/all/themes/uncctheme/assets/images/charlotte-logo.png">
+            <h1>Faculty Connections Update Tool</h1>
+        </div>
+        <hr>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/schedule">Schedule</a></li>
+                <li><a href="/manual-entry">Manual Entry</a></li>
+                <li><a href="/help">Help</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer>
+        <small>Possibly put something here</small>
+    </footer>
+</body>
+</html>
