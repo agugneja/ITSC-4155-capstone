@@ -1,7 +1,6 @@
 # Jacob Nyborg
-from fileinput import close
 from pkgutil import iter_modules
-import inspect
+import requests
 import Education
 import Engineering
 import CHHS
@@ -52,18 +51,15 @@ def main():
     header = ["site", "type", "action", "title", "excerpt", "content", "date", "author", "slug", "status", "menu-order", "password",
               "categories", "tags", "taxonomy-{name}", "meta-{name}"]
 
-    f = open("post.csv", "a", newline="", encoding='utf-8')
+    with open("post.csv", "a", newline="", encoding='utf-8') as f:
+        writer = csv.writer(f)
+        writer.writerow(header)
 
-    writer = csv.writer(f)
-    writer.writerow(header)
-
-    # Writes to CSV based on specfic formatting defined in header list
-    for i in range(len(profileList)):
-        listy = [urlList[i], "post", "update", profileList[i]
-                 ["Title"], "", profileList[i]["Content"], "", "", "", "", ""]
-        writer.writerow(listy)
-
-    f.close()
+        # Writes to CSV based on specfic formatting defined in header list
+        for i in range(len(profileList)):
+            listy = [urlList[i], "post", "update", profileList[i]
+                    ["Title"], "", profileList[i]["Content"], "", "", "", "", ""]
+            writer.writerow(listy)
 
 
 if __name__ == '__main__':
