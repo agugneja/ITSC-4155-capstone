@@ -14,7 +14,7 @@ build/
 develop-eggs/
 # dist/
 # dist is needed by tailwind
-node_modules/*
+Interface/node_modules/*
 downloads/
 eggs/
 .eggs/
