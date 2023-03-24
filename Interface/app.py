@@ -11,7 +11,7 @@ def schedule():
     return render_template('schedule.html')
 
 @app.route('/manual-entry')
-def manualEntry():
+def manual_entry():
     return render_template('manual-entry.html')
 
 @app.route('/help')
