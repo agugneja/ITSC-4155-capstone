@@ -3,5 +3,36 @@
 {% block content %}
 <h1>Home</h1>
 <hr>
-<!-- TODO: Add content -->
+<h2>Database last updated:</h2>
+<p>Month Date, Year at Time AM/PM</p> <!--Placeholder until code is written-->
+<button type="button">Export CSV</button>
+
+<h2>Current schedule:</h2>
+<p>Repeat every X months and X days<br>
+There is X month(s) and X day(s) remaining until the next update</p> <!--Placeholder until code is written-->
+
+<div>
+    <!--add action route and method as needed-->
+    <form>
+        <h3>Manual update</h3>
+        <label for="all">All</label><br>
+        <input type="radio" id="all" name="update" value="All">
+        
+        <label for="member">By faculty member(s):</label><br>
+        <input type="radio" id="member" name="update" value="ByMember">
+        <input type="text" id="member" name="member" placeholder="'John Smith', 'Alice Brown'"><br>
+        
+        <h3>Where to search</h3>
+        <input type="checkbox" id="directory" name="directory" value="Directory">
+        <label for="directory">Faculty directory</label><br>
+        
+        <input type="checkbox" id="linkedin" name="linkedin" value="LikedIn">
+        <label for="linkedin">LinkedIn</label><br>
+        
+        <input type="checkbox" id="scholar" name="scholar" value="Scholar">
+        <label for="scholar">Google Scholar</label><br>
+
+        <input type="submit" value="Confirm">
+    </form>
+</div>
 {% endblock %}
