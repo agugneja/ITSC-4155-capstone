@@ -3,5 +3,35 @@
 {% block content %}
 <h1>Schedule</h1>
 <hr>
-<!-- TODO: Add content -->
+<div>
+    <!--add action route and method as needed-->
+    <form>
+        <h2>Repeat every...</h2>
+        <label for="months">Month(s)</label>
+        <input type="number" id="months" name="months" min="1" max="12"><br>
+
+        <label for="days">Day(s)</label>
+        <input type="number" id="days" name="days" min="1" max="30"><br>
+
+        <h2>Where to search</h2>
+        <input type="checkbox" id="directory" name="directory" value="Directory">
+        <label for="directory">Faculty directory</label><br>
+        
+        <input type="checkbox" id="linkedin" name="linkedin" value="LikedIn">
+        <label for="linkedin">LinkedIn</label><br>
+        
+        <input type="checkbox" id="scholar" name="scholar" value="Scholar">
+        <label for="scholar">Google Scholar</label><br>
+    </form>
+</div>
+
+<div>
+    <form>
+        <h2>Start date</h2>
+        <input type="date" id="date"><br>
+
+        <input type="submit" value="Submit">
+    </form>
+</div>
+
 {% endblock %}

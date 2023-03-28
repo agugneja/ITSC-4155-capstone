@@ -3,5 +3,29 @@
 {% block content %}
 <h1>Manual entry</h1>
 <hr>
-<!-- TODO: Add content -->
+<!--add action route and method as needed-->
+<div>
+    <form>
+        <h2>Faculty member name</h2>
+        <input type="text" id="fullname" placeholder="John Smith"><br>
+
+        <h2>Fields to update</h2>
+        <label for="name">Name </label>
+        <input type="text" id="name" name="name"><br>
+
+        <label for="profile">Profile </label>
+        <textarea id="profile" name="profile" rows="4" cols="20"></textarea><br>
+
+        <label for="number">Phone Number </label>
+        <input type="tel" id="number" name="number"><br>
+
+        <label for="location">Location </label>
+        <input type="text" id="location" name="location"><br>
+
+        <label for="image">Upload Image </label>
+        <input type="file" id="image" name="image"><br>
+
+        <input type="submit" value="Confirm">
+    </form>
+</div>
 {% endblock %}
