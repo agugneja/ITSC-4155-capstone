@@ -34,18 +34,19 @@ def main():
     # urlList = [d.facultyURLs for d in department_objects]  # List for URLs to the faculty profiles
 
     # urlList = list(itertools.chain.from_iterable(urlList))
-    profileList = []
-    urlList = []
+    profile_list = []
+    url_list = []
     for d in department_objects:
-        urlList += d.facultyURLs
-        profileList += d.profiles
+        url_list += d.facultyURLs
+        profile_list += d.profiles
     
-    for i in range(len(urlList)-1, -1, -1):
+    for i in range(len(url_list)-1, -1, -1):
         try:
-            requests.get(urlList[i])
+            requests.get(url_list[i])
         except Exception:
-            print("Removed URL: ", urlList[i])
-            del urlList[i]
+            print("Removed URL: ", url_list[i])
+            del url_list[i]
+    
 
     # site, type, action, title, excerpt, content, date, author, slug, status, menu-order, password, categories, tags, taxonomy-{name}, meta-{name}
     header = ["site", "type", "action", "title", "excerpt", "content", "date", "author", "slug", "status", "menu-order", "password",
@@ -56,9 +57,9 @@ def main():
         writer.writerow(header)
 
         # Writes to CSV based on specfic formatting defined in header list
-        for i in range(len(profileList)):
-            listy = [urlList[i], "post", "update", profileList[i]
-                    ["Title"], "", profileList[i]["Content"], "", "", "", "", ""]
+        for i in range(len(profile_list)):
+            listy = [url_list[i], "post", "update", profile_list[i]
+                    ["Title"], "", profile_list[i]["Content"], "", "", "", "", ""]
             writer.writerow(listy)
 
 
