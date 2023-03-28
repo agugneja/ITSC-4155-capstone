@@ -1,27 +1,16 @@
 # Jacob Nyborg
 from pkgutil import iter_modules
 import requests
-# FIXME: There has to be a more elegant way to do this
-# I want to import these relative to main.py even if this is being run as a module
-if __name__ == '__main__':
-    import Education
-    import Engineering
-    import CHHS
-    import LiberalScience
-    import Misc
-    import models
-else:
-    from . import Education
-    from . import Engineering
-    from . import CHHS
-    from . import LiberalScience
-    from . import Misc
-    from . import models
+from . import Education
+from . import Engineering
+from . import CHHS
+from . import LiberalScience
+from . import Misc
+from . import models
 import importlib
 from concurrent.futures import ThreadPoolExecutor
 import csv
 import itertools
-
 
 def is_url_valid(url: str) -> bool:
     try:
@@ -31,7 +20,6 @@ def is_url_valid(url: str) -> bool:
     return True
 
 def main():
-    
     packages = [CHHS, Education, Engineering, LiberalScience, Misc]
     departments = []
     # For each folder containing modules
