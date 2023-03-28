@@ -40,14 +40,12 @@ def main():
         url_list += d.facultyURLs
         profile_list += d.profiles
     
-    for i in range(len(url_list)-1, -1, -1):
+    for url in url_list:
         try:
-            requests.get(url_list[i])
+            requests.get(url)
         except Exception:
-            print("Removed URL: ", url_list[i])
-            del url_list[i]
-    
-
+            print(f'Removed URL: {url}')
+            url = ''
     # site, type, action, title, excerpt, content, date, author, slug, status, menu-order, password, categories, tags, taxonomy-{name}, meta-{name}
     header = ["site", "type", "action", "title", "excerpt", "content", "date", "author", "slug", "status", "menu-order", "password",
               "categories", "tags", "taxonomy-{name}", "meta-{name}"]
