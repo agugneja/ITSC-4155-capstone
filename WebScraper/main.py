@@ -12,6 +12,12 @@ import csv
 import itertools
 
 
+def is_url_valid(url: str) -> bool:
+    try:
+        requests.get(url)
+    except Exception:
+        return False
+    return True
 
 def main():
     
@@ -26,7 +32,7 @@ def main():
             # This gets that class from the module
             departments.append(getattr(module, module_name))
 
-    with ThreadPoolExecutor(max_workers=50) as p:
+    with ThreadPoolExecutor(max_workers=25) as p:
         department_objects = list(p.map(lambda x: x(), departments))
 
     # profileList = [d.profilePages if 'profilePages' in d.__dict__ else d.profiles for d in department_objects]  # List for Profile Page Content
@@ -40,12 +46,13 @@ def main():
         url_list += d.facultyURLs
         profile_list += d.profiles
     
-    for url in url_list:
-        try:
-            requests.get(url)
-        except Exception:
-            print(f'Removed URL: {url}')
-            url = ''
+    bad_urls = []
+    with ThreadPoolExecutor(max_workers=25) as p:
+        bad_urls_iterator = p.map(lambda x: x if not is_url_valid(x) else '', url_list)
+        bad_urls = [url for url in bad_urls_iterator if url != '']
+
+    url_list = [url if url not in bad_urls else '' for url in url_list]
+
     # site, type, action, title, excerpt, content, date, author, slug, status, menu-order, password, categories, tags, taxonomy-{name}, meta-{name}
     header = ["site", "type", "action", "title", "excerpt", "content", "date", "author", "slug", "status", "menu-order", "password",
               "categories", "tags", "taxonomy-{name}", "meta-{name}"]
