@@ -2,7 +2,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-class Counseling:
+class counseling:
 
     def getFacultyURLs(self, baseURL, soup):
         URLs = []
