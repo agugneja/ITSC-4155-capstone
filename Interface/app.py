@@ -1,9 +1,9 @@
 from flask import Flask, render_template, url_for
 
 # Passed from app.py
-def getFunctions(getScrape):
+def get_functions(get_scrape):
     global scrape 
-    scrape = getScrape
+    scrape = get_scrape
 
 app = Flask(__name__)
 

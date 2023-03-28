@@ -5,5 +5,5 @@ print("Web scraper started successfully")
 
 # Start the web interface
 import Interface.app as frontEnd
-frontEnd.getFunctions(scrape)
+frontEnd.get_functions(scrape)
 frontEnd.app.run()

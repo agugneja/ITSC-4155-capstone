@@ -67,7 +67,7 @@ def main():
             writer.writerow(listy)
     
     # Temporary, will replace the CSV once the output is actually formatted correctly:
-    models.updateByName(profileList)
+    models.update_by_name(profileList)
 
 if __name__ == '__main__':
     main()
