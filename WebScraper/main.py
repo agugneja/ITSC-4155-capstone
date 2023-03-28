@@ -1,11 +1,22 @@
 # Jacob Nyborg
 from pkgutil import iter_modules
 import requests
-import Education
-import Engineering
-import CHHS
-import LiberalScience
-import Misc
+# FIXME: There has to be a more elegant way to do this
+# I want to import these relative to main.py even if this is being run as a module
+if __name__ == '__main__':
+    import Education
+    import Engineering
+    import CHHS
+    import LiberalScience
+    import Misc
+    import models
+else:
+    from . import Education
+    from . import Engineering
+    from . import CHHS
+    from . import LiberalScience
+    from . import Misc
+    from . import models
 import importlib
 from concurrent.futures import ThreadPoolExecutor
 import csv
@@ -60,7 +71,9 @@ def main():
             listy = [urlList[i], "post", "update", profileList[i]
                     ["Title"], "", profileList[i]["Content"], "", "", "", "", ""]
             writer.writerow(listy)
-
+    
+    # Temporary, will replace the CSV once the output is actually formatted correctly:
+    models.updateByName(profileList)
 
 if __name__ == '__main__':
     main()
