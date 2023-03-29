@@ -1,31 +1,45 @@
 {% extends "base.html" %}
 {% block title %}Manual Entry{% endblock %}
 {% block content %}
-<h1>Manual entry</h1>
-<hr>
-<!--add action route and method as needed-->
-<div>
-    <form>
-        <h2>Faculty member name</h2>
-        <input type="text" id="fullname" placeholder="John Smith"><br>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>{% block title %}{% endblock %} - Faculty Connections</title>
 
-        <h2>Fields to update</h2>
-        <label for="name">Name </label>
-        <input type="text" id="name" name="name"><br>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+</head>
+  <h1 class="text-3xl font-bold mb-4 border-solid">Manual Entry</h1>
+  <hr class="my-4">
+  <div class="bg-white p-4 rounded-lg shadow-md">
+    <!--add action route and method as needed-->
+    <form class="space-y-4">
+      <div>
+        <h2 class="text-xl font-semibold mb-2">Faculty member name</h2>
+        <input type="text" id="fullname" placeholder="John Smith" class="border px-4 py-2 rounded-lg border-gray-300 w-full">
+      </div>
 
-        <label for="profile">Profile </label>
-        <textarea id="profile" name="profile" rows="4" cols="20"></textarea><br>
+      <div>
+        <h2 class="text-xl underline font-bold mb-2 border-solid">Fields to update</h2>
 
-        <label for="number">Phone Number </label>
-        <input type="tel" id="number" name="number"><br>
+        <label for="name" class="block mb-1 font-semibold">Name</label>
+        <input type="text" id="name" name="name" class="border px-4 py-2 rounded-lg border-gray-300 w-half">
 
-        <label for="location">Location </label>
-        <input type="text" id="location" name="location"><br>
+        <label for="profile" class="block mb-1 font-semibold mt-2">Profile</label>
+        <textarea id="profile" name="profile" rows="4" cols="20" class="border px-4 py-2 rounded-lg border-gray-300 w-half"></textarea>
 
-        <label for="image">Upload Image </label>
-        <input type="file" id="image" name="image"><br>
+        <label for="number" class="block mb-1 font-semibold mt-2">Phone Number</label>
+        <input type="tel" id="number" name="number" class="border px-4 py-2 rounded-lg border-gray-300 w-half">
 
-        <input type="submit" value="Confirm">
+        <label for="location" class="block mb-1 font-semibold mt-2">Location</label>
+        <input type="text" id="location" name="location" class="border px-4 py-2 rounded-lg border-gray-300 w-half">
+
+        <label for="image" class="block mb-1 font-semibold mt-2">Upload Image</label>
+        <input type="file" id="image" name="image" class="mb-4">
+
+        <button type="submit" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg font-semibold">Confirm</button>
+      </div>
     </form>
-</div>
+  </div>
 {% endblock %}
