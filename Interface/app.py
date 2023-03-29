@@ -1,6 +1,5 @@
 from flask import Flask, render_template, url_for
-import sys
-sys.path.append('..')
+
 from WebScraper.main import main as scrape
 # Passed from app.py
 # def get_functions(get_scrape):
