@@ -14,7 +14,8 @@ class CHHS:
         soupList = soup.find_all("a",{"class":"button button-gray"})
         
         for i in soupList:
-            profURL = baseURL + i.get("href")
+            href = i.get("href")
+            profURL = baseURL + href if href.startswith('/') else href
             URLs.append(profURL)
         
         return URLs
@@ -38,6 +39,7 @@ class CHHS:
         return driver.page_source
 
     def getProfilePage(self, facultyURLs):
+        bad_urls = []
         myList = []
         for i in facultyURLs:
             try:
@@ -52,7 +54,8 @@ class CHHS:
                 myList.append(profileDict)
             except Exception:
                 print("Error: Doesn't have profile page or has incompatible format")
-        
+                bad_urls.append(i)
+        self.facultyURLs = [url for url in self.facultyURLs if url not in bad_urls]
         return myList
 
     def __init__(self):
