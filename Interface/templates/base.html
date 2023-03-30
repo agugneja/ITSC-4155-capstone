@@ -5,23 +5,25 @@
         .hover:hover {
            font-weight: 900;
         }
-
     </style>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <title>{% block title %}{% endblock %} - Faculty Connections</title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"/>
+    <link rel="stylesheet" href="../static/css/output.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"/> -->
 </head>
-<body class="bg-green-900">
-    <header class="bg-main-green p-4 flex justify-center items-center">
-        <img alt="UNC Charlotte" class="w-16" src="https://www.charlotte.edu/sites/all/themes/uncctheme/assets/images/charlotte-logo.png">
-        <h1 class="text-white text-xl ml-2">Faculty Connections Update Tool</h1>
+<body class="bg-main-green">
+    <header class="bg-main-green p-4 flex justify-center items-center border-solid border-b-8 border-b-gold1">
+        <img alt="UNC Charlotte" class="h-16" src="https://brand.charlotte.edu/sites/all/themes/uncc_epsilon/logo.svg">
+        <h1 class="text-white text-4xl ml-2 font-oswald">Faculty Connections Update Tool</h1>
     </header>
     <nav class="bg-white shadow-md">
-        <ul class="flex justify-between items-center p-6">
+        <ul class="flex justify-between items-center p-3">
             <li><a class="hover" href="/">Home</a></li>
             <li><a class="hover" href="/schedule">Schedule</a></li>
             <li><a class="hover" href="/manual-entry">Manual Entry</a></li>
