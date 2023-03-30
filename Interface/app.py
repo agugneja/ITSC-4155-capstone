@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, send_file
 
 from WebScraper.main import main as scrape
 # Passed from app.py
@@ -23,7 +23,12 @@ def manual_entry():
 @app.get('/help')
 def help():
     return render_template('help.html')
-
+@app.get('/csvdownload')
+def csv():
+    return send_file('static/example.csv',
+        mimetype='text/csv',
+        download_name='example.csv',
+        as_attachment=True)
 # Temp:
 @app.post('/manual-entry')
 def manual_update():
