@@ -30,8 +30,6 @@ class ArtsAndArch:
         self.facultyURLs = self.getFacultyURLs(baseURL, soup1, soup2, soup3, soup4, soup5)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-        print("CCI Started")
-
     def getSoup(self, URL):
         html_text = requests.get(URL)
         return html_text

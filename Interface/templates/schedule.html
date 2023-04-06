@@ -3,54 +3,48 @@
 {% block title %}Schedule{% endblock %}
 
 {% block content %}
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>{% block title %}{% endblock %} - Faculty Connections</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
-</head>
+
 <div class="max-w-2xl mx-auto px-4">
-  <h1 class="text-3xl font-bold mb-4">Schedule</h1>
+  <h1 class="text-3xl text-white font-bold mb-4">Schedule</h1>
   <hr class="my-4">
+  <div class="bg-white p-4 rounded-lg shadow-md">
+    <form class="mb-8">
+      <h2 class="text-lg font-bold mb-2">Repeat every...</h2>
 
-  <form class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Repeat every...</h2>
+      <div class="mb-4">
+        <label class="block font-medium mb-2" for="months">Month(s)</label>
+        <input class="border-gray-400 border-2 py-2 px-3 w-full rounded" type="number" id="months" name="months" min="1" max="12">
+      </div>
 
-    <div class="mb-4">
-      <label class="block font-medium mb-2" for="months">Month(s)</label>
-      <input class="border-gray-400 border-2 py-2 px-3 w-full rounded" type="number" id="months" name="months" min="1" max="12">
-    </div>
+      <div class="mb-4">
+        <label class="block font-medium mb-2" for="days">Day(s)</label>
+        <input class="border-gray-400 border-2 py-2 px-3 w-full rounded" type="number" id="days" name="days" min="1" max="30">
+      </div>
 
-    <div class="mb-4">
-      <label class="block font-medium mb-2" for="days">Day(s)</label>
-      <input class="border-gray-400 border-2 py-2 px-3 w-full rounded" type="number" id="days" name="days" min="1" max="30">
-    </div>
+      <h2 class="text-lg font-bold mb-2">Where to search</h2>
 
-    <h2 class="text-lg font-bold mb-2">Where to search</h2>
+      <div class="mb-4">
+        <input type="checkbox" id="directory" name="directory" value="Directory">
+        <label class="ml-2" for="directory">Faculty directory</label>
+      </div>
 
-    <div class="mb-4">
-      <input type="checkbox" id="directory" name="directory" value="Directory">
-      <label class="ml-2" for="directory">Faculty directory</label>
-    </div>
+      <div class="mb-4">
+        <input type="checkbox" id="linkedin" name="linkedin" value="LinkedIn">
+        <label class="ml-2" for="linkedin">LinkedIn</label>
+      </div>
 
-    <div class="mb-4">
-      <input type="checkbox" id="linkedin" name="linkedin" value="LinkedIn">
-      <label class="ml-2" for="linkedin">LinkedIn</label>
-    </div>
+      <div class="mb-4">
+        <input type="checkbox" id="scholar" name="scholar" value="Scholar">
+        <label class="ml-2" for="scholar">Google Scholar</label>
+      </div>
+    </form>
 
-    <div class="mb-4">
-      <input type="checkbox" id="scholar" name="scholar" value="Scholar">
-      <label class="ml-2" for="scholar">Google Scholar</label>
-    </div>
-  </form>
+    <form>
+      <h2 class="text-lg font-bold mb-2">Start date</h2>
+      <input class="border-gray-400 border-2 py-2 px-3 w-full rounded mb-4" type="date" id="date">
 
-  <form>
-    <h2 class="text-lg font-bold mb-2">Start date</h2>
-    <input class="border-gray-400 border-2 py-2 px-3 w-full rounded mb-4" type="date" id="date">
-
-    <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded" type="submit">Submit</button>
-  </form>
+      <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded" type="submit">Submit</button>
+    </form>
+  </div>
 </div>
 {% endblock %}

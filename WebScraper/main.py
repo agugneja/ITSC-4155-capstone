@@ -1,31 +1,25 @@
 # Jacob Nyborg
 from pkgutil import iter_modules
 import requests
-# FIXME: There has to be a more elegant way to do this
-# I want to import these relative to main.py even if this is being run as a module
-if __name__ == '__main__':
-    import Education
-    import Engineering
-    import CHHS
-    import LiberalScience
-    import Misc
-    import models
-else:
-    from . import Education
-    from . import Engineering
-    from . import CHHS
-    from . import LiberalScience
-    from . import Misc
-    from . import models
+from . import Education
+from . import Engineering
+from . import CHHS
+from . import LiberalScience
+from . import Misc
+from . import models
 import importlib
 from concurrent.futures import ThreadPoolExecutor
 import csv
 import itertools
 
-
+def is_url_valid(url: str) -> bool:
+    try:
+        requests.get(url)
+    except Exception:
+        return False
+    return True
 
 def main():
-    
     packages = [CHHS, Education, Engineering, LiberalScience, Misc]
     departments = []
     # For each folder containing modules
@@ -37,7 +31,7 @@ def main():
             # This gets that class from the module
             departments.append(getattr(module, module_name))
 
-    with ThreadPoolExecutor(max_workers=50) as p:
+    with ThreadPoolExecutor(max_workers=25) as p:
         department_objects = list(p.map(lambda x: x(), departments))
 
     # profileList = [d.profilePages if 'profilePages' in d.__dict__ else d.profiles for d in department_objects]  # List for Profile Page Content
@@ -45,18 +39,18 @@ def main():
     # urlList = [d.facultyURLs for d in department_objects]  # List for URLs to the faculty profiles
 
     # urlList = list(itertools.chain.from_iterable(urlList))
-    profileList = []
-    urlList = []
+    profile_list = []
+    url_list = []
     for d in department_objects:
-        urlList += d.facultyURLs
-        profileList += d.profiles
+        url_list += d.facultyURLs
+        profile_list += d.profiles
     
-    for i in range(len(urlList)-1, -1, -1):
-        try:
-            requests.get(urlList[i])
-        except Exception:
-            print("Removed URL: ", urlList[i])
-            del urlList[i]
+    bad_urls = []
+    with ThreadPoolExecutor(max_workers=25) as p:
+        bad_urls_iterator = p.map(lambda x: x if not is_url_valid(x) else '', url_list)
+        bad_urls = [url for url in bad_urls_iterator if url != '']
+
+    url_list = [url if url not in bad_urls else '' for url in url_list]
 
     # site, type, action, title, excerpt, content, date, author, slug, status, menu-order, password, categories, tags, taxonomy-{name}, meta-{name}
     header = ["site", "type", "action", "title", "excerpt", "content", "date", "author", "slug", "status", "menu-order", "password",
@@ -67,13 +61,13 @@ def main():
         writer.writerow(header)
 
         # Writes to CSV based on specfic formatting defined in header list
-        for i in range(len(profileList)):
-            listy = [urlList[i], "post", "update", profileList[i]
-                    ["Title"], "", profileList[i]["Content"], "", "", "", "", ""]
+        for i in range(len(profile_list)):
+            listy = [url_list[i], "post", "update", profile_list[i]
+                    ["Title"], "", profile_list[i]["Content"], "", "", "", "", ""]
             writer.writerow(listy)
     
     # Temporary, will replace the CSV once the output is actually formatted correctly:
-    models.updateByName(profileList)
+    models.update_by_name(profileList)
 
 if __name__ == '__main__':
     main()

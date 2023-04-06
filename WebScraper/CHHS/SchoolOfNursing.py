@@ -20,6 +20,7 @@ class SchoolOfNursing:
         return URLs
 
     def getProfilePage(self, facultyURLs):
+        bad_urls = []
         myList = []
         for i in facultyURLs:
             try:
@@ -37,7 +38,8 @@ class SchoolOfNursing:
                 myList.append(profileDict)
             except Exception:
                 print("Error: Doesn't have profile page or has incompatible format")
-        
+                bad_urls.append(i)
+        self.facultyURLs = [url for url in self.facultyURLs if url not in bad_urls]
         return myList
 
     def __init__(self):

@@ -3,65 +3,62 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+<div class="max-w-2xl mx-auto px-4">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>{% block title %}{% endblock %} - Faculty Connections</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
-</head>
     <div class="mt-0 m-4">
-        <h1 class="text-2xl font-bold">Home</h1>
+        <h1 class="text-3xl font-bold text-white ">Home</h1>
         <hr class="my-4">
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <div class="my-4">
+                <h2 class="font-bold">Database last updated:</h2>
+                <p class="text-gray-500">Month Date, Year at Time AM/PM</p> <!--Placeholder until code is written-->
+                <a href="{{url_for('csv')}}">
+                 <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Export CSV</button>
+                </a>
+            </div>
 
-        <div class="my-4">
-            <h2 class="font-bold">Database last updated:</h2>
-            <p class="text-gray-500">Month Date, Year at Time AM/PM</p> <!--Placeholder until code is written-->
-            <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Export CSV</button>
-        </div>
+            <div class="my-4">
+                <h2 class="font-bold">Current schedule:</h2>
+                <p class="text-gray-500">Repeat every X months and X days<br>
+                There is X month(s) and X day(s) remaining until the next update</p> <!--Placeholder until code is written-->
+            </div>
 
-        <div class="my-4">
-            <h2 class="font-bold">Current schedule:</h2>
-            <p class="text-gray-500">Repeat every X months and X days<br>
-            There is X month(s) and X day(s) remaining until the next update</p> <!--Placeholder until code is written-->
-        </div>
+            <div class="my-4">
+                <form class="flex flex-col">
+                    <h3 class="font-bold">Manual update</h3>
 
-        <div class="my-4">
-            <form class="flex flex-col">
-                <h3 class="font-bold">Manual update</h3>
+                    <label for="all" class="inline-flex items-center mt-2">
+                        <input type="radio" id="all" name="update" value="All" class="form-radio" checked>
+                        <span class="ml-2">All</span>
+                    </label>
 
-                <label for="all" class="inline-flex items-center mt-2">
-                    <input type="radio" id="all" name="update" value="All" class="form-radio" checked>
-                    <span class="ml-2">All</span>
-                </label>
+                    <label for="member" class="inline-flex items-center mt-2">
+                        <input type="radio" id="member" name="update" value="ByMember" class="form-radio">
+                        <span class="ml-2">By faculty member(s):</span>
+                    </label>
+                    <input type="text" id="member" name="member" placeholder="'John Smith', 'Alice Brown'" class="border form-input mt-1">
 
-                <label for="member" class="inline-flex items-center mt-2">
-                    <input type="radio" id="member" name="update" value="ByMember" class="form-radio">
-                    <span class="ml-2">By faculty member(s):</span>
-                </label>
-                <input type="text" id="member" name="member" placeholder="'John Smith', 'Alice Brown'" class="border form-input mt-1">
+                    <h3 class="font-bold mt-2">Where to search</h3>
 
-                <h3 class="font-bold mt-2">Where to search</h3>
+                    <label for="directory" class="inline-flex items-center mt-2">
+                        <input type="checkbox" id="directory" name="directory" value="Directory" class="form-checkbox">
+                        <span class="ml-2">Faculty directory</span>
+                    </label>
 
-                <label for="directory" class="inline-flex items-center mt-2">
-                    <input type="checkbox" id="directory" name="directory" value="Directory" class="form-checkbox">
-                    <span class="ml-2">Faculty directory</span>
-                </label>
+                    <label for="linkedin" class="inline-flex items-center mt-2">
+                        <input type="checkbox" id="linkedin" name="linkedin" value="LinkedIn" class="form-checkbox">
+                        <span class="ml-2">LinkedIn</span>
+                    </label>
 
-                <label for="linkedin" class="inline-flex items-center mt-2">
-                    <input type="checkbox" id="linkedin" name="linkedin" value="LinkedIn" class="form-checkbox">
-                    <span class="ml-2">LinkedIn</span>
-                </label>
+                    <label for="scholar" class="inline-flex items-center mt-2">
+                        <input type="checkbox" id="scholar" name="scholar" value="Scholar" class="form-checkbox">
+                        <span class="ml-2">Google Scholar</span>
+                    </label>
 
-                <label for="scholar" class="inline-flex items-center mt-2">
-                    <input type="checkbox" id="scholar" name="scholar" value="Scholar" class="form-checkbox">
-                    <span class="ml-2">Google Scholar</span>
-                </label>
-
-                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Confirm</button>
-            </form>
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Confirm</button>
+                </form>
+            </div>
         </div>
     </div>
+</div>
 {% endblock %}

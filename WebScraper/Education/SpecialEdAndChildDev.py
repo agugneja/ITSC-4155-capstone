@@ -10,7 +10,8 @@ class SpecialEdAndChildDev:
             soupList = soup.select(".views-field-field-directory-read-more-link > a")
             
             for i in soupList:
-                profURL = baseURL + i.get("href")
+                href = i.get("href")
+                profURL = baseURL + href if href.startswith('/') else href
                 URLs.append(profURL)
             
             return URLs
