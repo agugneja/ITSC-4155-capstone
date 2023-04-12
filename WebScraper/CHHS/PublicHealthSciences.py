@@ -7,8 +7,9 @@ class PublicHealthSciences:
         URLs = []
         soupList = soup.find_all("a",{"class":"thumbnail-link"})
         
-        for i in soupList:
-            profURL = baseURL + i.get("href")
+        for a_tag in soupList:
+            href = a_tag.get("href")
+            profURL = baseURL + href if href.startswith('/') else href
             URLs.append(profURL)
         
         return URLs
@@ -18,29 +19,31 @@ class PublicHealthSciences:
         soupList = soup.find_all("a",{"class":"button button-green"})
         
         for i in soupList:
-            profURL = baseURL + i.get("href")
+            href = i.get("href")
+            profURL = baseURL + href if href.startswith('/') else href
             URLs.append(profURL)
         
         return URLs
 
-    def getProfilePage(self, facultyURLs):
+    def getProfilePage(self):
         bad_urls = []
-        myList = []
-        for i in facultyURLs:
+        profiles = []
+        for url in self.facultyURLs:
             try:
-                page = requests.get(i)
+                page = requests.get(url)
                 soup = BeautifulSoup(page.content, "html.parser")
                 items = soup.find("article", {"class":"node node-directory node-promoted clearfix"})
                 profileDict = {
                     'Title': soup.find("h1",{'class':'page-header'}).getText().split(",")[0],
                     'Content': items,
                 }
-                myList.append(profileDict)
-            except Exception:
-                print("Error: Doesn't have profile page or has incompatible format")
-                bad_urls.append(i)
+                profiles.append(profileDict)
+            except Exception as e:
+                print(f"Something went wrong when visiting {url}:")
+                print(e)
+                bad_urls.append(url)
         self.facultyURLs = [url for url in self.facultyURLs if url not in bad_urls]
-        return myList
+        return profiles
 
     def __init__(self):
         print("Starting Health Sciences CHSS")
@@ -53,4 +56,4 @@ class PublicHealthSciences:
         soup = BeautifulSoup(html_text.content, "html.parser")
 
         self.facultyURLs = self.getFacultyURLs(baseURL, soup)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+        self.profiles = self.getProfilePage()

@@ -20,7 +20,8 @@ def is_url_valid(url: str) -> bool:
     return True
 
 def main():
-    packages = [CHHS, Education, Engineering, LiberalScience, Misc]
+    # packages = [CHHS, Education, Engineering, LiberalScience, Misc]
+    packages = [CHHS]
     departments = []
     # For each folder containing modules
     for package in packages:
@@ -31,7 +32,7 @@ def main():
             # This gets that class from the module
             departments.append(getattr(module, module_name))
 
-    with ThreadPoolExecutor(max_workers=25) as p:
+    with ThreadPoolExecutor(max_workers=15) as p:
         department_objects = list(p.map(lambda x: x(), departments))
 
     # profileList = [d.profilePages if 'profilePages' in d.__dict__ else d.profiles for d in department_objects]  # List for Profile Page Content
@@ -46,11 +47,12 @@ def main():
         profile_list += d.profiles
     
     bad_urls = []
-    with ThreadPoolExecutor(max_workers=25) as p:
-        bad_urls_iterator = p.map(lambda x: x if not is_url_valid(x) else '', url_list)
-        bad_urls = [url for url in bad_urls_iterator if url != '']
+    # with ThreadPoolExecutor(max_workers=25) as p:
+    #     bad_urls_iterator = p.map(lambda x: x if not is_url_valid(x) else '', url_list)
+    #     bad_urls = [url for url in bad_urls_iterator if url != '']
 
-    url_list = [url if url not in bad_urls else '' for url in url_list]
+    # url_list = [(url if url not in bad_urls else '') for url in url_list ]
+            
 
     # site, type, action, title, excerpt, content, date, author, slug, status, menu-order, password, categories, tags, taxonomy-{name}, meta-{name}
     header = ["site", "type", "action", "title", "excerpt", "content", "date", "author", "slug", "status", "menu-order", "password",
@@ -67,7 +69,7 @@ def main():
             writer.writerow(listy)
     
     # Temporary, will replace the CSV once the output is actually formatted correctly:
-    models.update_by_name(profileList)
+    models.update_by_name(profile_list)
 
 if __name__ == '__main__':
     main()
