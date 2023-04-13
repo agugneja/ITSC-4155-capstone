@@ -6,15 +6,15 @@ from bs4 import BeautifulSoup
 class SpecialEdAndChildDev:
 
     def getFacultyURLs(self, baseURL, soup):
-            URLs = []
-            soupList = soup.select(".views-field-field-directory-read-more-link > a")
-            
-            for i in soupList:
-                href = i.get("href")
-                profURL = baseURL + href if href.startswith('/') else href
-                URLs.append(profURL)
-            
-            return URLs
+        URLs = []
+        soupList = soup.select(".views-field-field-directory-read-more-link > a")
+        
+        for a_tag in soupList:
+            href = a_tag.get("href")
+            profURL = baseURL + href if href.startswith('/') else href
+            URLs.append(profURL)
+        
+        return URLs
 
     def getProfilePage(self, facultyURLs):
         myList = []
