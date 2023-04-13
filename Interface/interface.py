@@ -1,6 +1,6 @@
 from flask import Flask, render_template, url_for, send_file
 
-from WebScraper.main import main as scrape
+from WebScraper.webScraper import main as scrape
 # Passed from app.py
 # def get_functions(get_scrape):
 #     global scrape 

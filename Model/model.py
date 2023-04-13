@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from . import constants
@@ -24,3 +25,11 @@ def update_by_name(profile_list):
         faculty_members.replace_one({'Title': profile['Title'], },
                                    {'Title': profile['Title'], 'Content': str(profile['Content'])},
                                    upsert=True)
+
+# Make the FacultyProfile dataclass
+@dataclass
+class FacultyProfile():
+    name: str
+    rawHtml: str
+    tel: str
+    email: str

@@ -6,7 +6,7 @@ from . import Engineering
 from . import CHHS
 from . import LiberalScience
 from . import Misc
-from . import models
+from Model import model
 import importlib
 from concurrent.futures import ThreadPoolExecutor
 import csv
@@ -67,7 +67,7 @@ def main():
             writer.writerow(listy)
     
     # Temporary, will replace the CSV once the output is actually formatted correctly:
-    models.update_by_name(profileList)
+    model.update_by_name(profile_list)
 
 if __name__ == '__main__':
     main()
