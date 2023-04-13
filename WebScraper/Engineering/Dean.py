@@ -7,12 +7,14 @@ class Dean:
         URLs = []
         soupList = soup.find_all(
             "a", {"class": "button button-green button-small"})
-
-        for i in soupList:
-            profURL = baseURL + i.get("href")
+        
+        for a_tag in soupList:
+            href = a_tag.get("href")
+            profURL = baseURL + href if href.startswith('/') else href
             URLs.append(profURL)
-
+        
         return URLs
+    
 
     def getProfilePage(self, facultyURLs):
         myList = []

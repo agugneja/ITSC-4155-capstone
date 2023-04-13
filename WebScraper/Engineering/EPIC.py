@@ -5,14 +5,14 @@ class EPIC:
 
     def getFacultyURLs(self, baseURL, soup):
         URLs = []
-        #raw link to the page
         soupList = soup.find_all(
             "a", href=True, alt=True, title=True)
-
-        for i in soupList:
-            profURL = baseURL + i.get("href")
+        
+        for a_tag in soupList:
+            href = a_tag.get("href")
+            profURL = baseURL + href if href.startswith('/') else href
             URLs.append(profURL)
-
+        
         return URLs
 
     def getProfilePage(self, facultyURLs):
