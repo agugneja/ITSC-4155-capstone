@@ -27,6 +27,12 @@ class PsychologicalScience:
                 
                 if 'clas' in url:
                     items = soup.find("div", {"class":"entry-content"})
+                    title = soup.find("div",{'class':'name'}).getText()
+                    # Reverse comma delineated name
+                    if ',' in title:
+                        title = title.split(",")
+                        title.reverse()
+                        title = ' '.join([string.strip() for string in title])
                     profileDict = {
                         'Title': soup.find("div",{'class':'name'}).getText().split(",")[0],
                         'Content': items,
@@ -34,16 +40,22 @@ class PsychologicalScience:
 
                 else:
                     items = soup.find("div", {"class":"region region-content"})
+                    title = soup.find("h1",{'class':'page-header'}).getText()
+                    # Reverse comma delineated name
+                    if ',' in title:
+                        title = title.split(",")
+                        title.reverse()
+                        title = ' '.join([string.strip() for string in title])
                     if items:
                         profileDict = {
-                        'Title': soup.find("h1",{'class':'page-header'}).getText().split(",")[0],
+                        'Title': title,
                         'Content': items,
                         }
                     else:
                         print("in none")
                         items = soup.find("section", {"class":"col-sm-9"})
                         profileDict = {
-                        'Title': soup.find("h1",{'class':'page-header'}).getText().split(",")[0],
+                        'Title': title,
                         'Content': items,
                         }   
 
