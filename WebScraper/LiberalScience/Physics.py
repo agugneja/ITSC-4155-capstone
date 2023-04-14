@@ -17,10 +17,11 @@ class Physics:
         return URLs
 
     def getProfilePage(self, facultyURLs):
-        myList = []
-        for i in facultyURLs:
+        bad_urls = []
+        profiles = []
+        for url in facultyURLs:
             try:
-                page = requests.get(i)
+                page = requests.get(url)
                 soup = BeautifulSoup(page.content, "html.parser")
                 items = soup.find(
                     "article", {"class": "node node-directory node-promoted clearfix"})
@@ -30,11 +31,14 @@ class Physics:
                     'Content': items,
                 }
 
-                myList.append(profileDict)
-            except Exception:
-                print("Error: Doesn't have profile page")
+                profiles.append(profileDict)
+            except Exception as e:
+                print(f"Something went wrong when visiting {url}:")
+                print(e)
+                bad_urls.append(url)
+        self.facultyURLs = [url for url in self.facultyURLs if url not in bad_urls]
 
-        return myList
+        return profiles
 
     def __init__(self):
         print("Starting Physics Lib Science")

@@ -16,13 +16,14 @@ class History:
         return URLs
 
     def getProfilePage(self, facultyURLs):
-        myList = []
-        for i in facultyURLs:
+        bad_urls = []
+        profiles = []
+        for url in facultyURLs:
             try:
-                page = requests.get(i)
+                page = requests.get(url)
                 soup = BeautifulSoup(page.content, "html.parser")
                 
-                if 'pages' in i:
+                if 'pages' in url:
                     items = soup.find("div", {"class":"one-sidebar-width right-sidebar"})
                     profileDict = {
                         'Title': soup.find("div",{'class':'page-title'}).getText().split(",")[0],
@@ -36,13 +37,15 @@ class History:
                         'Content': items,
                     }   
 
-                myList.append(profileDict)
+                profiles.append(profileDict)
 
-            except Exception:
-                print("Error: Doesn't have profile page or has incompatible format")
-                print(i)
+            except Exception as e:
+                print(f"Something went wrong when visiting {url}:")
+                print(e)
+                bad_urls.append(url)
+        self.facultyURLs = [url for url in self.facultyURLs if url not in bad_urls]
         
-        return myList
+        return profiles
 
     def __init__(self):
         print("Starting History Lib Science")

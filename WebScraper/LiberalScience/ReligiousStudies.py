@@ -19,13 +19,14 @@ class ReligiousStudies:
 
     #This directory has 2 main variants so this should check for both
     def getProfilePage(self, facultyURLs):
-        myList = []
-        for i in facultyURLs:
+        bad_urls = []
+        profiles = []
+        for url in facultyURLs:
             try:
-                page = requests.get(i)
+                page = requests.get(url)
                 soup = BeautifulSoup(page.content, "html.parser")
                 
-                if 'clas' in i:
+                if 'clas' in url:
                     items = soup.find("div", {"class":"entry-content"})
                     profileDict = {
                         'Title': soup.find("div",{'class':'name'}).getText().split(",")[0],
@@ -46,13 +47,15 @@ class ReligiousStudies:
                         'Content': items,
                         }   
 
-                myList.append(profileDict)
+                profiles.append(profileDict)
 
-            except Exception: 
-                print("Error: Doesn't have profile page or has incompatible format")
-                print(i)
+            except Exception as e:
+                print(f"Something went wrong when visiting {url}:")
+                print(e)
+                bad_urls.append(url)
+        self.facultyURLs = [url for url in self.facultyURLs if url not in bad_urls]
         
-        return myList
+        return profiles
 
     def __init__(self):
         print("Starting Religious Studies Lib Science")
