@@ -5,18 +5,15 @@ from bs4 import BeautifulSoup
 class Communication:
 
     #This page has the full url not extensions
-    def getFacultyURLs(self, soup, baseURL):
+    def getFacultyURLs(self, baseURL, soup):
         URLs = []
-        soupList = soup.find_all("div",{"class":"directory-back"})
+        soupList = soup.find_all(
+            "a", {"class": "button button-gray"})
         
-        for i in soupList:
-            text = str(i)
-            text = text.split("href=")[2].split(" ")[0].replace('"', '')
-            if 'pages' in text:
-                URLs.append(text)
-            else:
-                profURL = baseURL + text
-                URLs.append(profURL)
+        for a_tag in soupList:
+            href = a_tag.get("href")
+            profURL = baseURL + href if href.startswith('/') else href
+            URLs.append(profURL)
         
         return URLs
 
@@ -65,5 +62,5 @@ class Communication:
         html_text = requests.get(directoryURL)
         soup = BeautifulSoup(html_text.content, "html.parser")
 
-        self.facultyURLs = self.getFacultyURLs(soup, baseURL)
+        self.facultyURLs = self.getFacultyURLs(baseURL, soup)
         self.profiles = self.getProfilePage(self.facultyURLs)

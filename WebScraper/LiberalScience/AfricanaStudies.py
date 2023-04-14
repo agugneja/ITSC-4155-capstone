@@ -6,16 +6,13 @@ class AfricanaStudies:
 
     def getFacultyURLs(self, baseURL, soup):
         URLs = []
-        soupList = soup.find_all("div",{"class":"directory-back"})
+        soupList = soup.find_all(
+            "a", {"class": "button button-gray"})
         
-        for i in soupList:
-            text = str(i)
-            text = text.split("href=")[2].split(" ")[0].replace('"', '')
-            if 'pages' in text:
-                URLs.append(text)
-            else:
-                profURL = baseURL + text
-                URLs.append(profURL)
+        for a_tag in soupList:
+            href = a_tag.get("href")
+            profURL = baseURL + href if href.startswith('/') else href
+            URLs.append(profURL)
         
         return URLs
 

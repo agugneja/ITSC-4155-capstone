@@ -4,17 +4,14 @@ from bs4 import BeautifulSoup
 
 class History:
 
-    #This page has the full url not extensions
-    def getFacultyURLs(self, soup, baseURL):
+    def getFacultyURLs(self, baseURL, soup):
         URLs = []
         soupList = soup.find_all("a",{"class":"thumbnail-link"})
         
-        for i in soupList:
-            if 'pages' in i.get("href"):
-                URLs.append(i.get("href"))
-            else:
-                profURL = baseURL + i.get("href")
-                URLs.append(profURL)
+        for a_tag in soupList:
+            href = a_tag.get("href")
+            profURL = baseURL + href if href.startswith('/') else href
+            URLs.append(profURL)
         
         return URLs
 
@@ -55,5 +52,5 @@ class History:
         html_text = requests.get(directoryURL)
         soup = BeautifulSoup(html_text.content, "html.parser")
 
-        self.facultyURLs = self.getFacultyURLs(soup, baseURL)
+        self.facultyURLs = self.getFacultyURLs(baseURL, soup)
         self.profiles = self.getProfilePage(self.facultyURLs)
