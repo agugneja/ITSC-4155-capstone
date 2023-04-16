@@ -11,27 +11,27 @@ class ArtsAndArch:
         URL = "https://coaa.charlotte.edu/directory/faculty"
         html_text = requests.get(URL)
         soup1 = BeautifulSoup(html_text.content, "html.parser")
-        self.facultyURLs += self.getFacultyURLs(URL, soup1)
+        self.facultyURLs += self.getFacultyURLs(baseURL, soup1)
 
         partURL = "https://coaa.charlotte.edu/directory/part-time-faculty"
         html_text = requests.get(partURL)
         soup2 = BeautifulSoup(html_text.content, "html.parser")
-        self.facultyURLs += self.getFacultyURLs(partURL, soup2)
+        self.facultyURLs += self.getFacultyURLs(baseURL, soup2)
         
         adjuntURL = "https://coaa.charlotte.edu/directory/adjunct-faculty"
         html_text = requests.get(adjuntURL)
         soup3 = BeautifulSoup(html_text.content, "html.parser")
-        self.facultyURLs += self.getFacultyURLs(adjuntURL, soup3)
+        self.facultyURLs += self.getFacultyURLs(baseURL, soup3)
         
         staffURL = "https://coaa.charlotte.edu/directory/staff"
         html_text = requests.get(staffURL)
         soup4 = BeautifulSoup(html_text.content, "html.parser")
-        self.facultyURLs += self.getFacultyURLs(staffURL, soup4)
+        self.facultyURLs += self.getFacultyURLs(baseURL, soup4)
         
         emeritusURL = "https://coaa.charlotte.edu/directory/emeritus"
         html_text = requests.get(emeritusURL)
         soup5 = BeautifulSoup(html_text.content, "html.parser")
-        self.facultyURLs += self.getFacultyURLs(emeritusURL, soup5)
+        self.facultyURLs += self.getFacultyURLs(baseURL, soup5)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
     def getFacultyURLs(self, baseURL, soup):
@@ -44,25 +44,28 @@ class ArtsAndArch:
             URLs.append(profURL)
         
         return URLs
-
+  
     def getProfilePage(self, facultyURLs):
-        myList = []
-        for i in facultyURLs:
+        bad_urls = []
+        profiles = []
+        for url in facultyURLs:
             try:
-                page = requests.get(i)
+                page = requests.get(url)
                 soup = BeautifulSoup(page.content, "html.parser")
                 items = soup.find("article", {"class":"node node-directory node-promoted clearfix"})
-            
+
                 profileDict = {
                     'Title': soup.find("h1",{'class':'page-header'}).getText(),
                     'Content': items,
                 }
-                myList.append(profileDict)
-            except Exception:
-                print("Error: Doesn't have profile page")
-    
-        return myList
-
+                profiles.append(profileDict)
+            except Exception as e:
+                print(f"Something went wrong when visiting {url}:")
+                print(e)
+                bad_urls.append(url)
+        self.facultyURLs = [url for url in self.facultyURLs if url not in bad_urls]
+        
+        return profiles
 
 
 # def getFacultyURLs(baseURL, soup1, soup2, soup3, soup4, soup5):
