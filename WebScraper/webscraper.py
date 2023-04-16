@@ -6,11 +6,10 @@ from . import Engineering
 from . import CHHS
 from . import LiberalScience
 from . import Misc
-from . import models
+from Model.model import FacultyProfile, update_by_name
 import importlib
 from concurrent.futures import ThreadPoolExecutor
 import csv
-import itertools
 
 def is_url_valid(url: str) -> bool:
     try:
@@ -66,8 +65,13 @@ def main():
                     ["Title"], "", profile_list[i]["Content"], "", "", "", "", ""]
             writer.writerow(listy)
     
-    # Temporary, will replace the CSV once the output is actually formatted correctly:
-    models.update_by_name(profileList)
+    # I know this is bad practice.
+    # I will change this when web scrapers just use FacultyProfile instead of to janky parallel arrays.
+    # This is also untested because my internet is slow.
+    faculty_profiles = []
+    for i in range(len(profile_list)): # 💩
+        faculty_profiles.append(FacultyProfile(name=profile_list[i]['Title'], rawHtml=str(profile_list[i]["Content"]), url=url_list[i]))
+    update_by_name(faculty_profiles)
 
 if __name__ == '__main__':
     main()
