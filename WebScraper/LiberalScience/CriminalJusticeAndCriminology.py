@@ -17,37 +17,27 @@ class CriminalJusticeAndCriminology:
             URLs.append(profURL)
         
         return URLs
-
+    
     def getProfilePage(self) -> list[FacultyProfile]:
-        bad_urls = []
         profiles = []
         for url in self.facultyURLs:
             try:
                 page = requests.get(url)
                 soup = BeautifulSoup(page.content, "lxml")
-                
+                rawHtml = ''
+                name = ''
                 if 'pages' in url:
-                    items = soup.find("div", {"id":"content_pane"})
-                    profileDict = {
-                        'Title': soup.find("div",{'class':'name'}).getText().split(",")[0],
-                        'Content': items,
-                    }
-
+                    rawHtml = soup.find("div", {"id":"content_pane"})
+                    name = soup.find("div",{'class':'name'}).getText().split(",")[0]
                 else:
-                    items = soup.find("div", {"class":"col-sm-9"})
-                    profileDict = {
-                        'Title': soup.find("h1",{'class':'page-header'}).getText().split(",")[0],
-                        'Content': items,
-                    }   
-
-                profiles.append(profileDict)
+                    rawHtml = soup.find("section", {"class":"col-sm-9"})
+                    name = soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
+                
+                profiles.append(FacultyProfile(name=name, rawHtml=rawHtml, url=url))
 
             except Exception as e:
                 print(f"Something went wrong when visiting {url}:")
                 print(e)
-                bad_urls.append(url)
-        self.facultyURLs = [url for url in self.facultyURLs if url not in bad_urls]
-        
         return profiles
 
     def __init__(self):

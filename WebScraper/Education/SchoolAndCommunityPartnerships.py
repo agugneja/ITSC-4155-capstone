@@ -17,25 +17,21 @@ class SchoolAndCommunityPartnerships:
         return URLs
 
     def getProfilePage(self) -> list[FacultyProfile]:
-        bad_urls = []
         profiles = []
         for url in self.facultyURLs:
             try:
                 page = requests.get(url)
                 soup = BeautifulSoup(page.content, "lxml")
-                items = soup.find("article", {"class":"node node-directory clearfix"})
-                
-                profileDict = {
-                    'Title': soup.find("h1",{'class':'page-header'}).getText().split(",")[0],
-                    'Content': items,
-                }
-                profiles.append(profileDict)
+
+                rawHtml = soup.find("article", {"class":"node node-directory clearfix"})
+                name = soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
+
+                profiles.append(FacultyProfile(name=name, rawHtml=rawHtml, url=url))
             except Exception as e:
                 print(f"Something went wrong when visiting {url}:")
                 print(e)
-                bad_urls.append(url)
-        self.facultyURLs = [url for url in self.facultyURLs if url not in bad_urls]
         return profiles
+
 
     def __init__(self):
         print("Starting Community Education")

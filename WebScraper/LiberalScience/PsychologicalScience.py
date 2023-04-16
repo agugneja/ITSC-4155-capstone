@@ -16,58 +16,35 @@ class PsychologicalScience:
             URLs.append(profURL)
         
         return URLs
-
-    #This directory has 2 main variants so this should check for both
     def getProfilePage(self) -> list[FacultyProfile]:
-        bad_urls = []
         profiles = []
         for url in self.facultyURLs:
             try:
                 page = requests.get(url)
                 soup = BeautifulSoup(page.content, "lxml")
-                
+                rawHtml = ''
+                name = ''
                 if 'clas' in url:
-                    items = soup.find("div", {"class":"entry-content"})
-                    title = soup.find("div",{'class':'name'}).getText()
-                    # Reverse comma delineated name
-                    if ',' in title:
-                        title = title.split(",")
-                        title.reverse()
-                        title = ' '.join([string.strip() for string in title])
-                    profileDict = {
-                        'Title': soup.find("div",{'class':'name'}).getText().split(",")[0],
-                        'Content': items,
-                    }
-
+                    rawHtml = soup.find("div", {"class":"entry-content"})
+                    name = soup.find("div",{'class':'name'}).getText().split(",")[0]
+                elif items := soup.find("div", {"class":"region region-content"}):
+                    rawHtml = items
+                    name = soup.find("h1",{'class':'page-header'}).getText()
                 else:
-                    items = soup.find("div", {"class":"region region-content"})
-                    title = soup.find("h1",{'class':'page-header'}).getText()
-                    # Reverse comma delineated name
-                    if ',' in title:
-                        title = title.split(",")
-                        title.reverse()
-                        title = ' '.join([string.strip() for string in title])
-                    if items:
-                        profileDict = {
-                        'Title': title,
-                        'Content': items,
-                        }
-                    else:
-                        print("in none")
-                        items = soup.find("section", {"class":"col-sm-9"})
-                        profileDict = {
-                        'Title': title,
-                        'Content': items,
-                        }   
+                    rawHtml = soup.find("section", {"class":"col-sm-9"})
+                    name = soup.find("h1",{'class':'page-header'}).getText()
+                
+                # reverse comma seperated "last, first" name
+                if ',' in name:
+                    name = name.split(",")
+                    name.reverse()
+                    name = ' '.join([string.strip() for string in name])
 
-                profiles.append(profileDict)
+                profiles.append(FacultyProfile(name=name, rawHtml=rawHtml, url=url))
 
             except Exception as e:
                 print(f"Something went wrong when visiting {url}:")
                 print(e)
-                bad_urls.append(url)
-        self.facultyURLs = [url for url in self.facultyURLs if url not in bad_urls]
-        
         return profiles
 
     def __init__(self):
