@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 
 class Geography:
 
-    def getFacultyURLs(self, baseURL, soup):
+    def getFacultyURLs(self, baseURL: str, soup: BeautifulSoup) -> list[str]:
         URLs = []
         soupList = soup.find_all("div",{"class":"directory-back"})
         

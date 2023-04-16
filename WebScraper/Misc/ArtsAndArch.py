@@ -34,7 +34,7 @@ class ArtsAndArch:
         self.facultyURLs += self.getFacultyURLs(baseURL, soup5)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getFacultyURLs(self, baseURL, soup):
+    def getFacultyURLs(self, baseURL: str, soup: BeautifulSoup) -> list[str]:
         URLs = []
         soupList = soup.find_all("a",{"class":"thumbnail-link"})
         

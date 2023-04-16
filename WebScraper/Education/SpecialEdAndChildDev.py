@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 
 class SpecialEdAndChildDev:
 
-    def getFacultyURLs(self, baseURL, soup):
+    def getFacultyURLs(self, baseURL: str, soup: BeautifulSoup) -> list[str]:
         URLs = []
         soupList = soup.select(".views-field-field-directory-read-more-link > a")
         

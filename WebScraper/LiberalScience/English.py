@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 class English:
 
     #This page has the full url not extensions
-    def getFacultyURLs(self, baseURL, soup):
+    def getFacultyURLs(self, baseURL: str, soup: BeautifulSoup) -> list[str]:
         URLs = []
         soupList = soup.find_all(
             "a", {"class": "button button-gray"})

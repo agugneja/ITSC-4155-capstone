@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 
 class BiologicalSciences:
     
-    def getFacultyURLs(self, baseURL, soup):
+    def getFacultyURLs(self, baseURL: str, soup: BeautifulSoup) -> list[str]:
         URLs = []
         soupList = soup.select(".caption > a")
         
