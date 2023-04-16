@@ -1,6 +1,7 @@
 #Steven wilson
 import requests
 from bs4 import BeautifulSoup
+from Model.model import FacultyProfile
 
 class Counseling:
 
@@ -15,7 +16,7 @@ class Counseling:
         
         return URLs
 
-    def getProfilePage(self, facultyURLs):
+    def getProfilePage(self) -> list[FacultyProfile]:
         bad_urls = []
         profiles = []
         for url in self.facultyURLs:
@@ -45,7 +46,7 @@ class Counseling:
         soup = BeautifulSoup(html_text.content, "lxml")
 
         self.facultyURLs = self.getFacultyURLs(baseURL, soup)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+        self.profiles = self.getProfilePage()
 
 
 '''
