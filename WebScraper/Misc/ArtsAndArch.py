@@ -6,65 +6,44 @@ class ArtsAndArch:
     def __init__(self):
         print("Starting Arts and Architecture")
         baseURL = "https://coaa.charlotte.edu/"
-    
+        
+        self.facultyURLs = []
         URL = "https://coaa.charlotte.edu/directory/faculty"
-        html_text = self.getSoup(URL)
+        html_text = requests.get(URL)
         soup1 = BeautifulSoup(html_text.content, "html.parser")
+        self.facultyURLs += self.getFacultyURLs(URL, soup1)
 
         partURL = "https://coaa.charlotte.edu/directory/part-time-faculty"
-        html_text = self.getSoup(partURL)
+        html_text = requests.get(partURL)
         soup2 = BeautifulSoup(html_text.content, "html.parser")
-
+        self.facultyURLs += self.getFacultyURLs(partURL, soup2)
+        
         adjuntURL = "https://coaa.charlotte.edu/directory/adjunct-faculty"
-        html_text = self.getSoup(adjuntURL)
+        html_text = requests.get(adjuntURL)
         soup3 = BeautifulSoup(html_text.content, "html.parser")
-
+        self.facultyURLs += self.getFacultyURLs(adjuntURL, soup3)
+        
         staffURL = "https://coaa.charlotte.edu/directory/staff"
-        html_text = self.getSoup(staffURL)
+        html_text = requests.get(staffURL)
         soup4 = BeautifulSoup(html_text.content, "html.parser")
-
+        self.facultyURLs += self.getFacultyURLs(staffURL, soup4)
+        
         emeritusURL = "https://coaa.charlotte.edu/directory/emeritus"
-        html_text = self.getSoup(emeritusURL)
+        html_text = requests.get(emeritusURL)
         soup5 = BeautifulSoup(html_text.content, "html.parser")
-
-        self.facultyURLs = self.getFacultyURLs(baseURL, soup1, soup2, soup3, soup4, soup5)
+        self.facultyURLs += self.getFacultyURLs(emeritusURL, soup5)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getSoup(self, URL):
-        html_text = requests.get(URL)
-        return html_text
-
-
-    def getFacultyURLs(self, baseURL, soup1, soup2, soup3, soup4, soup5):
+    def getFacultyURLs(self, baseURL, soup):
         URLs = []
-        soup1List = soup1.find_all("a",{"class":"thumbnail-link"})
-        soup2List = soup2.find_all("a",{"class":"thumbnail-link"})
-        soup3List = soup3.find_all("a",{"class":"thumbnail-link"})
-        soup4List = soup4.find_all("a",{"class":"thumbnail-link"})
-        soup5List = soup5.find_all("a",{"class":"thumbnail-link"})
-
-        for i in soup1List:
-            profURL = baseURL + i.get("href")
+        soupList = soup.find_all("a",{"class":"thumbnail-link"})
+        
+        for a_tag in soupList:
+            href = a_tag.get("href")
+            profURL = baseURL + href if href.startswith('/') else href
             URLs.append(profURL)
-
-        for i in soup2List:
-            profURL = baseURL + i.get("href")
-            URLs.append(profURL)
-
-        for i in soup3List:
-            profURL = baseURL + i.get("href")
-            URLs.append(profURL)
-
-        for i in soup4List:
-            profURL = baseURL + i.get("href")
-            URLs.append(profURL)
-
-        for i in soup5List:
-            profURL = baseURL + i.get("href")
-            URLs.append(profURL)
-
+        
         return URLs
-    
 
     def getProfilePage(self, facultyURLs):
         myList = []

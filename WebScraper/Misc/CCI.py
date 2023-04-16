@@ -11,39 +11,22 @@ class CCI:
     def __init__(self):
         print("CCI Started")
         baseURL = "https://cci.charlotte.edu"
-        directoryURL = "https://cci.charlotte.edu/directory/faculty"
-        html_text = self.getSoup(directoryURL)
+        directoryURL = "https://cci.charlotte.edu/directory/faculty?items_per_page=All"
+        html_text = requests.get(directoryURL)
         soup = BeautifulSoup(html_text, "html.parser")
         self.facultyURLs = self.getFacultyURLs(baseURL, soup)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getSoup(self, siteUrl):
-        options = Options()
-        options.headless = True
-        driver = webdriver.Chrome(options= options)
-
-        driver.get(siteUrl)
-        label = driver.find_element('id', 'edit-items-per-page')
-        drop = Select(label)
-        drop.select_by_visible_text('- All -')
-        submit = driver.find_element('id', 'edit-submit-customized-directory-search')
-        submit.click()
-
-        time.sleep(1) # Have to let page load after selecting all
-
-        html_text = driver.page_source
-        return html_text
-
-
     def getFacultyURLs(self, baseURL, soup):
-        urls = []
+        URLs = []
         soupList = soup.find_all("a",{"class":"button-gray"})
-    
-        for i in soupList:
-            profURL = baseURL + i.get("href")
-            urls.append(profURL)
-    
-        return urls
+        
+        for a_tag in soupList:
+            href = a_tag.get("href")
+            profURL = baseURL + href if href.startswith('/') else href
+            URLs.append(profURL)
+        
+        return URLs
 
     def getProfilePage(self, facultyURLs):
         profiles = []

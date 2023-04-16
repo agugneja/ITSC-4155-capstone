@@ -6,24 +6,21 @@ class Belk:
         print("belk Started")
         baseURL = "https://belkcollege.charlotte.edu/"
         directoryURL = "https://belkcollege.charlotte.edu/directory"
-        html_text = self.getSoup(directoryURL)
+        html_text = requests.get(directoryURL)
         soup = BeautifulSoup(html_text.content, "html.parser")
         self.facultyURLs = self.getFacultyURLs(baseURL, soup)
         self.profiles = self.getProfilePage(self.facultyURLs)
-    
-    def getSoup(self, URL):
-        html_text = requests.get(URL)
-        return html_text
-
+        
     def getFacultyURLs(self, baseURL, soup):
-        urls = []
-        soupList = soup.find_all("a",{"class":"button-gray"})
-    
-        for i in soupList:
-            profURL = baseURL + i.get("href")
-            urls.append(profURL)
-    
-        return urls
+        URLs = []
+        soupList = soup.find_all("a",{"class":"thumbnail-link"})
+        
+        for a_tag in soupList:
+            href = a_tag.get("href")
+            profURL = baseURL + href if href.startswith('/') else href
+            URLs.append(profURL)
+        
+        return URLs
 
     def getProfilePage(self, facultyURLs):
         profiles = []
