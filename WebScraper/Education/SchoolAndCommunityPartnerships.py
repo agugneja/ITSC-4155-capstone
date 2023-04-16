@@ -7,7 +7,7 @@ class SchoolAndCommunityPartnerships:
 
     def getFacultyURLs(self, baseURL: str, soup: BeautifulSoup) -> list[str]:
         URLs = []
-        soupList = soup.select(".directory-back > a")
+        soupList = soup.select(".directory-back > a:last-of-type")
         
         for a_tag in soupList:
             href = a_tag.get("href")

@@ -8,10 +8,9 @@ class ReligiousStudies:
     #This page has the full url not extensions
     def getFacultyURLs(self, baseURL: str, soup: BeautifulSoup) -> list[str]:
         URLs = []
-        soupList = soup.find_all("div",{"class":"directory-back"})
+        soupList = soup.select(".directory-back > a:last-of-type")
         
-        for div in soupList:
-            a_tag = div.find_all("a")[-1]
+        for a_tag in soupList:
             href = a_tag.get("href")
             profURL = baseURL + href if href.startswith('/') else href
             URLs.append(profURL)
@@ -52,3 +51,6 @@ class ReligiousStudies:
 
         self.facultyURLs = self.getFacultyURLs(baseURL, soup)
         self.profiles = self.getProfilePage()
+
+if __name__ == '__main__':
+    ReligiousStudies()
