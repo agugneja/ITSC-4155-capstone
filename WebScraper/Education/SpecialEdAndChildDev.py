@@ -22,7 +22,7 @@ class SpecialEdAndChildDev:
         for url in facultyURLs:
             try:
                 page = requests.get(url)
-                soup = BeautifulSoup(page.content, "html.parser")
+                soup = BeautifulSoup(page.content, "lxml")
                 items = soup.find("article", {"class":"node node-directory clearfix"})
                 
                 profileDict = {
@@ -43,7 +43,7 @@ class SpecialEdAndChildDev:
         directoryURL = "https://spcd.charlotte.edu/directory-table"
         
         html_text = requests.get(directoryURL)
-        soup = BeautifulSoup(html_text.content, "html.parser")
+        soup = BeautifulSoup(html_text.content, "lxml")
 
         self.facultyURLs = self.getFacultyURLs(baseURL, soup)
         self.profiles = self.getProfilePage(self.facultyURLs)
@@ -65,7 +65,7 @@ def getProfilePage(facultyURLs):
     for i in facultyURLs:
         try:
             page = requests.get(i)
-            soup = BeautifulSoup(page.content, "html.parser")
+            soup = BeautifulSoup(page.content, "lxml")
             items = soup.find_all("article", {"class":"node node-directory clearfix"})
             
             for count, element in enumerate(items):
@@ -87,7 +87,7 @@ def main():
     directoryURL = "https://spcd.charlotte.edu/directory-table"
     
     html_text = requests.get(directoryURL)
-    soup = BeautifulSoup(html_text.content, "html.parser")
+    soup = BeautifulSoup(html_text.content, "lxml")
 
     facultyURLs = getFacultyURLs(baseURL, soup)
     print(facultyURLs)

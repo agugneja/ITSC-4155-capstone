@@ -21,7 +21,7 @@ class SchoolOfNursing:
         for url in self.facultyURLs:
             try:
                 page = requests.get(url)
-                soup = BeautifulSoup(page.content, "html.parser")
+                soup = BeautifulSoup(page.content, "lxml")
                 items = soup.find("article", {"class":"node node-directory node-promoted clearfix"})
 
                 profileDict = {
@@ -46,7 +46,7 @@ class SchoolOfNursing:
         #this school also has a directory for Faculty Emeriti but none have profiles
 
         html_text = requests.get(directoryURL)
-        soup = BeautifulSoup(html_text.content, "html.parser")
+        soup = BeautifulSoup(html_text.content, "lxml")
 
         self.facultyURLs = self.getFacultyURLs(baseURL, soup)
         self.profiles = self.getProfilePage()

@@ -31,7 +31,7 @@ class PublicHealthSciences:
         for url in self.facultyURLs:
             try:
                 page = requests.get(url)
-                soup = BeautifulSoup(page.content, "html.parser")
+                soup = BeautifulSoup(page.content, "lxml")
                 items = soup.find("article", {"class":"node node-directory node-promoted clearfix"})
                 profileDict = {
                     'Title': soup.find("h1",{'class':'page-header'}).getText().split(",")[0],
@@ -53,7 +53,7 @@ class PublicHealthSciences:
         directoryURLEmeritus = "https://publichealth.charlotte.edu/about%20us/emeritus-faculty"    
         
         html_text = requests.get(directoryURL)
-        soup = BeautifulSoup(html_text.content, "html.parser")
+        soup = BeautifulSoup(html_text.content, "lxml")
 
         self.facultyURLs = self.getFacultyURLs(baseURL, soup)
         self.profiles = self.getProfilePage()

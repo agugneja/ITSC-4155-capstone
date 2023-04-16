@@ -10,27 +10,27 @@ class ArtsAndArch:
         self.facultyURLs = []
         URL = "https://coaa.charlotte.edu/directory/faculty"
         html_text = requests.get(URL)
-        soup1 = BeautifulSoup(html_text.content, "html.parser")
+        soup1 = BeautifulSoup(html_text.content, "lxml")
         self.facultyURLs += self.getFacultyURLs(baseURL, soup1)
 
         partURL = "https://coaa.charlotte.edu/directory/part-time-faculty"
         html_text = requests.get(partURL)
-        soup2 = BeautifulSoup(html_text.content, "html.parser")
+        soup2 = BeautifulSoup(html_text.content, "lxml")
         self.facultyURLs += self.getFacultyURLs(baseURL, soup2)
         
         adjuntURL = "https://coaa.charlotte.edu/directory/adjunct-faculty"
         html_text = requests.get(adjuntURL)
-        soup3 = BeautifulSoup(html_text.content, "html.parser")
+        soup3 = BeautifulSoup(html_text.content, "lxml")
         self.facultyURLs += self.getFacultyURLs(baseURL, soup3)
         
         staffURL = "https://coaa.charlotte.edu/directory/staff"
         html_text = requests.get(staffURL)
-        soup4 = BeautifulSoup(html_text.content, "html.parser")
+        soup4 = BeautifulSoup(html_text.content, "lxml")
         self.facultyURLs += self.getFacultyURLs(baseURL, soup4)
         
         emeritusURL = "https://coaa.charlotte.edu/directory/emeritus"
         html_text = requests.get(emeritusURL)
-        soup5 = BeautifulSoup(html_text.content, "html.parser")
+        soup5 = BeautifulSoup(html_text.content, "lxml")
         self.facultyURLs += self.getFacultyURLs(baseURL, soup5)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
@@ -51,7 +51,7 @@ class ArtsAndArch:
         for url in facultyURLs:
             try:
                 page = requests.get(url)
-                soup = BeautifulSoup(page.content, "html.parser")
+                soup = BeautifulSoup(page.content, "lxml")
                 items = soup.find("article", {"class":"node node-directory node-promoted clearfix"})
 
                 profileDict = {
@@ -103,7 +103,7 @@ class ArtsAndArch:
 #     for i in facultyURLs:
 #         try:
 #             page = requests.get(i)
-#             soup = BeautifulSoup(page.content, "html.parser")
+#             soup = BeautifulSoup(page.content, "lxml")
 #             items = soup.find_all("div", {"class":"field-items"})
             
 #             for count, element in enumerate(items):
@@ -125,24 +125,24 @@ class ArtsAndArch:
     
 #     URL = "https://coaa.charlotte.edu/directory/faculty"
 #     html_text = requests.get(URL)
-#     soup1 = BeautifulSoup(html_text.content, "html.parser")
+#     soup1 = BeautifulSoup(html_text.content, "lxml")
 
 
 #     partURL = "https://coaa.charlotte.edu/directory/part-time-faculty"
 #     html_text = requests.get(partURL)
-#     soup2 = BeautifulSoup(html_text.content, "html.parser")
+#     soup2 = BeautifulSoup(html_text.content, "lxml")
 
 #     adjuntURL = "https://coaa.charlotte.edu/directory/adjunct-faculty"
 #     html_text = requests.get(adjuntURL)
-#     soup3 = BeautifulSoup(html_text.content, "html.parser")
+#     soup3 = BeautifulSoup(html_text.content, "lxml")
 
 #     staffURL = "https://coaa.charlotte.edu/directory/staff"
 #     html_text = requests.get(staffURL)
-#     soup4 = BeautifulSoup(html_text.content, "html.parser")
+#     soup4 = BeautifulSoup(html_text.content, "lxml")
 
 #     emeritusURL = "https://coaa.charlotte.edu/directory/emeritus"
 #     html_text = requests.get(emeritusURL)
-#     soup5 = BeautifulSoup(html_text.content, "html.parser")
+#     soup5 = BeautifulSoup(html_text.content, "lxml")
 
 
 #     facutlyURLs = getFacultyURLs(baseURL, soup1, soup2, soup3, soup4, soup5)
@@ -177,14 +177,14 @@ class ArtsAndArch:
     # URL = "https://cci.charlotte.edu/directory/faculty"
     # page = requests.get(URL)
 
-    # soup = BeautifulSoup(page.content, "html.parser")
+    # soup = BeautifulSoup(page.content, "lxml")
     
     # results = soup.find("a",{"class":"button-gray"}).get("href")
 
     # URL_Prof = baseURL + results
 
     # Prof_Page = requests.get(URL_Prof)
-    # soup2 = BeautifulSoup(Prof_Page.content, "html.parser")
+    # soup2 = BeautifulSoup(Prof_Page.content, "lxml")
 
     # results2 = soup2.find("article",{"class":"node-directory"})
 

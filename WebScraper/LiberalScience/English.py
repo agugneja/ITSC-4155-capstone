@@ -24,7 +24,7 @@ class English:
         for url in facultyURLs:
             try:
                 page = requests.get(url)
-                soup = BeautifulSoup(page.content, "html.parser")
+                soup = BeautifulSoup(page.content, "lxml")
                 
                 if 'clas' in url:
                     items = soup.find("div", {"class":"entry-content"})
@@ -56,7 +56,7 @@ class English:
         baseURL = "https://english.charlotte.edu"
     
         html_text = requests.get(directoryURL)
-        soup = BeautifulSoup(html_text.content, "html.parser")
+        soup = BeautifulSoup(html_text.content, "lxml")
 
         self.facultyURLs = self.getFacultyURLs(baseURL, soup)
         self.profiles = self.getProfilePage(self.facultyURLs)

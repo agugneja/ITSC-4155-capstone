@@ -7,7 +7,7 @@ class CCI:
         baseURL = "https://cci.charlotte.edu"
         directoryURL = "https://cci.charlotte.edu/directory/faculty?items_per_page=All"
         html_text = requests.get(directoryURL)
-        soup = BeautifulSoup(html_text.content, "html.parser")
+        soup = BeautifulSoup(html_text.content, "lxml")
         self.facultyURLs = self.getFacultyURLs(baseURL, soup)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
@@ -28,7 +28,7 @@ class CCI:
         for url in facultyURLs:
             try:
                 page = requests.get(url)
-                soup = BeautifulSoup(page.content, "html.parser")
+                soup = BeautifulSoup(page.content, "lxml")
                 items = soup.find("article",{'class':'node node-directory clearfix'})
 
                 profileDict = {
@@ -64,7 +64,7 @@ class CCI:
 #     time.sleep(1) # Have to let page load after selecting all
 
 #     html_text = driver.page_source
-#     soup = BeautifulSoup(html_text, "html.parser")
+#     soup = BeautifulSoup(html_text, "lxml")
     
 #     facutlyURLs = getFacultyURLs(baseURL, soup)
 #     print(facutlyURLs)
@@ -96,14 +96,14 @@ class CCI:
     # URL = "https://cci.charlotte.edu/directory/faculty"
     # page = requests.get(URL)
 
-    # soup = BeautifulSoup(page.content, "html.parser")
+    # soup = BeautifulSoup(page.content, "lxml")
     
     # results = soup.find("a",{"class":"button-gray"}).get("href")
 
     # URL_Prof = baseURL + results
 
     # Prof_Page = requests.get(URL_Prof)
-    # soup2 = BeautifulSoup(Prof_Page.content, "html.parser")
+    # soup2 = BeautifulSoup(Prof_Page.content, "lxml")
 
     # results2 = soup2.find("article",{"class":"node-directory"})
 

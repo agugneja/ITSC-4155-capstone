@@ -22,7 +22,7 @@ class Electrical:
         for url in facultyURLs:
             try:
                 page = requests.get(url)
-                soup = BeautifulSoup(page.content, "html.parser")
+                soup = BeautifulSoup(page.content, "lxml")
                 items = soup.find(
                     "article", {"class": "node node-directory node-promoted clearfix"})
 
@@ -52,15 +52,15 @@ class Electrical:
 
         #Main directory
         html_text = requests.get(URL)
-        soup = BeautifulSoup(html_text.content, "html.parser")
+        soup = BeautifulSoup(html_text.content, "lxml")
 
         #Emeritus
         html_text = requests.get(URLemeritus)
-        soup_Emeritus = BeautifulSoup(html_text.content, "html.parser")
+        soup_Emeritus = BeautifulSoup(html_text.content, "lxml")
 
         #Staff directory 
         html_text = requests.get(URLstaff)
-        soup_Staff = BeautifulSoup(html_text.content, "html.parser")
+        soup_Staff = BeautifulSoup(html_text.content, "lxml")
 
         self.facultyURLs = self.getFacultyURLs(baseURL, soup)
         self.profiles = self.getProfilePage(self.facultyURLs)

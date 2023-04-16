@@ -21,7 +21,7 @@ class Chemistry:
         for url in facultyURLs:
             try:
                 page = requests.get(url)
-                soup = BeautifulSoup(page.content, "html.parser")
+                soup = BeautifulSoup(page.content, "lxml")
                 items = soup.find("article", {"class":"node node-directory clearfix"})
                 if items is None:
                     items = soup.find("article",{"class":"node node-directory node-promoted clearfix"})
@@ -45,7 +45,7 @@ class Chemistry:
         directoryURL = "https://chemistry.charlotte.edu/directory-grid/faculty"
 
         html_text = requests.get(directoryURL)
-        soup = BeautifulSoup(html_text.content, "html.parser")
+        soup = BeautifulSoup(html_text.content, "lxml")
 
         self.facultyURLs = self.getFacultyURLs(baseURL, soup)
         self.profiles = self.getProfilePage(self.facultyURLs)

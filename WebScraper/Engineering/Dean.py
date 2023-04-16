@@ -22,7 +22,7 @@ class Dean:
         for url in facultyURLs:
             try:
                 page = requests.get(url)
-                soup = BeautifulSoup(page.content, "html.parser")
+                soup = BeautifulSoup(page.content, "lxml")
                 items = soup.find(
                     "article", {"class": "node node-directory clearfix"})
 
@@ -45,7 +45,7 @@ class Dean:
         URL = "https://engr.charlotte.edu/directory-box/dean%27s-office"
 
         html_text = requests.get(URL)
-        soup = BeautifulSoup(html_text.content, "html.parser")
+        soup = BeautifulSoup(html_text.content, "lxml")
 
         self.facultyURLs = self.getFacultyURLs(baseURL, soup)
         self.profiles = self.getProfilePage(self.facultyURLs)

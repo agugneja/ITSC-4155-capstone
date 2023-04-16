@@ -7,7 +7,7 @@ class DataScience:
         baseURL = "https://datascience.charlotte.edu"
         directoryURL = "https://datascience.charlotte.edu/directory/faculty"
         html_text = requests.get(directoryURL)
-        soup = BeautifulSoup(html_text.content, "html.parser")
+        soup = BeautifulSoup(html_text.content, "lxml")
         self.facultyURLs = self.getFacultyURLs(baseURL, soup)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
@@ -27,7 +27,7 @@ class DataScience:
         for url in facultyURLs:
             try:
                 page = requests.get(url)
-                soup = BeautifulSoup(page.content, "html.parser")
+                soup = BeautifulSoup(page.content, "lxml")
                 items = soup.find("article",{'class':'node node-directory node-promoted clearfix'})
 
                 profileDict = {
@@ -58,7 +58,7 @@ class DataScience:
 #     for i in facultyURLs:
 #         try:
 #             page = requests.get(i)
-#             soup = BeautifulSoup(page.content, "html.parser")
+#             soup = BeautifulSoup(page.content, "lxml")
 #             # items = soup.find_all("div", {"class":"field-items"})
 #             items = soup.find("article",{'class':'node node-directory node-promoted clearfix'} )
 #             # for count, element in enumerate(items):
@@ -81,7 +81,7 @@ class DataScience:
 #     URL = "https://datascience.charlotte.edu/directory/faculty"
 
 #     html_text = requests.get(URL)
-#     soup = BeautifulSoup(html_text.content, "html.parser")
+#     soup = BeautifulSoup(html_text.content, "lxml")
     
 #     facutlyURLs = getFacultyURLs(baseURL, soup)
 #     print(facutlyURLs)

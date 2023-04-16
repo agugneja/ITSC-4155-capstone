@@ -22,7 +22,7 @@ class Physics:
         for url in facultyURLs:
             try:
                 page = requests.get(url)
-                soup = BeautifulSoup(page.content, "html.parser")
+                soup = BeautifulSoup(page.content, "lxml")
                 items = soup.find(
                     "article", {"class": "node node-directory node-promoted clearfix"})
 
@@ -46,7 +46,7 @@ class Physics:
         URL = "https://physics.charlotte.edu/people"
 
         html_text = requests.get(URL)
-        soup = BeautifulSoup(html_text.content, "html.parser")
+        soup = BeautifulSoup(html_text.content, "lxml")
 
         self.facultyURLs = self.getFacultyURLs(baseURL, soup)
         self.profiles = self.getProfilePage(self.facultyURLs)
