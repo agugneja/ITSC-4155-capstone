@@ -1,6 +1,7 @@
 #Jacob Nyborg
 import requests
 from bs4 import BeautifulSoup
+from Model.model import FacultyProfile
 
 class ReligiousStudies:
 
@@ -18,10 +19,10 @@ class ReligiousStudies:
         return URLs
 
     #This directory has 2 main variants so this should check for both
-    def getProfilePage(self, facultyURLs):
+    def getProfilePage(self) -> list[FacultyProfile]:
         bad_urls = []
         profiles = []
-        for url in facultyURLs:
+        for url in self.facultyURLs:
             try:
                 page = requests.get(url)
                 soup = BeautifulSoup(page.content, "lxml")
@@ -66,4 +67,4 @@ class ReligiousStudies:
         soup = BeautifulSoup(html_text.content, "lxml")
 
         self.facultyURLs = self.getFacultyURLs(baseURL, soup)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+        self.profiles = self.getProfilePage()

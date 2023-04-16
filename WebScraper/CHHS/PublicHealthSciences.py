@@ -1,6 +1,7 @@
 #Steven wilson
 import requests
 from bs4 import BeautifulSoup
+from Model.model import FacultyProfile
 class PublicHealthSciences:
 
     def getFacultyURLs(self, baseURL: str, soup: BeautifulSoup) -> list[str]:
@@ -25,7 +26,7 @@ class PublicHealthSciences:
         
         return URLs
 
-    def getProfilePage(self):
+    def getProfilePage(self) -> list[FacultyProfile]:
         bad_urls = []
         profiles = []
         for url in self.facultyURLs:

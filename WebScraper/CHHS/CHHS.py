@@ -2,6 +2,7 @@
 
 import requests
 from bs4 import BeautifulSoup
+from Model.model import FacultyProfile
 
 
 class CHHS:
@@ -17,7 +18,7 @@ class CHHS:
         
         return URLs
 
-    def getProfilePage(self):
+    def getProfilePage(self) -> list[FacultyProfile]:
         bad_urls = []
         profiles = []
         for url in self.facultyURLs:

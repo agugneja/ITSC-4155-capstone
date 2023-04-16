@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 
 class Counseling:
 
-    def getFacultyURLs(self, baseURL, soup):
+    def getFacultyURLs(self, baseURL: str, soup: BeautifulSoup) -> list[str]:
         URLs = []
         soupList = soup.find_all("a",{"class":"button button-gray"})
         
@@ -18,10 +18,10 @@ class Counseling:
     def getProfilePage(self, facultyURLs):
         bad_urls = []
         profiles = []
-        for url in facultyURLs:
+        for url in self.facultyURLs:
             try:
                 page = requests.get(url)
-                soup = BeautifulSoup(page.content, "html.parser")
+                soup = BeautifulSoup(page.content, "lxml")
                 items = soup.find("article", {"class":"node node-directory node-promoted clearfix"})
 
                 profileDict = {
@@ -42,7 +42,7 @@ class Counseling:
         directoryURL = "https://counseling.charlotte.edu/directory-list"
         
         html_text = requests.get(directoryURL)
-        soup = BeautifulSoup(html_text.content, "html.parser")
+        soup = BeautifulSoup(html_text.content, "lxml")
 
         self.facultyURLs = self.getFacultyURLs(baseURL, soup)
         self.profiles = self.getProfilePage(self.facultyURLs)
@@ -65,7 +65,7 @@ def getProfilePage(facultyURLs):
     for i in facultyURLs:
         try:
             page = requests.get(i)
-            soup = BeautifulSoup(page.content, "html.parser")
+            soup = BeautifulSoup(page.content, "lxml")
             items = soup.find_all("article", {"class":"node node-directory node-promoted clearfix"})
             
             for count, element in enumerate(items):
@@ -87,7 +87,7 @@ def main():
     directoryURL = "https://counseling.charlotte.edu/directory-list"
     
     html_text = requests.get(directoryURL)
-    soup = BeautifulSoup(html_text.content, "html.parser")
+    soup = BeautifulSoup(html_text.content, "lxml")
 
     facultyURLs = getFacultyURLs(baseURL, soup)
     print(facultyURLs)
