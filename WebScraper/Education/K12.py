@@ -2,9 +2,9 @@
 import requests
 from bs4 import BeautifulSoup
 from Model.model import FacultyProfile
-from .. import FacultyWebScraper
+from ..FacultyWebScraper import FacultyWebScraper
 
-class K12(FacultyWebScraper.FacultyWebScraper):
+class K12(FacultyWebScraper):
 
     def getProfilePage(self) -> list[FacultyProfile]:
         profiles = []
