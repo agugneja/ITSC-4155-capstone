@@ -2,8 +2,9 @@
 import requests
 from bs4 import BeautifulSoup
 from Model.model import FacultyProfile
+from ..FacultyWebScraper import FacultyWebScraperfrom .. import FacultyWebScraper
 
-class English:
+class English(FacultyWebScraper.FacultyWebScraper):
 
     #This page has the full url not extensions
     def getFacultyURLs(self, baseURL: str, soup: BeautifulSoup) -> list[str]:
@@ -17,6 +18,7 @@ class English:
             URLs.append(profURL)
         
         return URLs
+    
     def getProfilePage(self) -> list[FacultyProfile]:
         profiles = []
         for url in self.facultyURLs:

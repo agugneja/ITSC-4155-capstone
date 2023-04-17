@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from Model.model import FacultyProfile
-
+from ..FacultyWebScraper import FacultyWebScraper
 
 class ArtsAndArch:
     def __init__(self):

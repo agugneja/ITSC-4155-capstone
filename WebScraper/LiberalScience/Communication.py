@@ -2,7 +2,7 @@
 import requests
 from bs4 import BeautifulSoup
 from Model.model import FacultyProfile
-
+from ..FacultyWebScraper import FacultyWebScraper
 class Communication:
 
     #This page has the full url not extensions

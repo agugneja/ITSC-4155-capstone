@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from Model.model import FacultyProfile
-
+from ..FacultyWebScraper import FacultyWebScraper
 class Belk:
     def __init__(self):
         print("belk Started")
