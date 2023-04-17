@@ -3,18 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 from Model.model import FacultyProfile
 from ..FacultyWebScraper import FacultyWebScraper
-class Anthropology:
-    
-    def getFacultyURLs(self, baseURL: str, soup: BeautifulSoup) -> list[str]:
-        URLs = []
-        soupList = soup.select(".directory-back > a:last-of-type")
-        
-        for a_tag in soupList:
-            href = a_tag.get("href")
-            profURL = baseURL + href if href.startswith('/') else href
-            URLs.append(profURL)
-        
-        return URLs
+class Anthropology(FacultyWebScraper):
     
     def getProfilePage(self) -> list[FacultyProfile]:
         profiles = []
@@ -40,5 +29,5 @@ class Anthropology:
         html_text = requests.get(directoryURL)
         soup = BeautifulSoup(html_text.content, "lxml")
 
-        self.facultyURLs = self.getFacultyURLs(baseURL, soup)
+        self.facultyURLs = self.getFacultyURLs(baseURL, soup.select(".directory-back > a:last-of-type"))
         self.profiles = self.getProfilePage()

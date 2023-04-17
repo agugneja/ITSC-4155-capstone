@@ -2,22 +2,9 @@
 import requests
 from bs4 import BeautifulSoup
 from Model.model import FacultyProfile
-from ..FacultyWebScraper import FacultyWebScraperfrom .. import FacultyWebScraper
+from ..FacultyWebScraper import FacultyWebScraper
 
-class English(FacultyWebScraper.FacultyWebScraper):
-
-    #This page has the full url not extensions
-    def getFacultyURLs(self, baseURL: str, soup: BeautifulSoup) -> list[str]:
-        URLs = []
-        soupList = soup.find_all(
-            "a", {"class": "button button-gray"})
-        
-        for a_tag in soupList:
-            href = a_tag.get("href")
-            profURL = baseURL + href if href.startswith('/') else href
-            URLs.append(profURL)
-        
-        return URLs
+class English(FacultyWebScraper):
     
     def getProfilePage(self) -> list[FacultyProfile]:
         profiles = []
@@ -49,5 +36,6 @@ class English(FacultyWebScraper.FacultyWebScraper):
         html_text = requests.get(directoryURL)
         soup = BeautifulSoup(html_text.content, "lxml")
 
-        self.facultyURLs = self.getFacultyURLs(baseURL, soup)
+        self.facultyURLs = self.getFacultyURLs(baseURL, soup.find_all(
+            "a", {"class": "button button-gray"}))
         self.profiles = self.getProfilePage()
