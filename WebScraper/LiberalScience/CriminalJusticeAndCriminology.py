@@ -1,50 +1,31 @@
 #Steven wilson/ Jacob Nyborg
 import requests
 from bs4 import BeautifulSoup
-
-class CriminalJusticeAndCriminology:
-
-    #This page has the full url not extensions
-    def getFacultyURLs(self, soup, baseURL):
-        URLs = []
-        soupList = soup.find_all("a",{"class":"button button-gray"})
-        
-        for i in soupList:
-            if 'pages' in i.get("href"):
-                URLs.append(i.get("href"))
-            else:
-                profURL = baseURL + i.get("href")
-                URLs.append(profURL)
-        
-        return URLs
-
-    def getProfilePage(self, facultyURLs):
-        myList = []
-        for i in facultyURLs:
+from Model.model import FacultyProfile
+from ..FacultyWebScraper import FacultyWebScraper
+class CriminalJusticeAndCriminology(FacultyWebScraper):
+    
+    def getProfilePage(self) -> list[FacultyProfile]:
+        profiles = []
+        for url in self.facultyURLs:
             try:
-                page = requests.get(i)
-                soup = BeautifulSoup(page.content, "html.parser")
-                
-                if 'pages' in i:
-                    items = soup.find("div", {"id":"content_pane"})
-                    profileDict = {
-                        'Title': soup.find("div",{'class':'name'}).getText().split(",")[0],
-                        'Content': items,
-                    }
-
+                page = requests.get(url)
+                soup = BeautifulSoup(page.content, "lxml")
+                rawHtml = ''
+                name = ''
+                if 'pages' in url:
+                    rawHtml = soup.find("div", {"id":"content_pane"})
+                    name = soup.find("div",{'class':'name'}).getText().split(",")[0]
                 else:
-                    items = soup.find("div", {"class":"col-sm-9"})
-                    profileDict = {
-                        'Title': soup.find("h1",{'class':'page-header'}).getText().split(",")[0],
-                        'Content': items,
-                    }   
+                    rawHtml = soup.find("section", {"class":"col-sm-9"})
+                    name = soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
+                
+                profiles.append(FacultyProfile(name=name, rawHtml=rawHtml, url=url))
 
-                myList.append(profileDict)
-
-            except Exception:
-                print("Error: Doesn't have profile page or has incompatible format")
-        
-        return myList
+            except Exception as e:
+                print(f"Something went wrong when visiting {url}:")
+                print(e)
+        return profiles
 
     def __init__(self):
         print("Starting Criminal Justice Lib Science")
@@ -52,7 +33,8 @@ class CriminalJusticeAndCriminology:
         baseURL = "https://criminaljustice.charlotte.edu"
         
         html_text = requests.get(directoryURL)
-        soup = BeautifulSoup(html_text.content, "html.parser")
+        soup = BeautifulSoup(html_text.content, "lxml")
 
-        self.facultyURLs = self.getFacultyURLs(soup, baseURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+        self.facultyURLs = self.getFacultyURLs(baseURL, soup.find_all(
+            "a", {"class": "button button-gray"}))
+        self.profiles = self.getProfilePage()

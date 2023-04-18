@@ -11,8 +11,6 @@ Run `python app.py` in the root folder after installing all the requirements.
 ### System Requirements
 - Python 3
 - PIP
-- Google Chrome or Chromium
-- [chromedriver](http://chromedriver.storage.googleapis.com/index.html)
 - The required packages: `pip install -r requirements.txt`
 
 ## Team 15 Members

@@ -1,64 +1,40 @@
 #Jacob Nyborg
 import requests
 from bs4 import BeautifulSoup
+from Model.model import FacultyProfile
+from ..FacultyWebScraper import FacultyWebScraper
+class PsychologicalScience(FacultyWebScraper):
 
-class PsychologicalScience:
-
-    #This page has the full url not extensions
-    def getFacultyURLs(self, soup, baseURL):
-        URLs = []
-        soupList = soup.find_all("div",{"class":"directory-back"})
-        
-        for i in soupList:
-            text = str(i)
+    def getProfilePage(self) -> list[FacultyProfile]:
+        profiles = []
+        for url in self.facultyURLs:
             try:
-                text = text.split("href=")[2].split(" ")[0].replace('"', '')
-            except Exception:
-                text = text.split("href=")[1].split(" ")[0].replace('"', '')
-            if 'pages' in text:
-                URLs.append(text)
-            else:
-                profURL = baseURL + text
-                URLs.append(profURL)
-        
-        return URLs
-
-    #This directory has 2 main variants so this should check for both
-    def getProfilePage(self, facultyURLs):
-        myList = []
-        for i in facultyURLs:
-            try:
-                page = requests.get(i)
-                soup = BeautifulSoup(page.content, "html.parser")
-                
-                if 'clas' in i:
-                    items = soup.find("div", {"class":"entry-content"})
-                    profileDict = {
-                        'Title': soup.find("div",{'class':'name'}).getText().split(",")[0],
-                        'Content': items,
-                    }
-
+                page = requests.get(url)
+                soup = BeautifulSoup(page.content, "lxml")
+                rawHtml = ''
+                name = ''
+                if 'clas' in url:
+                    rawHtml = soup.find("div", {"class":"entry-content"})
+                    name = soup.find("div",{'class':'name'}).getText().split(",")[0]
+                elif items := soup.find("div", {"class":"region region-content"}):
+                    rawHtml = items
+                    name = soup.find("h1",{'class':'page-header'}).getText()
                 else:
-                    items = soup.find("div", {"class":"region region-content"})
-                    if items:
-                        profileDict = {
-                        'Title': soup.find("h1",{'class':'page-header'}).getText().split(",")[0],
-                        'Content': items,
-                        }
-                    else:
-                        print("in none")
-                        items = soup.find("section", {"class":"col-sm-9"})
-                        profileDict = {
-                        'Title': soup.find("h1",{'class':'page-header'}).getText().split(",")[0],
-                        'Content': items,
-                        }   
+                    rawHtml = soup.find("section", {"class":"col-sm-9"})
+                    name = soup.find("h1",{'class':'page-header'}).getText()
+                
+                # reverse comma seperated "last, first" name
+                if ',' in name:
+                    name = name.split(",")
+                    name.reverse()
+                    name = ' '.join([string.strip() for string in name])
 
-                myList.append(profileDict)
+                profiles.append(FacultyProfile(name=name, rawHtml=rawHtml, url=url))
 
-            except Exception:
-                print("Error: Doesn't have profile page or has incompatible format: " + i)
-        
-        return myList
+            except Exception as e:
+                print(f"Something went wrong when visiting {url}:")
+                print(e)
+        return profiles
 
     def __init__(self):
         print("Starting Global Studies Lib Science")
@@ -66,7 +42,7 @@ class PsychologicalScience:
         baseURL = "https://psych.charlotte.edu"
     
         html_text = requests.get(directoryURL)
-        soup = BeautifulSoup(html_text.content, "html.parser")
+        soup = BeautifulSoup(html_text.content, "lxml")
 
-        self.facultyURLs = self.getFacultyURLs(soup, baseURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+        self.facultyURLs = self.getFacultyURLs(baseURL, soup.select(".directory-back > a:last-of-type"))
+        self.profiles = self.getProfilePage()

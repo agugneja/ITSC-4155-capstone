@@ -1,19 +1,20 @@
+#Steven wilson
 import requests
 from bs4 import BeautifulSoup
 from Model.model import FacultyProfile
 from ..FacultyWebScraper import FacultyWebScraper
 
-class MOSAIC(FacultyWebScraper):
-    
+
+class Counseling(FacultyWebScraper):
+
     def getProfilePage(self) -> list[FacultyProfile]:
         profiles = []
         for url in self.facultyURLs:
             try:
                 page = requests.get(url)
                 soup = BeautifulSoup(page.content, "lxml")
-
-                rawHtml = soup.find("article", {"class": "node node-directory node-promoted clearfix"})
-                name = soup.find("h1", {'class': 'page-header'}).getText()
+                rawHtml = soup.find("article")
+                name = soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
 
                 profiles.append(FacultyProfile(name=name, rawHtml=rawHtml, url=url))
             except Exception as e:
@@ -22,13 +23,12 @@ class MOSAIC(FacultyWebScraper):
         return profiles
 
     def __init__(self):
-        print("Starting MOSAIC Engineering")
-        baseURL = "https://engrmosaic.charlotte.edu"
-        URL = "https://engrmosaic.charlotte.edu/directory-box"
-
-        html_text = requests.get(URL)
+        print("Starting Counseling Education")
+        baseURL = "https://counseling.charlotte.edu"
+        directoryURL = "https://counseling.charlotte.edu/directory-list"
+        
+        html_text = requests.get(directoryURL)
         soup = BeautifulSoup(html_text.content, "lxml")
 
-        self.facultyURLs = self.getFacultyURLs(baseURL, soup.find_all(
-            "a", {"class": "button button-green button-small"}))
+        self.facultyURLs = self.getFacultyURLs(baseURL, soup.find_all("a",{"class":"button button-gray"}))
         self.profiles = self.getProfilePage()
