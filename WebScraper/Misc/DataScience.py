@@ -11,11 +11,11 @@ class DataScience(FacultyWebScraper):
         html_text = requests.get(directoryURL)
         soup = BeautifulSoup(html_text.content, "lxml")
         self.facultyURLs = self.getFacultyURLs(baseURL, soup.find_all("a",{"class":"thumbnail-link"}))
-        self.profiles = self.getProfilePage()
+        self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getProfilePage(self) -> list[FacultyProfile]:
+    def getProfilePage(self, facultyURLs) -> list[FacultyProfile]:
         profiles = []
-        for url in self.facultyURLs:
+        for url in facultyURLs:
             try:
                 page = requests.get(url)
                 soup = BeautifulSoup(page.content, "lxml")

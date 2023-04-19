@@ -6,9 +6,9 @@ from ..FacultyWebScraper import FacultyWebScraper
 
 class ApplPhysHlthClinSciAndKinesiology(FacultyWebScraper):
 
-    def getProfilePage(self) -> list[FacultyProfile]:
+    def getProfilePage(self, facultyURLs) -> list[FacultyProfile]:
         profiles = []
-        for url in self.facultyURLs:
+        for url in facultyURLs:
             try:
                 page = requests.get(url)
                 soup = BeautifulSoup(page.content, "lxml")
@@ -31,4 +31,4 @@ class ApplPhysHlthClinSciAndKinesiology(FacultyWebScraper):
         soup = BeautifulSoup(html_text.content, "lxml")
 
         self.facultyURLs = self.getFacultyURLs(baseURL, soup.find_all("a",{"class":"button button-green"}))
-        self.profiles = self.getProfilePage()
+        self.profiles = self.getProfilePage(self.facultyURLs)
