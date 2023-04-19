@@ -35,7 +35,7 @@ class ArtsAndArch(FacultyWebScraper):
         self.facultyURLs += self.getFacultyURLs(baseURL, soup5.find_all("a",{"class":"thumbnail-link"}))
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getProfilePage(self, facultyURLs) -> list[FacultyProfile]:
+    def getProfilePage(self, facultyURLs: list[str]) -> list[FacultyProfile]:
         profiles = []
         for url in facultyURLs:
             try:

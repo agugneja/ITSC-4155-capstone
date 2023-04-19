@@ -5,7 +5,7 @@ from ..FacultyWebScraper import FacultyWebScraper
 
 class Electrical(FacultyWebScraper):
     
-    def getProfilePage(self, facultyURLs) -> list[FacultyProfile]:
+    def getProfilePage(self, facultyURLs: list[str]) -> list[FacultyProfile]:
         profiles = []
         for url in facultyURLs:
             try:

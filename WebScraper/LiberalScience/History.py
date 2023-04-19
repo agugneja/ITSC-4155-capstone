@@ -5,7 +5,7 @@ from Model.model import FacultyProfile
 from ..FacultyWebScraper import FacultyWebScraper
 class History(FacultyWebScraper):
 
-    def getProfilePage(self, facultyURLs) -> list[FacultyProfile]:
+    def getProfilePage(self, facultyURLs: list[str]) -> list[FacultyProfile]:
         profiles = []
         for url in facultyURLs:
             try:
