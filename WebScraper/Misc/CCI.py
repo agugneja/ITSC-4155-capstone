@@ -23,7 +23,7 @@ class CCI(FacultyWebScraper):
                 rawHtml = soup.find("article", {"class":"node node-directory clearfix"})
                 name = soup.find("h1",{'class':'page-header'}).getText()
 
-                profiles.append(FacultyProfile(name=name, rawHtml=rawHtml, url=url))
+                profiles.append(FacultyProfile(name=name, rawHtml=str(rawHtml), url=url))
             except Exception as e:
                 print(f"Something went wrong when visiting {url}:")
                 print(e)

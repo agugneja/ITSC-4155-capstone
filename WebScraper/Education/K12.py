@@ -15,7 +15,7 @@ class K12(FacultyWebScraper):
                 rawHtml = soup.find("article")
                 name = soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
 
-                profiles.append(FacultyProfile(name=name, rawHtml=rawHtml, url=url))
+                profiles.append(FacultyProfile(name=name, rawHtml=str(rawHtml), url=url))
             except Exception as e:
                 print(f"Something went wrong when visiting {url}:")
                 print(e)
