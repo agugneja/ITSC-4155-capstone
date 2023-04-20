@@ -5,9 +5,9 @@ from Model.model import FacultyProfile
 from ..FacultyWebScraper import FacultyWebScraper
 class Communication(FacultyWebScraper):
 
-    def getProfilePage(self) -> list[FacultyProfile]:
+    def getProfilePage(self, facultyURLs: list[str]) -> list[FacultyProfile]:
         profiles = []
-        for url in self.facultyURLs:
+        for url in facultyURLs:
             try:
                 page = requests.get(url)
                 soup = BeautifulSoup(page.content, "lxml")
@@ -23,7 +23,7 @@ class Communication(FacultyWebScraper):
                     rawHtml = soup.find("section", {"class":"col-sm-9"})
                     name = soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
                 
-                profiles.append(FacultyProfile(name=name, rawHtml=rawHtml, url=url))
+                profiles.append(FacultyProfile(name=name, rawHtml=str(rawHtml), url=url))
 
             except Exception as e:
                 print(f"Something went wrong when visiting {url}:")
@@ -40,4 +40,4 @@ class Communication(FacultyWebScraper):
 
         self.facultyURLs = self.getFacultyURLs(baseURL, soup.find_all(
             "a", {"class": "button button-gray"}))
-        self.profiles = self.getProfilePage()
+        self.profiles = self.getProfilePage(self.facultyURLs)
