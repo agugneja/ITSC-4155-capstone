@@ -6,28 +6,19 @@ from ..FacultyWebScraper import FacultyWebScraper
 
 class SpecialEdAndChildDev(FacultyWebScraper):
 
-    def getProfilePage(self, facultyURLs: list[str]) -> list[FacultyProfile]:
-        profiles = []
-        for url in facultyURLs:
-            try:
-                page = requests.get(url)
-                soup = BeautifulSoup(page.content, "lxml")
-                rawHtml = soup.find("article")
-                name = soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
-
-                profiles.append(FacultyProfile(name=name, rawHtml=str(rawHtml), url=url))
-            except Exception as e:
-                print(f"Something went wrong when visiting {url}:")
-                print(e)
-        return profiles
-
     def __init__(self):
         print("Starting Special Education")
         baseURL = "https://spcd.charlotte.edu"
         directoryURL = "https://spcd.charlotte.edu/directory-table"
         
-        html_text = requests.get(directoryURL)
-        soup = BeautifulSoup(html_text.content, "lxml")
-
-        self.facultyURLs = self.getFacultyURLs(baseURL, soup.select(".views-field-field-directory-read-more-link > a"))
+        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
         self.profiles = self.getProfilePage(self.facultyURLs)
+    
+    def getRawHtml(self, soup: BeautifulSoup, url: str):
+        return soup.find("article")
+
+    def getName(self, soup: BeautifulSoup, url: str):
+        return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
+
+    def scrapeURLs(self, soup: BeautifulSoup) -> list[str]:
+        return soup.select(".views-field-field-directory-read-more-link > a")
