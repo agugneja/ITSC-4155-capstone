@@ -1,4 +1,5 @@
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, ResultSet, Tag
+from typing import Optional
 from .FacultyWebScraper import FacultyWebScraper
 
 class ApplPhysHlthClinSciAndKinesiology(FacultyWebScraper):
@@ -12,13 +13,13 @@ class ApplPhysHlthClinSciAndKinesiology(FacultyWebScraper):
         self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getRawHtml(self, soup: BeautifulSoup, url: str = None):
+    def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("article", {"class":"node node-directory node-promoted clearfix"})
     
-    def getName(self, soup: BeautifulSoup, url: str = None):
+    def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
     
-    def scrapeURLs(self, soup: BeautifulSoup) -> list[str]:
+    def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.find_all("a",{"class":"button button-green"})
 
 class CHHS(FacultyWebScraper):
@@ -32,10 +33,10 @@ class CHHS(FacultyWebScraper):
         self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getRawHtml(self, soup: BeautifulSoup, url: str = None):
+    def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("article", {"class":"node node-directory node-promoted clearfix"})
     
-    def getName(self, soup: BeautifulSoup, url: str = None):
+    def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
     
     def scrapeURLs(self, soup: BeautifulSoup):
@@ -52,10 +53,10 @@ class PublicHealthSciences(FacultyWebScraper):
         self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getRawHtml(self, soup: BeautifulSoup, url: str = None):
+    def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("article", {"class":"node node-directory node-promoted clearfix"})
     
-    def getName(self, soup: BeautifulSoup, url: str = None):
+    def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
     
     def scrapeURLs(self, soup: BeautifulSoup):
@@ -72,10 +73,10 @@ class SchoolOfNursing(FacultyWebScraper):
         self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getRawHtml(self, soup: BeautifulSoup, url: str = None):
+    def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("article", {"class":"node node-directory node-promoted clearfix"})
     
-    def getName(self, soup: BeautifulSoup, url: str = None):
+    def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
     
     def scrapeURLs(self, soup: BeautifulSoup):
@@ -92,10 +93,10 @@ class SchoolOfSocialWork(FacultyWebScraper):
         self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getRawHtml(self, soup: BeautifulSoup, url: str = None):
+    def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("article", {"class":"node node-directory node-promoted clearfix"})
     
-    def getName(self, soup: BeautifulSoup, url: str = None):
+    def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
     
     def scrapeURLs(self, soup: BeautifulSoup):

@@ -1,8 +1,7 @@
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 from bs4 import ResultSet
-import traceback
 import requests
-from typing import Optional, Callable
+from typing import Optional
 from Model.model import FacultyProfile
 from abc import ABC, abstractmethod
 
@@ -41,13 +40,22 @@ class FacultyWebScraper(ABC):
     
     
     def getProfilePage(self, urls: list[str]) -> list[FacultyProfile]:
+        """Grabs the profile content and name of faculty members from their directory profile
+
+        ### Args:
+            `urls (list[str])`: the list of faculty profile urls 
+
+        ### Returns:
+            `list[FacultyProfile]`: a list of FacultyProfile objects that 
+            represent the faculty members whose profiles were scraped
+        """
         profiles = []
         for url in urls:
             if soup := self.getSoup(url):
                 try:
                     rawHtml = self.getRawHtml(soup, url)
                     name = self.getName(soup, url)
-                    profiles.append(FacultyProfile(name=name, rawHtml=str(rawHtml), url=url))
+                    profiles.append(FacultyProfile(name=name, rawHtml=rawHtml, url=url))
                 except Exception as e:
                     print(f"Something went wrong when visiting {url}:")
                     print(e)
@@ -73,14 +81,42 @@ class FacultyWebScraper(ABC):
             # self.bad_urls.append(url)
 
     @abstractmethod
-    def getRawHtml(soup: BeautifulSoup, url: str):
+    def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
+        """Scrapes the profile content from a faculty profile page
+
+        ### Args:
+            `soup (BeautifulSoup)`: holds the html content of the page being scraped
+            `url (str)`: the URL of the page being scraped (sometimes not used)
+
+        ### Returns:
+            `Optional[Tag]`: A `Tag` object representing the HTML tag containing the 
+            content of the profile, or `None` if nothing was found
+        """
         ...
     
     @abstractmethod
-    def getName(soup: BeautifulSoup, url: str):
+    def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
+        """Scrapes the name from a faculty profile page
+
+        ### Args:
+            soup (BeautifulSoup): holds the html content of the page being scraped
+            url (str): the URL of the page being scraped (sometimes not used)
+
+        ### Returns:
+            `Optional[Tag]`: A `Tag` object representing the HTML tag containing the 
+            faculty member's name, or `None` if nothing was found
+        """
         ...
 
     @abstractmethod
-    def scrapeURLs(soup: BeautifulSoup):
+    def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
+        """Scrapes the <a> tags that point to faculty profiles from a faculty directory
+
+        ### Args:
+            soup (BeautifulSoup): holds the html content of the directory being scraped
+       
+        ### Returns:
+            `list[str]`: A list of <a> tags
+        """
         ...
     

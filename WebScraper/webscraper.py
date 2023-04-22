@@ -1,42 +1,27 @@
-# Jacob Nyborg
-from pkgutil import iter_modules
 import requests
-from . import Education
-from . import Engineering
-from . import CHHS
-from . import LiberalScience
-from . import Misc
-from .LiberalScience import English
+import inspect
+from . import chhs, education, engineering, liberalscience, misc
 from Model.model import FacultyProfile, update_by_name
-import importlib
+from .FacultyWebScraper import FacultyWebScraper
 from concurrent.futures import ThreadPoolExecutor
 import csv
 
-def is_url_valid(url: str) -> bool:
-    try:
-        requests.get(url)
-    except Exception:
-        return False
-    return True
-
 def main():
-    packages = [CHHS, Education, Engineering, LiberalScience, Misc]
+    modules = [chhs, education, engineering, liberalscience, misc]
+    # modules = [education]
     departments = []
-    # For each folder containing modules
-    for package in packages:
-        # For each module inside the folder
-        for _, module_name, _ in iter_modules(package.__path__):
-            module = importlib.import_module(f'{package.__name__}.{module_name}')
-            # Each module contains a class with the same name as the module
-            # This gets that class from the module
-            departments.append(getattr(module, module_name))
-
+    for module in modules:
+        for name, obj in inspect.getmembers(module, predicate=inspect.isclass):
+            if obj is not FacultyWebScraper and issubclass(obj, FacultyWebScraper):
+                departments.append(obj)
+    
     with ThreadPoolExecutor(max_workers=15) as p:
         department_objects = list(p.map(lambda x: x(), departments))
 
     profiles = []
     for d in department_objects:
         profiles += d.profiles
+        # print(d.bad_urls)
                 
 
     # site, type, action, title, excerpt, content, date, author, slug, status, menu-order, password, categories, tags, taxonomy-{name}, meta-{name}

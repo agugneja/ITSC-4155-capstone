@@ -1,5 +1,6 @@
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, ResultSet, Tag
+from typing import Optional
 from .FacultyWebScraper import FacultyWebScraper
 
 class AfricanaStudies(FacultyWebScraper):
@@ -12,7 +13,7 @@ class AfricanaStudies(FacultyWebScraper):
         self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getRawHtml(self, soup: BeautifulSoup, url: str):
+    def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'clas' in url:
             return soup.find("div", {"class":"entry-content"})       
         elif items := soup.find("article", {"class":"node node-directory clearfix"}):
@@ -20,13 +21,13 @@ class AfricanaStudies(FacultyWebScraper):
         else:
             return soup.find("section", {"class":"col-sm-9"})
                     
-    def getName(self, soup: BeautifulSoup, url: str):
+    def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
          if 'clas' in url:
             return soup.find("div",{'class':'name'}).getText().split(",")[0]
          else:
             return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
                     
-    def scrapeURLs(self, soup: BeautifulSoup) -> list[str]:
+    def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.find_all("a", {"class": "button button-gray"})
     
 class Anthropology(FacultyWebScraper):
@@ -39,13 +40,13 @@ class Anthropology(FacultyWebScraper):
         self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getRawHtml(self, soup: BeautifulSoup, url: str):
+    def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("article", {"class": "node node-directory node-promoted clearfix"})
 
-    def getName(self, soup: BeautifulSoup, url: str):
+    def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
     
-    def scrapeURLs(self, soup: BeautifulSoup) -> list[str]:
+    def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.select(".directory-back > a:last-of-type")
     
 class BiologicalSciences(FacultyWebScraper):
@@ -58,13 +59,13 @@ class BiologicalSciences(FacultyWebScraper):
         self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getRawHtml(self, soup: BeautifulSoup, url: str):
+    def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("article", {"class": "node node-directory node-promoted clearfix"})
 
-    def getName(self, soup: BeautifulSoup, url: str):
+    def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
     
-    def scrapeURLs(self, soup: BeautifulSoup) -> list[str]:
+    def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.select(".caption > a")
 
 class Chemistry(FacultyWebScraper):
@@ -77,13 +78,13 @@ class Chemistry(FacultyWebScraper):
         self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getRawHtml(self, soup: BeautifulSoup, url: str):
+    def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("article", {"class": "node node-directory node-promoted clearfix"})
 
-    def getName(self, soup: BeautifulSoup, url: str):
+    def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
     
-    def scrapeURLs(self, soup: BeautifulSoup) -> list[str]:
+    def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.find_all("a",{"class":"thumbnail-link"})
 
 class Communication(FacultyWebScraper):
@@ -96,7 +97,7 @@ class Communication(FacultyWebScraper):
         self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
         self.profiles = self.getProfilePage(self.facultyURLs)
         
-    def getRawHtml(self, soup: BeautifulSoup, url: str):
+    def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'clas' in url:
             return soup.find("div", {"class":"entry-content"})       
         elif items := soup.find("article", {"class":"node node-directory clearfix"}):
@@ -104,13 +105,13 @@ class Communication(FacultyWebScraper):
         else:
             return soup.find("section", {"class":"col-sm-9"})
                     
-    def getName(self, soup: BeautifulSoup, url: str):
+    def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
          if 'clas' in url:
             return soup.find("div",{'class':'name'}).getText().split(",")[0]
          else:
             return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
                     
-    def scrapeURLs(self, soup: BeautifulSoup) -> list[str]:
+    def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.find_all("a", {"class": "button button-gray"})
     
 class CriminalJusticeAndCriminology(FacultyWebScraper):
@@ -123,7 +124,7 @@ class CriminalJusticeAndCriminology(FacultyWebScraper):
         self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getRawHtml(self, soup: BeautifulSoup, url: str):
+    def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'pages' in url:
             return soup.find("div", {"id":"content_pane"})
         else:
@@ -135,7 +136,7 @@ class CriminalJusticeAndCriminology(FacultyWebScraper):
         else:
             return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
         
-    def scrapeURLs(self, soup: BeautifulSoup) -> list[str]:
+    def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.find_all("a", {"class": "button button-gray"})
 
 class English(FacultyWebScraper):
@@ -148,7 +149,7 @@ class English(FacultyWebScraper):
         self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
         self.profiles = self.getProfilePage(self.facultyURLs)
     
-    def getRawHtml(self, soup: BeautifulSoup, url: str):
+    def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'clas' in url:
             return soup.find("div", {"class":"entry-content"})
         else:
@@ -160,7 +161,7 @@ class English(FacultyWebScraper):
         else:
             return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
         
-    def scrapeURLs(self, soup: BeautifulSoup) -> list[str]:
+    def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.find_all("a", {"class": "button button-gray"})
 
 class Geography(FacultyWebScraper):
@@ -173,7 +174,7 @@ class Geography(FacultyWebScraper):
         self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getRawHtml(self, soup: BeautifulSoup, url: str):
+    def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'clas' in url:
             return soup.find("div", {"class":"entry-content"})       
         elif items := soup.find("article", {"class":"node node-directory clearfix"}):
@@ -181,13 +182,13 @@ class Geography(FacultyWebScraper):
         else:
             return soup.find("article", {"class":"node node-directory node-promoted clearfix"})
                     
-    def getName(self, soup: BeautifulSoup, url: str):
+    def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
          if 'clas' in url:
             return soup.find("div",{'class':'name'}).getText().split(",")[0]
          else:
             return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
                     
-    def scrapeURLs(self, soup: BeautifulSoup) -> list[str]:
+    def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.select(".directory-back > a:last-of-type")
     
 class GlobalStudies(FacultyWebScraper):
@@ -200,7 +201,7 @@ class GlobalStudies(FacultyWebScraper):
         self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getRawHtml(self, soup: BeautifulSoup, url: str):
+    def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'clas' in url:
             return soup.find("div", {"class":"entry-content"})       
         elif items := soup.find("article", {"class":"node node-directory clearfix"}):
@@ -208,13 +209,13 @@ class GlobalStudies(FacultyWebScraper):
         else:
             return soup.find("section", {"class":"col-sm-9"})
                     
-    def getName(self, soup: BeautifulSoup, url: str):
+    def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
          if 'clas' in url:
             return soup.find("div",{'class':'name'}).getText().split(",")[0]
          else:
             return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
                     
-    def scrapeURLs(self, soup: BeautifulSoup) -> list[str]:
+    def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.select(".directory-back > a:last-of-type")
     
 class History(FacultyWebScraper):
@@ -227,7 +228,7 @@ class History(FacultyWebScraper):
         self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getRawHtml(self, soup: BeautifulSoup, url: str):
+    def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'pages' in url:
             return soup.find("div", {"class":"one-sidebar-width right-sidebar"})
         else:
@@ -239,7 +240,7 @@ class History(FacultyWebScraper):
         else:
             return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
         
-    def scrapeURLs(self, soup: BeautifulSoup) -> list[str]:
+    def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.find_all("a",{"class":"thumbnail-link"})
     
 class Languages(FacultyWebScraper):
@@ -252,14 +253,14 @@ class Languages(FacultyWebScraper):
         self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getRawHtml(self, soup: BeautifulSoup, url: str):
+    def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("article", {"class": ["node node-directory clearfix", 
             "node node-directory node-promoted clearfix"]})
 
-    def getName(self, soup: BeautifulSoup, url: str):
+    def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("h1", {'class': 'page-header'}).getText()
     
-    def scrapeURLs(self, soup: BeautifulSoup) -> list[str]:
+    def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.find_all("a", href=True, alt=True, title=True)
     
 class Mathematics(FacultyWebScraper):
@@ -272,19 +273,19 @@ class Mathematics(FacultyWebScraper):
         self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getRawHtml(self, soup: BeautifulSoup, url: str):
+    def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'clas' in url:
             return soup.find("div", {"class":"entry-content"})       
         else:
             return soup.find("article", {"class":"node node-directory node-promoted clearfix"})
                     
-    def getName(self, soup: BeautifulSoup, url: str):
+    def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
          if 'clas' in url:
             return soup.find("div",{'class':'name'}).getText().split(",")[0]
          else:
             return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
                     
-    def scrapeURLs(self, soup: BeautifulSoup) -> list[str]:
+    def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.find_all("a", {"class": "button button-gray"})
     
 class Philosophy(FacultyWebScraper):
@@ -297,19 +298,19 @@ class Philosophy(FacultyWebScraper):
         self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getRawHtml(self, soup: BeautifulSoup, url: str):
+    def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'pages' in url:
             return soup.find("div", {"class":"one-sidebar-width right-sidebar"})
         else:
             return soup.find("div", {"class":"col-sm-9"})
                     
-    def getName(self, soup: BeautifulSoup, url: str):
+    def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
          if 'pages' in url:
             return soup.find("div",{'class':'page-title'}).getText().split(",")[0]
          else:
             return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
                     
-    def scrapeURLs(self, soup: BeautifulSoup) -> list[str]:
+    def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.find_all("a", {"class": "button button-gray"})#]
     
 class Physics(FacultyWebScraper):
@@ -322,13 +323,13 @@ class Physics(FacultyWebScraper):
         self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getRawHtml(self, soup: BeautifulSoup, url: str):
+    def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("article", {"class": "node node-directory node-promoted clearfix"})
 
-    def getName(self, soup: BeautifulSoup, url: str):
+    def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("h1", {'class':'page-header'}).getText()
     
-    def scrapeURLs(self, soup: BeautifulSoup) -> list[str]:
+    def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.find_all("a", href=True, alt=True, title=True)
     
 class PoliticalScience(FacultyWebScraper):
@@ -341,19 +342,19 @@ class PoliticalScience(FacultyWebScraper):
         self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getRawHtml(self, soup: BeautifulSoup, url: str):
+    def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'clas' in url:
             return soup.find("div", {"class":"entry-content"})       
         else:
             return soup.find("article", {"class":"node node-directory node-promoted clearfix"})
                     
-    def getName(self, soup: BeautifulSoup, url: str):
+    def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
          if 'clas' in url:
             return soup.find("div",{'class':'name'}).getText().split(",")[0]
          else:
             return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
                     
-    def scrapeURLs(self, soup: BeautifulSoup) -> list[str]:
+    def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.find_all("a", {"class": "button button-gray"})
     
 class PsychologicalScience(FacultyWebScraper):
@@ -366,7 +367,7 @@ class PsychologicalScience(FacultyWebScraper):
         self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getRawHtml(self, soup: BeautifulSoup, url: str):
+    def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'clas' in url:
             return soup.find("div", {"class":"entry-content"})       
         elif items := soup.find("div", {"class":"region region-content"}):
@@ -374,7 +375,7 @@ class PsychologicalScience(FacultyWebScraper):
         else:
             return soup.find("section", {"class":"col-sm-9"})
                     
-    def getName(self, soup: BeautifulSoup, url: str):
+    def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'clas' in url:
             name = soup.find("div",{'class':'name'}).getText().split(",")[0]
         else:
@@ -388,7 +389,7 @@ class PsychologicalScience(FacultyWebScraper):
 
         return name
          
-    def scrapeURLs(self, soup: BeautifulSoup) -> list[str]:
+    def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.select(".directory-back > a:last-of-type")
     
 class ReligiousStudies(FacultyWebScraper):
@@ -401,7 +402,7 @@ class ReligiousStudies(FacultyWebScraper):
         self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getRawHtml(self, soup: BeautifulSoup, url: str):
+    def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'clas' in url:
             return soup.find("div", {"class":"entry-content"})       
         elif items := soup.find("section", {"class":"col-sm-9"}):
@@ -409,13 +410,13 @@ class ReligiousStudies(FacultyWebScraper):
         else:
             return soup.find("article", {"class":"node node-directory node-promoted clearfix"})
                     
-    def getName(self, soup: BeautifulSoup, url: str):
+    def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
          if 'clas' in url:
             return soup.find("div",{'class':'name'}).getText().split(",")[0]
          else:
             return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
                     
-    def scrapeURLs(self, soup: BeautifulSoup) -> list[str]:
+    def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.select(".directory-back > a:last-of-type")
 
 class Sociology(FacultyWebScraper):
@@ -428,19 +429,19 @@ class Sociology(FacultyWebScraper):
         self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getRawHtml(self, soup: BeautifulSoup, url: str):
+    def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'clas' in url:
             return soup.find("div", {"class":"entry-content"})       
         else:
             return soup.find("article", {"class":"node node-directory node-promoted clearfix"})
                     
-    def getName(self, soup: BeautifulSoup, url: str):
+    def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
          if 'clas' in url:
             return soup.find("div",{'class':'name'}).getText().split(",")[0]
          else:
             return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
                     
-    def scrapeURLs(self, soup: BeautifulSoup) -> list[str]:
+    def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.find_all("a", {"class": "button button-gray"})
     
 class Writing(FacultyWebScraper):
@@ -453,17 +454,17 @@ class Writing(FacultyWebScraper):
         self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
         self.profiles = self.getProfilePage(self.facultyURLs)
 
-    def getRawHtml(self, soup: BeautifulSoup, url: str):
+    def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'clas' in url:
             return soup.find("div", {"class":"entry-content"})       
         else:
             return soup.find("section", {"class":"col-sm-9"})
                     
-    def getName(self, soup: BeautifulSoup, url: str):
+    def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
          if 'clas' in url:
             return soup.find("div",{'class':'name'}).getText().split(",")[0]
          else:
             return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
                     
-    def scrapeURLs(self, soup: BeautifulSoup) -> list[str]:
+    def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.find_all("a",{"class":"thumbnail-link"})
