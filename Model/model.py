@@ -20,7 +20,17 @@ class FacultyProfile():
     tel: str = None
     email: str = None
     url: str = None
-
+    
+    # Explicit type cast to exclude casting None to str
+    def __setattr__(self, __name: str, __value) -> None:
+        if __value is not None:
+            try:
+                __value = str(__value)
+            except ValueError as e:
+                print("Error while casting: " + e)
+        elif __name == 'name':
+            raise TypeError("name is required")
+        super().__setattr__(__name, __value)
 
 # Define collections
 db = client.itsc4155_team15
