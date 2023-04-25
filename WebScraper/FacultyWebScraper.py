@@ -55,7 +55,7 @@ class FacultyWebScraper(ABC):
                 try:
                     rawHtml = self.getRawHtml(soup, url)
                     name = self.getName(soup, url)
-                    profiles.append(FacultyProfile(name=name, rawHtml=rawHtml, url=url))
+                    profiles.append(FacultyProfile(name=name, department=self.__class__.__name__, rawHtml=rawHtml, url=url))
                 except Exception as e:
                     print(f"Something went wrong when visiting {url}:")
                     print(e)

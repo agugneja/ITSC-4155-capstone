@@ -16,6 +16,7 @@ print("Successfully connected to MongoDB")
 @dataclass
 class FacultyProfile():
     name: str
+    department: str
     rawHtml: str = None
     tel: str = None
     email: str = None
