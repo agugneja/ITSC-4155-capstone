@@ -5,7 +5,7 @@ from .FacultyWebScraper import FacultyWebScraper
 
 class AfricanaStudies(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Africana Studies Lib Science")
         baseURL = "https://africana.charlotte.edu"
         directoryURL = "https://africana.charlotte.edu/people/full-time-faculty"
@@ -32,7 +32,7 @@ class AfricanaStudies(FacultyWebScraper):
     
 class Anthropology(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Antropology Lib Science")
         baseURL = "https://anthropology.charlotte.edu"
         directoryURL = "https://anthropology.charlotte.edu/people"
@@ -51,7 +51,7 @@ class Anthropology(FacultyWebScraper):
     
 class BiologicalSciences(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Biological Lib Science")
         baseURL = "https://biology.charlotte.edu"
         directoryURL = "https://biology.charlotte.edu/directory/faculty"
@@ -70,7 +70,7 @@ class BiologicalSciences(FacultyWebScraper):
 
 class Chemistry(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Chemistry Lib Science")
         baseURL = "https://chemistry.charlotte.edu"
         directoryURL = "https://chemistry.charlotte.edu/directory-grid/faculty"
@@ -89,7 +89,7 @@ class Chemistry(FacultyWebScraper):
 
 class Communication(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Communication Studies Lib Science")
         directoryURL = "https://communication.charlotte.edu/people/full-time-faculty"
         baseURL = "https://communication.charlotte.edu"
@@ -116,7 +116,7 @@ class Communication(FacultyWebScraper):
     
 class CriminalJusticeAndCriminology(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Criminal Justice Lib Science")
         directoryURL = "https://criminaljustice.charlotte.edu/people/faculty"
         baseURL = "https://criminaljustice.charlotte.edu"
@@ -141,7 +141,7 @@ class CriminalJusticeAndCriminology(FacultyWebScraper):
 
 class English(FacultyWebScraper):
     
-    def __init__(self):
+    def run(self):
         print("Starting English Lib Science")
         directoryURL = "https://english.charlotte.edu/directory-list/professorial-faculty"
         baseURL = "https://english.charlotte.edu"
@@ -166,7 +166,7 @@ class English(FacultyWebScraper):
 
 class Geography(FacultyWebScraper):
  
-    def __init__(self):
+    def run(self):
         print("Starting Geography and Earth Studies Lib Science")
         directoryURL = "https://geoearth.charlotte.edu/directory-flip/full-time-faculty"
         baseURL = "https://geoearth.charlotte.edu"
@@ -193,7 +193,7 @@ class Geography(FacultyWebScraper):
     
 class GlobalStudies(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Global Studies Lib Science")
         directoryURL = "https://globalstudies.charlotte.edu/people"
         baseURL = "https://globalstudies.charlotte.edu"
@@ -220,7 +220,7 @@ class GlobalStudies(FacultyWebScraper):
     
 class History(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting History Lib Science")
         directoryURL = "https://history.charlotte.edu/people/faculty"
         baseURL = "https://history.charlotte.edu/people/faculty"
@@ -245,7 +245,7 @@ class History(FacultyWebScraper):
     
 class Languages(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Languages Lib Science")
         baseURL = "https://languages.charlotte.edu/"
         directoryURL = "https://languages.charlotte.edu/people"
@@ -265,7 +265,7 @@ class Languages(FacultyWebScraper):
     
 class Mathematics(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Mathematics Lib Science")
         directoryURL = "https://math.charlotte.edu/directory-list/faculty"
         baseURL = "https://math.charlotte.edu"
@@ -290,7 +290,7 @@ class Mathematics(FacultyWebScraper):
     
 class Philosophy(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Philosophy Lib Science")
         directoryURL = "https://philosophy.charlotte.edu/directory-list/faculty"
         baseURL = "https://philosophy.charlotte.edu"
@@ -315,7 +315,7 @@ class Philosophy(FacultyWebScraper):
     
 class Physics(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Physics Lib Science")
         baseURL = "https://physics.charlotte.edu/"
         directoryURL = "https://physics.charlotte.edu/people"
@@ -334,7 +334,7 @@ class Physics(FacultyWebScraper):
     
 class PoliticalScience(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Political Science")
         directoryURL = "https://politicalscience.charlotte.edu/directory-list/full-time-faculty"
         baseURL = "https://politicalscience.charlotte.edu/"
@@ -359,7 +359,7 @@ class PoliticalScience(FacultyWebScraper):
     
 class PsychologicalScience(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Global Studies Lib Science")
         directoryURL = "https://psych.charlotte.edu/people"
         baseURL = "https://psych.charlotte.edu"
@@ -394,7 +394,7 @@ class PsychologicalScience(FacultyWebScraper):
     
 class ReligiousStudies(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Religious Studies Lib Science")
         directoryURL = "https://religiousstudies.charlotte.edu/directory/faculty-and-staff"
         baseURL = "https://religiousstudies.charlotte.edu"
@@ -421,7 +421,7 @@ class ReligiousStudies(FacultyWebScraper):
 
 class Sociology(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Sociology Lib Science")
         directoryURL = "https://sociology.charlotte.edu/directory-list/full-time-faculty"
         baseURL = "https://sociology.charlotte.edu"
@@ -446,7 +446,7 @@ class Sociology(FacultyWebScraper):
     
 class Writing(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Writing Lib Science")
         directoryURL = "https://writing.charlotte.edu/directory-grid/faculty"
         baseURL = "https://writing.charlotte.edu"

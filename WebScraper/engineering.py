@@ -4,7 +4,7 @@ from .FacultyWebScraper import FacultyWebScraper
 
 class Civil(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Civil Engineering")
         baseURL = "https://cee.charlotte.edu/"
         directoryURL = "https://cee.charlotte.edu/directory-box"
@@ -23,7 +23,7 @@ class Civil(FacultyWebScraper):
 
 class Dean(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Dean Engineering")
         baseURL = "https://engr.charlotte.edu"
         directoryURL = "https://engr.charlotte.edu/directory-box/dean%27s-office"
@@ -42,7 +42,7 @@ class Dean(FacultyWebScraper):
     
 class EPIC(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Epic Engineering")
         baseURL = "https://epic.charlotte.edu"
         directoryURL = "https://epic.charlotte.edu/epic-staff/9"
@@ -61,7 +61,7 @@ class EPIC(FacultyWebScraper):
 
 class Electrical(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Electrical Engineering")
         baseURL = "https://ece.charlotte.edu"
 
@@ -90,7 +90,7 @@ class Electrical(FacultyWebScraper):
 
 class EngineeringTech(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Tech Engineering")
         baseURL = "https://et.charlotte.edu/"
         directoryURL = "https://et.charlotte.edu/directory-box"
@@ -109,7 +109,7 @@ class EngineeringTech(FacultyWebScraper):
     
 class MOSAIC(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting MOSAIC Engineering")
         baseURL = "https://engrmosaic.charlotte.edu"
         directoryURL = "https://engrmosaic.charlotte.edu/directory-box"
@@ -128,7 +128,7 @@ class MOSAIC(FacultyWebScraper):
 
 class Mechanical(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Mechanical Engineering")
         baseURL = "https://mees.charlotte.edu/"
         #Main directory
@@ -156,7 +156,7 @@ class Mechanical(FacultyWebScraper):
 
 class Motorsports(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Motorsports Engineering")
         baseURL = "https://motorsports.charlotte.edu"
         directoryURL = "https://motorsports.charlotte.edu/directory-box"
@@ -175,7 +175,7 @@ class Motorsports(FacultyWebScraper):
 
 class StudentDevelopment(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Student Development Engineering")
         baseURL = "https://osds.charlotte.edu"
         directoryURL = "https://osds.charlotte.edu/directory-list/faculty-and-staff"
@@ -194,7 +194,7 @@ class StudentDevelopment(FacultyWebScraper):
 
 class Systems(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Systems Engineering")
         baseURL = "https://seem.charlotte.edu"
         directoryURL = "https://seem.charlotte.edu/directory-box"

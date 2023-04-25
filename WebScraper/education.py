@@ -5,7 +5,7 @@ from .FacultyWebScraper import FacultyWebScraper
 
 class Counseling(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Counseling Education")
         baseURL = "https://counseling.charlotte.edu"
         directoryURL = "https://counseling.charlotte.edu/directory-list"
@@ -24,7 +24,7 @@ class Counseling(FacultyWebScraper):
 
 class EducationLeadership(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Leadership Education")
         baseURL = "https://edld.charlotte.edu"
         directoryURL = "https://edld.charlotte.edu/directory-list"
@@ -43,7 +43,7 @@ class EducationLeadership(FacultyWebScraper):
 
 class K12(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting K12 Education")
         baseURL = "https://mdsk.charlotte.edu"
         directoryURL = "https://mdsk.charlotte.edu/directory-list"
@@ -62,7 +62,7 @@ class K12(FacultyWebScraper):
 
 class ReadingAndElementaryEducation(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Reading Education")
         baseURL = "https://reel.charlotte.edu"
         directoryURL = "https://reel.charlotte.edu/directory-list/faculty"
@@ -81,7 +81,7 @@ class ReadingAndElementaryEducation(FacultyWebScraper):
 
 class SchoolAndCommunityPartnerships(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Community Education")
         baseURL = "https://osacp.charlotte.edu"
         directoryURL = "https://osacp.charlotte.edu/directory-flip"
@@ -100,7 +100,7 @@ class SchoolAndCommunityPartnerships(FacultyWebScraper):
 
 class SpecialEdAndChildDev(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Special Education")
         baseURL = "https://spcd.charlotte.edu"
         directoryURL = "https://spcd.charlotte.edu/directory-table"

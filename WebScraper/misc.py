@@ -4,7 +4,7 @@ from typing import Optional
 from .FacultyWebScraper import FacultyWebScraper
 
 class ArtsAndArch(FacultyWebScraper):
-    def __init__(self):
+    def run(self):
         print("Starting Arts and Architecture")
         baseURL = "https://coaa.charlotte.edu/"
         mainURL = "https://coaa.charlotte.edu/directory/faculty"
@@ -32,7 +32,7 @@ class ArtsAndArch(FacultyWebScraper):
         return soup.find_all("a",{"class":"thumbnail-link"})
 
 class Belk(FacultyWebScraper):
-    def __init__(self):
+    def run(self):
         print("Belk Started")
         baseURL = "https://belkcollege.charlotte.edu/"
         directoryURL = "https://belkcollege.charlotte.edu/directory"
@@ -50,7 +50,7 @@ class Belk(FacultyWebScraper):
         return soup.find_all("a",{"class":"button-gray"})
 
 class CCI(FacultyWebScraper):
-    def __init__(self):
+    def run(self):
         print("CCI Started")
         baseURL = "https://cci.charlotte.edu"
         directoryURL = "https://cci.charlotte.edu/directory/faculty?items_per_page=All"
@@ -68,7 +68,7 @@ class CCI(FacultyWebScraper):
         return soup.find_all("a",{"class":"button-gray"})
 
 class DataScience(FacultyWebScraper):
-    def __init__(self):
+    def run(self):
         print("data science Started")
         baseURL = "https://datascience.charlotte.edu"
         directoryURL = "https://datascience.charlotte.edu/directory/faculty"
