@@ -4,7 +4,7 @@ from .FacultyWebScraper import FacultyWebScraper
 
 class ApplPhysHlthClinSciAndKinesiology(FacultyWebScraper):
         
-    def __init__(self):
+    def run(self):
         print("ApplPhysHlthClinSciAndKinesiology CHHS")
         baseURL = "https://aphcs.charlotte.edu"
         directoryURL = "https://aphcs.charlotte.edu/directory"
@@ -24,7 +24,7 @@ class ApplPhysHlthClinSciAndKinesiology(FacultyWebScraper):
 
 class CHHS(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting CHHS")
         baseURL = "https://health.charlotte.edu"
         directoryURL = "https://health.charlotte.edu/about-college/faculty-and-staff?items_per_page=All"
@@ -44,7 +44,7 @@ class CHHS(FacultyWebScraper):
 
 class PublicHealthSciences(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Health Sciences CHSS")
         baseURL = "https://publichealth.charlotte.edu"
         directoryURL = "https://publichealth.charlotte.edu/directory/3"
@@ -64,7 +64,7 @@ class PublicHealthSciences(FacultyWebScraper):
     
 class SchoolOfNursing(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Nursing CHHS")
         baseURL = "https://nursing.charlotte.edu"
         directoryURL = "https://nursing.charlotte.edu/about-us/faculty-and-staff"
@@ -84,7 +84,7 @@ class SchoolOfNursing(FacultyWebScraper):
 
 class SchoolOfSocialWork(FacultyWebScraper):
 
-    def __init__(self):
+    def run(self):
         print("Starting Social Work CHHS")
         baseURL = "https://socialwork.charlotte.edu"
         directoryURL = "https://socialwork.charlotte.edu/about-us/faculty-and-staff-directory"

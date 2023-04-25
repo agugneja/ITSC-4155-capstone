@@ -7,16 +7,17 @@ from concurrent.futures import ThreadPoolExecutor
 import csv
 
 def main():
-    modules = [chhs, education, engineering, liberalscience, misc]
-    # modules = [education]
+    # modules = [chhs, education, engineering, liberalscience, misc]
+    modules = [education]
     departments = []
     for module in modules:
         for name, obj in inspect.getmembers(module, predicate=inspect.isclass):
             if obj is not FacultyWebScraper and issubclass(obj, FacultyWebScraper):
                 departments.append(obj)
     
+    department_objects = [x() for x in departments]
     with ThreadPoolExecutor(max_workers=15) as p:
-        department_objects = list(p.map(lambda x: x(), departments))
+        p.map(lambda x: x.run(), department_objects)
 
     profiles = []
     for d in department_objects:
