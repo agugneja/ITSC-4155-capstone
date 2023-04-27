@@ -3,6 +3,11 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from . import constants
 
+
+# Constants
+DB_NAME = 'itsc4155_team15'
+COLLECTION_NAME = 'facultyMembers'
+
 # Connect to the server
 connect_URI = f'mongodb+srv://{constants.MONGODB_USERNAME}:{constants.MONGODB_PASSWORD}@cluster0.yex3ra0.mongodb.net/?retryWrites=true&w=majority'
 client = MongoClient(host=connect_URI, server_api=ServerApi("1"))
@@ -10,6 +15,11 @@ client = MongoClient(host=connect_URI, server_api=ServerApi("1"))
 # Test connection
 client.admin.command('ping')
 print("Successfully connected to MongoDB")
+
+
+# Define collections
+db = client[DB_NAME]
+faculty_members = db[COLLECTION_NAME]
 
 
 # Make the FacultyProfile dataclass
@@ -21,7 +31,7 @@ class FacultyProfile():
     tel: str = None
     email: str = None
     url: str = None
-    
+
     # Explicit type cast to exclude casting None to str
     def __setattr__(self, __name: str, __value) -> None:
         if __value is not None:
@@ -32,10 +42,6 @@ class FacultyProfile():
         elif __name == 'name':
             raise TypeError("name is required")
         super().__setattr__(__name, __value)
-
-# Define collections
-db = client.itsc4155_team15
-faculty_members = db.facultyMembers
 
 
 # Define some functions
