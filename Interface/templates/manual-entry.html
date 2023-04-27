@@ -10,7 +10,15 @@
     <form class="space-y-4">
       <div>
         <h2 class="text-xl font-semibold mb-2">Faculty member name</h2>
-        <input type="text" id="fullname" placeholder="John Smith" class="border px-4 py-2 rounded-lg border-gray-300 w-full">
+        <input type="text" id="member_input" placeholder="John Smith" class="border px-4 py-2 rounded-lg border-gray-300 w-full">
+        <script>
+          let members = {{ faculty_members|safe }}
+          $(function () {
+              $('#member_input').autocomplete({
+                  source: members
+              })
+          });
+      </script>
       </div>
 
       <div>

@@ -1,5 +1,5 @@
-from flask import Flask, render_template, url_for, send_file, make_response
-import csv
+from flask import Flask, render_template, url_for, send_file, make_response, Response
+import csv, json
 from io import StringIO
 
 from WebScraper.webscraper import main as scrape
@@ -14,17 +14,20 @@ app = Flask(__name__)
 
 @app.get('/')
 def index():
-    return render_template('index.html')
-
+    faculty_members = [faculty['name'] for faculty in model.faculty_members.find()]
+    return render_template('index.html', faculty_members=faculty_members)
 
 @app.get('/schedule')
 def schedule():
     return render_template('schedule.html')
 
 
-@app.get('/manual-entry')
+@app.get('/manual-entry') 
 def manual_entry():
-    return render_template('manual-entry.html')
+    # repeated here instead of making a global so that it will update each 
+    # time it's needed
+    faculty_members = [faculty['name'] for faculty in model.faculty_members.find()]
+    return render_template('manual-entry.html', faculty_members=faculty_members)
 
 
 @app.get('/help')
