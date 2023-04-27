@@ -1,9 +1,10 @@
-from flask import Flask, render_template, url_for, send_file, make_response, Response
+from flask import Flask, render_template, url_for, send_file, make_response, Response, request
 import csv, json
 from io import StringIO
 
 from WebScraper.webscraper import main as scrape
 from Model import model
+from Schedule import scheduler
 # Passed from app.py
 # def get_functions(get_scrape):
 #     global scrape
@@ -15,10 +16,12 @@ app = Flask(__name__)
 @app.get('/')
 def index():
     faculty_members = [faculty['name'] for faculty in model.faculty_members.find()]
+    # current_schedule = scheduler.get_job()
     return render_template('index.html', faculty_members=faculty_members)
 
 @app.get('/schedule')
 def schedule():
+    # current_schedule = scheduler.get_job()
     return render_template('schedule.html')
 
 
@@ -66,7 +69,13 @@ def csv_download():
     #     as_attachment=True)
 
 
-# Temp:
+# Manual entry
 @app.post('/manual-entry')
 def manual_update():
     scrape()
+    
+
+# Change schedule
+@app.post('/schedule')
+def update_schedule():
+    new_schedule = request.form

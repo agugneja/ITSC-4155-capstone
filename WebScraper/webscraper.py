@@ -6,7 +6,7 @@ from .FacultyWebScraper import FacultyWebScraper
 from concurrent.futures import ThreadPoolExecutor
 import csv
 
-def main(departments_to_scrape: list[str] = None):
+def main():
     # modules = [chhs, education, engineering, liberalscience, misc]
     modules = [education]
     departments = []
