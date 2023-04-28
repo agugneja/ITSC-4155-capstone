@@ -2,8 +2,10 @@ from dataclasses import dataclass, asdict
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from . import constants
+from flask import Flask, request
 
 # Connect to the server
+app = Flask(__name__)
 connect_URI = f'mongodb+srv://{constants.MONGODB_USERNAME}:{constants.MONGODB_PASSWORD}@cluster0.yex3ra0.mongodb.net/?retryWrites=true&w=majority'
 client = MongoClient(host=connect_URI, server_api=ServerApi("1"))
 
@@ -20,6 +22,7 @@ class FacultyProfile():
     rawHtml: str = None
     tel: str = None
     email: str = None
+    location: str = None
     url: str = None
     
     # Explicit type cast to exclude casting None to str
@@ -59,3 +62,19 @@ def csv_dump() -> list[FacultyProfile]:
                            faculty_member.get('rawHtml'),
                            url=faculty_member.get('url'))
             for faculty_member in faculty_members.find(projection={'name': True, 'rawHtml': True, 'url': True})]
+
+@app.post('/manual-entry/<name>')
+def update(name, department, rawHtml, tel, email, location, url):
+    filter = { 'name': name }
+    new_values = { 
+        "$set": {
+        name: request.form.get('name'),
+        department: request.form.get('department'),
+        rawHtml: request.form.get('profile'),
+        tel: request.form.get('number'),
+        email: request.form.get('email'),
+        location: request.form.get('location'),
+        url: request.form.get('url')
+        }
+    }
+    faculty_members.update_one(filter, new_values)
