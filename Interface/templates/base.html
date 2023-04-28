@@ -27,16 +27,27 @@
     <nav class="bg-white shadow-md">
         <ul class="flex justify-between items-center p-3">
             <li><a href="/">Home</a></li>
+            <li><a href="/search-profiles">Search Profiles</a></li>
             <li><a href="/schedule">Schedule</a></li>
             <li><a href="/manual-entry">Manual Entry</a></li>
             <li><a href="/help">Help</a></li>
+            
         </ul>
     </nav>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="bg-red-400 text-white p-2">
+        {% for message in messages %}
+            <li>Error: {{ message }}</li>
+        {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
     <main class="p-4">
         {% block content %}
         {% endblock %}
     </main>
-    <footer class="bg-white p-2 text-center">
+    <footer class="bg-white p-2 text-center fixed bottom-0 w-screen">
         <small>ITSC 4155 Team 15</small>
     </footer>
 </body>
