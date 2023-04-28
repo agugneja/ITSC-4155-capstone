@@ -19,12 +19,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"/> -->
 </head>
-<body class="bg-main-green">
+<body class="bg-main-green flex flex-col h-screen" >
     <header class="bg-main-green p-4 flex justify-center items-center border-solid border-b-8 border-b-gold1">
         <img alt="UNC Charlotte" class="h-16" src="https://brand.charlotte.edu/sites/all/themes/uncc_epsilon/logo.svg">
         <h1 class="text-white text-4xl ml-2 font-oswald">Faculty Connections Update Tool</h1>
     </header>
-    <nav class="bg-white shadow-md">
+    <nav class="bg-white shadow-md px-8">
         <ul class="flex justify-between items-center p-3">
             <li><a href="/">Home</a></li>
             <li><a href="/search-profiles">Search Profiles</a></li>
@@ -43,11 +43,11 @@
             </ul>
         {% endif %}
     {% endwith %}
-    <main class="p-4">
+    <main class="p-4 flex-grow">
         {% block content %}
         {% endblock %}
     </main>
-    <footer class="bg-white p-2 text-center fixed bottom-0 w-screen">
+    <footer class="bg-white p-2 text-center relative bottom-0 w-screen">
         <small>ITSC 4155 Team 15</small>
     </footer>
 </body>
