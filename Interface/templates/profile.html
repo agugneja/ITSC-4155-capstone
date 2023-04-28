@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% from 'macros.html' import autocomplete_faculty_search_bar %}
+{% block title %}{{ profile['name'] if profile['name'] else 'Profile Search' }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4">
+    <h1 class="text-3xl text-white font-bold mb-4">Search Profiles</h1>
+    <hr class="my-4">
+    <div class="bg-white p-4 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold mb-2">Faculty Member Name</h2>
+        <form method="get" class="flex flex-col">
+            {{ autocomplete_faculty_search_bar(faculty_members=faculty_members, classes="border-gray-400 border-2 py-2 px-3 w-full rounded")}}
+            <div class="content-center flex">
+            <button type="submit" class="bg-main-green hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4">Search</button>
+        </form>
+    </div>
+        
+        {% if profile %}
+            <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
+            <h2 class="text-lg font-bold">Name</h2>
+            <p class="block font-medium mb-2">{{ profile['name'] }}</p>
+
+            <h2 class="text-lg font-bold">Department</h2>
+            <p class="block font-medium mb-2">{{ profile['department'] }}</p>
+            {% if profile['name'] %}
+            <h2 class="text-lg font-bold ">Email</h2>
+            <a class="block font-medium mb-2 underline hover:text-blue-800" href="mailto:{{ profile['email']}}">{{ profile['email']}}</a>
+            {% endif %}
+            <h2 class="text-lg font-bold">Phone Number</h2>
+            <p class="block font-medium mb-2">(555)-555-5555</p>
+            <h2 class="text-lg font-bold"><a class="underline hover:text-blue-800" href="{{profile['url']}}">Profile</a></h2>
+            {{profile['rawHtml']|safe}}
+        {% endif %}
+    </div>
+</div>
+
+
+{% endblock %}
