@@ -1,6 +1,7 @@
-from flask import Flask, render_template, url_for, send_file, make_response, Response
+from flask import Flask, render_template, url_for, send_file, make_response, Response, request, redirect, flash
 import csv, json
 from io import StringIO
+import re
 
 from WebScraper.webscraper import main as scrape
 from Model import model
@@ -10,7 +11,9 @@ from Model import model
 #     scrape = get_scrape
 
 app = Flask(__name__)
-
+app.debug = True
+app.secret_key = "password"
+app.url_map.strict_slashes = False
 
 @app.get('/')
 def index():
@@ -28,6 +31,21 @@ def manual_entry():
     # time it's needed
     faculty_members = [faculty['name'] for faculty in model.faculty_members.find()]
     return render_template('manual-entry.html', faculty_members=faculty_members)
+
+@app.get('/search-profiles')
+def profile_search():
+    faculty_members = [faculty['name'] for faculty in model.faculty_members.find()]
+    faculty_name = request.args.get('name')
+    if faculty_name is None or faculty_name == "":
+        profile = None
+    else:
+        # case insensitive search
+        profile = model.faculty_members.find_one({'name':{ '$regex': re.escape(faculty_name), '$options': 'i'}})
+        if profile is None:
+            flash(f'Faculty member "{faculty_name}" not found')
+
+    return render_template('profile.html', profile=profile, faculty_members=faculty_members)
+    
 
 
 @app.get('/help')
