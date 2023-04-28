@@ -1,0 +1,11 @@
+{% macro autocomplete_faculty_search_bar(faculty_members, classes) %}
+    <input type="text" id="member_input" name="name" class="{{classes}}">
+    <script>
+        let members = {{ faculty_members|safe }}
+        $(function () {
+            $('#member_input').autocomplete({
+                source: members
+            })
+        });
+    </script>
+{% endmacro %}
