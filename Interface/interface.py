@@ -5,6 +5,7 @@ import re
 
 from WebScraper.webscraper import main as scrape
 from Model import model
+from dataclasses import dataclass, asdict
 # Passed from app.py
 # def get_functions(get_scrape):
 #     global scrape
@@ -85,6 +86,28 @@ def csv_download():
 
 
 # Temp:
-@app.post('/manual-entry')
-def manual_update():
-    scrape()
+# @app.post('/manual-entry')
+# def manual_update():
+#     scrape()
+
+@app.post('/manual-entry/<name>')
+def update():
+    faculty_name = request.form.get('member_input')
+    member = model.faculty_members.find_one({'name': faculty_name})
+    filter = { '_id': member.get('_id')}
+
+    faculty_dict = asdict(model.FacultyProfile)
+
+    faculty_dict['name'] = request.form.get('name')
+    faculty_dict['department'] = request.form.get('department')
+    faculty_dict['rawHtml'] = request.form.get('profile')
+    faculty_dict['tel'] = request.form.get('number')
+    faculty_dict['email'] = request.form.get('email')
+    faculty_dict['location'] = request.form.get('location')
+    faculty_dict['url'] =  request.form.get('url')
+
+    for field, value in faculty_dict:
+        if value is not None:
+            model.faculty_members.update_one(filter, {'$set': {field: value}})
+    
+    return redirect('/profile/' + str(faculty_name))
