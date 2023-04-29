@@ -1,11 +1,36 @@
-{% macro autocomplete_faculty_search_bar(faculty_members, classes) %}
+{% macro autocomplete_faculty_search_bar(faculty_names, faculty_emails, classes) %}
     <input type="text" id="member_input" name="name" class="{{classes}}">
+    <input type="hidden" id="_id_input" name="_id">
     <script>
-        let members = {{ faculty_members|safe }}
         $(function () {
-            $('#member_input').autocomplete({
-                source: members
+            $.getJSON('/faculty-profiles').done((result) => {
+                $('#member_input').autocomplete({
+                    source: result.map(x => ({label:x.name, name:x.name, email:x.email, _id:x._id.$oid})),
+                    autoFocus: true,
+                    focus: (event, ui) => {
+                        $('#_id_input').val(ui.item._id);
+                        return false;
+                    },
+                    select: (event, ui) => {
+                        $('#member_input').val(ui.item.label);
+                        $('#member_input').closest('form').submit();
+                        return false;
+                    }
+                }).autocomplete("instance")._renderItem = (ul, item) => {
+                    if (item.email !== null) {
+                        return $( "<li>" )
+                        .append( "<div>" + item.name + "<br>(" + item.email + ")</div>" )
+                        .appendTo( ul );
+                    } else {
+                        return $( "<li>" )
+                        .append( "<div>" + item.name + "</div>" )
+                        .appendTo( ul );
+                    }
+                }
             })
-        });
+            .fail(() => {
+                alert("Sorry, something went wrong")
+            })
+        }); 
     </script>
 {% endmacro %}
