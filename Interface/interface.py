@@ -1,5 +1,6 @@
-from flask import Flask, render_template, url_for, send_file, make_response, Response, request, redirect, flash
+from flask import Flask, render_template, url_for, send_file, make_response, Response, request, redirect, flash, session
 import csv, json
+from bson import json_util, ObjectId
 from io import StringIO
 import re
 
@@ -34,20 +35,28 @@ def manual_entry():
     return render_template('manual-entry.html', faculty_members=faculty_members)
 
 @app.get('/search-profiles')
+
 def profile_search():
-    faculty_members = [faculty['name'] for faculty in model.faculty_members.find()]
-    faculty_name = request.args.get('name')
-    if faculty_name is None or faculty_name == "":
+    faculty_names = [faculty['name'] for faculty in model.faculty_members.find()]
+    faculty_emails = [faculty['email'] if faculty['email'] else '' for faculty in model.faculty_members.find()]
+    name = request.args.get('name')
+    _id = request.args.get('_id')
+    if _id is None or _id == "":
         profile = None
     else:
         # case insensitive search
-        profile = model.faculty_members.find_one({'name':{ '$regex': re.escape(faculty_name), '$options': 'i'}})
+        profile = model.faculty_members.find_one({'_id':ObjectId(_id)})
+        # profile = model.faculty_members.find_one({'name':{ '$regex': re.escape(query), '$options': 'i'}})
         if profile is None:
-            flash(f'Faculty member "{faculty_name}" not found')
+            flash(f'Faculty member "{name}" not found')
 
-    return render_template('profile.html', profile=profile, faculty_members=faculty_members)
+    return render_template('profile.html', profile=profile, faculty_names=faculty_names, faculty_emails=faculty_emails)
     
 
+@app.get('/faculty-profiles')
+def get_profiles():
+    # need to use the bson json_util to properly convert bson to valid json
+    return json.loads(json_util.dumps(model.faculty_members.find({},{'_id':1, 'name':1, 'email':1})))
 
 @app.get('/help')
 def help():
@@ -106,7 +115,7 @@ def update():
         'rawHtml':request.form.get('profile'),
         'tel': request.form.get('number'),
         'email': request.form.get('email'),
-        'location': request.form.get('location'),
+        'address': request.form.get('location'),
         'url': request.form.get('url')
     }
 

@@ -12,6 +12,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <title>{% block title %}{% endblock %} - Faculty Connections</title>
+    <link rel="icon" type="image/x-icon" href="https://directory.charlotte.edu/sites/all/themes/epsilon-theme-drupal7/favicon.ico">
     <link rel="stylesheet" href="../static/css/output.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
@@ -20,12 +21,12 @@
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"/> -->
 </head>
 <body class="bg-main-green flex flex-col h-screen" >
-    <header class="bg-main-green p-4 flex justify-center items-center border-solid border-b-8 border-b-gold1">
+    <header class="bg-main-green p-4 flex justify-center items-center border-solid border-b-8 border-b-gold1 space-x-4">
         <img alt="UNC Charlotte" class="h-16" src="https://brand.charlotte.edu/sites/all/themes/uncc_epsilon/logo.svg">
         <h1 class="text-white text-4xl ml-2 font-oswald">Faculty Connections Update Tool</h1>
     </header>
     <nav class="bg-white shadow-md px-8">
-        <ul class="flex justify-between items-center p-3">
+        <ul class="flex justify-around p-3">
             <li><a href="/">Home</a></li>
             <li><a href="/search-profiles">Search Profiles</a></li>
             <li><a href="/schedule">Schedule</a></li>

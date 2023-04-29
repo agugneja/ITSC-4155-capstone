@@ -11,7 +11,7 @@
     <form class="space-y-4" action="/manual-entry" method="post">
       <div>
         <h2 class="text-xl font-semibold mb-2">Faculty member name</h2>
-        {{ autocomplete_faculty_search_bar(faculty_members=faculty_members, classes="border px-4 py-2 rounded-lg border-gray-300 w-full")}}
+        {{ autocomplete_faculty_search_bar(submit_on_select=False, classes="border px-4 py-2 rounded-lg border-gray-300 w-full")}}
       </div>
 
       <div>
