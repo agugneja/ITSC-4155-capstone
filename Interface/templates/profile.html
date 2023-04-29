@@ -9,7 +9,7 @@
     <div class="bg-white p-4 rounded-lg shadow-md">
         <h2 class="text-xl font-semibold mb-2">Faculty Member Name</h2>
         <form method="get" class="flex flex-col">
-            {{ autocomplete_faculty_search_bar(faculty_names=faculty_names, faculty_emails=faculty_emails, classes="border-gray-400 border-2 py-2
+            {{ autocomplete_faculty_search_bar(submit_on_select=True, classes="border-gray-400 border-2 py-2
             px-3 w-full rounded")}}
             <div class="justify-center items-center flex space-x-1">
                 <button type="submit"

@@ -1,4 +1,4 @@
-{% macro autocomplete_faculty_search_bar(faculty_names, faculty_emails, classes) %}
+{% macro autocomplete_faculty_search_bar(submit_on_select, classes) %}
     <input type="text" id="member_input" name="name" class="{{classes}}">
     <input type="hidden" id="_id_input" name="_id">
     <script>
@@ -11,11 +11,13 @@
                         $('#_id_input').val(ui.item._id);
                         return false;
                     },
+                    {% if submit_on_select %}
                     select: (event, ui) => {
                         $('#member_input').val(ui.item.label);
                         $('#member_input').closest('form').submit();
                         return false;
                     }
+                    {% endif %}
                 }).autocomplete("instance")._renderItem = (ul, item) => {
                     if (item.email !== null) {
                         return $( "<li>" )
