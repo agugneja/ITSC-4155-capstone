@@ -20,6 +20,7 @@ class FacultyProfile():
     rawHtml: str = None
     tel: str = None
     email: str = None
+    address: str = None
     url: str = None
     
     # Explicit type cast to exclude casting None to str

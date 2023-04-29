@@ -36,7 +36,7 @@
                         <input type="radio" id="member" name="update" value="ByMember" class="form-radio">
                         <span class="ml-2">By faculty member:</span>
                     </label>
-                    {{ autocomplete_faculty_search_bar(faculty_members=faculty_members, classes="border-gray-400 border rounded form-input mt-1")}}
+                    {{ autocomplete_faculty_search_bar(submit_on_select=False, classes="border-gray-400 border rounded form-input mt-1")}}
                     <h3 class="font-bold mt-2">Where to search</h3>
 
                     <label for="directory" class="inline-flex items-center mt-2">
