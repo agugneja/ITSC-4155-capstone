@@ -101,14 +101,11 @@ def csv_download():
 
 @app.post('/manual-entry')
 def update():
-    faculty_name = request.form.get('name')
-    member = model.faculty_members.find_one({'name': faculty_name})
-    filter = { '_id': member.get('_id')}
-
-    if member is None or faculty_name == "" or filter is None:
-        flash(f'Faculty Member {faculty_name} not found.')
+    _id = request.form.get('_id')
+    #faculty_name = request.form.get('name')
+    #faculty_member = model.faculty_members.find_one({'_id': ObjectId(_id)})
+    filter = { '_id': ObjectId(_id)}
     
-
     faculty_dict = {
         'name': request.form.get('name'),
         'department': request.form.get('department'),
