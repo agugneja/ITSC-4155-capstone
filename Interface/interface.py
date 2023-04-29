@@ -90,24 +90,36 @@ def csv_download():
 # def manual_update():
 #     scrape()
 
-@app.post('/manual-entry/<name>')
+@app.post('/manual-entry')
 def update():
-    faculty_name = request.form.get('member_input')
+    faculty_name = request.form.get('name')
     member = model.faculty_members.find_one({'name': faculty_name})
     filter = { '_id': member.get('_id')}
 
-    faculty_dict = asdict(model.FacultyProfile)
+    if member is None or faculty_name == "" or filter is None:
+        flash(f'Faculty Member {faculty_name} not found.')
+    
 
-    faculty_dict['name'] = request.form.get('name')
-    faculty_dict['department'] = request.form.get('department')
-    faculty_dict['rawHtml'] = request.form.get('profile')
-    faculty_dict['tel'] = request.form.get('number')
-    faculty_dict['email'] = request.form.get('email')
-    faculty_dict['location'] = request.form.get('location')
-    faculty_dict['url'] =  request.form.get('url')
+    faculty_dict = {
+        'name': request.form.get('name'),
+        'department': request.form.get('department'),
+        'rawHtml':request.form.get('profile'),
+        'tel': request.form.get('number'),
+        'email': request.form.get('email'),
+        'location': request.form.get('location'),
+        'url': request.form.get('url')
+    }
 
-    for field, value in faculty_dict:
+    # faculty_dict['name'] = request.form.get('name')
+    # faculty_dict['department'] = request.form.get('department')
+    # faculty_dict['rawHtml'] = request.form.get('profile')
+    # faculty_dict['tel'] = request.form.get('number')
+    # faculty_dict['email'] = request.form.get('email')
+    # faculty_dict['location'] = request.form.get('location')
+    # faculty_dict['url'] =  request.form.get('url')
+
+    for field, value in faculty_dict.items():
         if value is not None:
             model.faculty_members.update_one(filter, {'$set': {field: value}})
     
-    return redirect('/profile/' + str(faculty_name))
+    return render_template('manual-entry.html')
