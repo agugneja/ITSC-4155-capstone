@@ -7,6 +7,7 @@ import re
 
 from WebScraper.webscraper import main as scrape
 from Model import model
+from dataclasses import dataclass, asdict
 # Passed from app.py
 # def get_functions(get_scrape):
 #     global scrape
@@ -103,6 +104,37 @@ def csv_download():
 
 
 # Temp:
+# @app.post('/manual-entry')
+# def manual_update():
+#     scrape()
+
 @app.post('/manual-entry')
-def manual_update():
-    scrape()
+def update():
+    _id = request.form.get('_id')
+    #faculty_name = request.form.get('name')
+    #faculty_member = model.faculty_members.find_one({'_id': ObjectId(_id)})
+    filter = { '_id': ObjectId(_id)}
+    
+    faculty_dict = {
+        'name': request.form.get('name'),
+        'department': request.form.get('department'),
+        'rawHtml':request.form.get('profile'),
+        'tel': request.form.get('number'),
+        'email': request.form.get('email'),
+        'address': request.form.get('location'),
+        'url': request.form.get('url')
+    }
+
+    # faculty_dict['name'] = request.form.get('name')
+    # faculty_dict['department'] = request.form.get('department')
+    # faculty_dict['rawHtml'] = request.form.get('profile')
+    # faculty_dict['tel'] = request.form.get('number')
+    # faculty_dict['email'] = request.form.get('email')
+    # faculty_dict['location'] = request.form.get('location')
+    # faculty_dict['url'] =  request.form.get('url')
+
+    for field, value in faculty_dict.items():
+        if value is not None:
+            model.faculty_members.update_one(filter, {'$set': {field: value}})
+    
+    return render_template('manual-entry.html')
