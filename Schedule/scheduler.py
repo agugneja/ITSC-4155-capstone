@@ -33,7 +33,7 @@ scheduler.start()
 
 def add_job(months: Union[int, str, list[Union[int, str]], None],
             days: Union[int, str, list[Union[int, str]], None],
-            start_date: Union[str, datetime]) -> Job:
+            start_date: Union[str, datetime, None] = None) -> Job:
     """Add/update the scraping schedule
 
     ### Args:

@@ -33,7 +33,6 @@ def schedule():
     start_date_iso = current_schedule['start_date'].date().isoformat() if type(current_schedule['start_date']) == datetime else None
     # next_fire_time is not important for this page
 
-    print(months, days, start_date_iso)
     return render_template('schedule.html', months=months, days=days, start_date=start_date_iso)
 
 
@@ -138,9 +137,13 @@ def update():
 @app.post('/schedule')
 def update_schedule():
     form_data = request.form.to_dict(flat=False)
-    months = form_data['months']
-    days = form_data['days']
+    months = form_data.get('months')
+    days = form_data.get('days')
     start_date = form_data['start_date'][0]
+    
+    # Handle start_date not existing
+    if  start_date == '':
+        start_date = None
     
     print(form_data)
 
