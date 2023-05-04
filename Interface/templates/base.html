@@ -16,9 +16,34 @@
     <link rel="stylesheet" href="../static/css/output.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"/> -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        /** @type {import('tailwindcss').Config} */
+        tailwind.config = {
+        mode: "jit",
+        content: ["./templates/*.html"],
+        theme: {
+            
+            extend: {
+            fontFamily: {
+                'oswald': ['Oswald', 'sans-serif']
+            },
+            colors: {
+                "main-green": "#005035",
+                "gold1":" #a49665",
+                "darker-green": "#233a30",
+                "gold2": "#ad9651",
+                "main-gray": "#222",
+                "main-gold": "#a49665"
+            }
+            },
+        },
+        plugins: [],
+        }
+
+    </script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
 </head>
 <body class="bg-main-green flex flex-col h-screen" >
     <header class="bg-main-green p-4 flex justify-center items-center border-solid border-b-8 border-b-gold1 space-x-4">
