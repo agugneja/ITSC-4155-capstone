@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import Flask, render_template, url_for, send_file, make_response, Response, request, redirect, flash, session
 import csv
 import json
@@ -8,10 +9,8 @@ import re
 from WebScraper.webscraper import main as scrape
 from Model import model
 from dataclasses import dataclass, asdict
-# Passed from app.py
-# def get_functions(get_scrape):
-#     global scrape
-#     scrape = get_scrape
+from Schedule import scheduler
+
 
 app = Flask(__name__)
 app.debug = True
@@ -21,21 +20,27 @@ app.url_map.strict_slashes = False
 
 @app.get('/')
 def index():
+    # current_schedule = scheduler.get_job()
     return render_template('index.html')
 
 
 @app.get('/schedule')
 def schedule():
-    return render_template('schedule.html')
+    current_schedule = scheduler.get_job()
+
+    months = current_schedule['months']
+    days = current_schedule['days']
+    start_date_iso = current_schedule['start_date'].date().isoformat() if type(current_schedule['start_date']) == datetime else None
+    # next_fire_time is not important for this page
+
+    return render_template('schedule.html', months=months, days=days, start_date=start_date_iso)
 
 
 @app.get('/manual-entry')
 def manual_entry():
-    faculty_member = None
-    if _id := request.args.get('_id'):
-        
-        faculty_member = model.faculty_members.find_one({'_id':ObjectId(_id)})
-    return render_template('manual-entry.html', faculty_member=faculty_member)
+    # repeated here instead of making a global so that it will update each
+    # time it's needed
+    return render_template('manual-entry.html')
 
 
 @app.get('/search-profiles')
@@ -50,7 +55,7 @@ def profile_search():
             # case insensitive search
             'name': {'$regex': re.escape(name), '$options': 'i'}})
         if profile is None:
-            flash(f'Faculty member "{name}" not found')
+            flash(f'Faculty member "{name}" not found', 'error')
 
     return render_template('profile.html', profile=profile)
 
@@ -60,10 +65,12 @@ def get_profiles():
     # need to use the bson json_util to properly convert bson to valid json
     return json.loads(json_util.dumps(model.faculty_members.find({}, {'_id': 1, 'name': 1, 'email': 1})))
 
+
 @app.delete('/delete/<_id>')
 def delete_faculty_member(_id):
-    model.faculty_members.delete_one({'_id':ObjectId(_id)})
+    model.faculty_members.delete_one({'_id': ObjectId(_id)})
     return Response(status=204)
+
 
 @app.get('/help')
 def help():
@@ -102,19 +109,15 @@ def csv_download():
 
 
 # Temp:
-# @app.post('/manual-entry')
-# def manual_update():
-#     scrape()
-
 @app.post('/manual-entry')
 def update():
     _id = request.form.get('_id')
-    db_filter = { '_id': ObjectId(_id)}
-    
+    db_filter = {'_id': ObjectId(_id)}
+
     faculty_dict = {
         'name': request.form.get('new_name'),
         'department': request.form.get('department'),
-        'rawHtml':request.form.get('profile'),
+        'rawHtml': request.form.get('profile'),
         'tel': request.form.get('number'),
         'email': request.form.get('email'),
         'address': request.form.get('location'),
@@ -123,6 +126,32 @@ def update():
 
     for field, value in faculty_dict.items():
         if value is not None:
-            model.faculty_members.update_one(db_filter, {'$set': {field: value if value != '' else None}})
-    
+            model.faculty_members.update_one(
+                db_filter, {'$set': {field: value if value != '' else None}})
+
     return redirect(f'search-profiles?name={faculty_dict["name"]}&_id={_id}')
+
+# Change schedule
+
+
+@app.post('/schedule')
+def update_schedule():
+    form_data = request.form.to_dict(flat=False)
+    months = form_data.get('months')
+    days = form_data.get('days')
+    start_date = form_data['start_date'][0]
+    
+    # Handle start_date not existing
+    if  start_date == '':
+        start_date = None
+    
+    print(form_data)
+
+    job = scheduler.add_job(months, days, start_date)
+
+    if job is not None:
+        flash('Job successfully added', 'message')
+    else:
+        flash('Job not added', 'error')
+
+    return redirect('/schedule')
