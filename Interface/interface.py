@@ -1,10 +1,12 @@
-from flask import Flask, render_template, url_for, send_file, make_response, Response, request, redirect, flash
+from flask import Flask, render_template, url_for, send_file, make_response, Response, request, redirect, flash, session
 import csv, json
+from bson import json_util, ObjectId
 from io import StringIO
 import re
 
 from WebScraper.webscraper import main as scrape
 from Model import model
+from dataclasses import dataclass, asdict
 from Schedule import scheduler
 # Passed from app.py
 # def get_functions(get_scrape):
@@ -36,20 +38,28 @@ def manual_entry():
     return render_template('manual-entry.html', faculty_members=faculty_members)
 
 @app.get('/search-profiles')
+
 def profile_search():
-    faculty_members = [faculty['name'] for faculty in model.faculty_members.find()]
-    faculty_name = request.args.get('name')
-    if faculty_name is None or faculty_name == "":
+    faculty_names = [faculty['name'] for faculty in model.faculty_members.find()]
+    faculty_emails = [faculty['email'] if faculty['email'] else '' for faculty in model.faculty_members.find()]
+    name = request.args.get('name')
+    _id = request.args.get('_id')
+    if _id is None or _id == "":
         profile = None
     else:
         # case insensitive search
-        profile = model.faculty_members.find_one({'name':{ '$regex': re.escape(faculty_name), '$options': 'i'}})
+        profile = model.faculty_members.find_one({'_id':ObjectId(_id)})
+        # profile = model.faculty_members.find_one({'name':{ '$regex': re.escape(query), '$options': 'i'}})
         if profile is None:
-            flash(f'Faculty member "{faculty_name}" not found')
+            flash(f'Faculty member "{name}" not found')
 
-    return render_template('profile.html', profile=profile, faculty_members=faculty_members)
+    return render_template('profile.html', profile=profile, faculty_names=faculty_names, faculty_emails=faculty_emails)
     
 
+@app.get('/faculty-profiles')
+def get_profiles():
+    # need to use the bson json_util to properly convert bson to valid json
+    return json.loads(json_util.dumps(model.faculty_members.find({},{'_id':1, 'name':1, 'email':1})))
 
 @app.get('/help')
 def help():
@@ -87,11 +97,37 @@ def csv_download():
     #     as_attachment=True)
 
 
-# Manual entry
+# Temp:
 @app.post('/manual-entry')
-def manual_update():
-    scrape()
+def update():
+    _id = request.form.get('_id')
+    #faculty_name = request.form.get('name')
+    #faculty_member = model.faculty_members.find_one({'_id': ObjectId(_id)})
+    filter = { '_id': ObjectId(_id)}
     
+    faculty_dict = {
+        'name': request.form.get('name'),
+        'department': request.form.get('department'),
+        'rawHtml':request.form.get('profile'),
+        'tel': request.form.get('number'),
+        'email': request.form.get('email'),
+        'address': request.form.get('location'),
+        'url': request.form.get('url')
+    }
+
+    # faculty_dict['name'] = request.form.get('name')
+    # faculty_dict['department'] = request.form.get('department')
+    # faculty_dict['rawHtml'] = request.form.get('profile')
+    # faculty_dict['tel'] = request.form.get('number')
+    # faculty_dict['email'] = request.form.get('email')
+    # faculty_dict['location'] = request.form.get('location')
+    # faculty_dict['url'] =  request.form.get('url')
+
+    for field, value in faculty_dict.items():
+        if value is not None:
+            model.faculty_members.update_one(filter, {'$set': {field: value}})
+    
+    return render_template('manual-entry.html')
 
 # Change schedule
 @app.post('/schedule')
