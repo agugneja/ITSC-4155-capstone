@@ -9,10 +9,7 @@ from WebScraper.webscraper import main as scrape
 from Model import model
 from dataclasses import dataclass, asdict
 from Schedule import scheduler
-# Passed from app.py
-# def get_functions(get_scrape):
-#     global scrape
-#     scrape = get_scrape
+
 
 app = Flask(__name__)
 app.debug = True
@@ -22,14 +19,8 @@ app.url_map.strict_slashes = False
 
 @app.get('/')
 def index():
-<<<<<<< HEAD
-    faculty_members = [faculty['name'] for faculty in model.faculty_members.find()]
     # current_schedule = scheduler.get_job()
-    return render_template('index.html', faculty_members=faculty_members)
-=======
     return render_template('index.html')
-
->>>>>>> ethannixon-working-branch
 
 @app.get('/schedule')
 def schedule():
@@ -39,12 +30,9 @@ def schedule():
 
 @app.get('/manual-entry')
 def manual_entry():
-    faculty_member = None
-    if _id := request.args.get('_id'):
-        
-        faculty_member = model.faculty_members.find_one({'_id':ObjectId(_id)})
-    return render_template('manual-entry.html', faculty_member=faculty_member)
-
+    # repeated here instead of making a global so that it will update each 
+    # time it's needed
+    return render_template('manual-entry.html')
 
 @app.get('/search-profiles')
 def profile_search():
@@ -129,13 +117,9 @@ def update():
         if value is not None:
             model.faculty_members.update_one(db_filter, {'$set': {field: value if value != '' else None}})
     
-<<<<<<< HEAD
-    return render_template('manual-entry.html')
+    return redirect(f'search-profiles?name={faculty_dict["name"]}&_id={_id}')
 
 # Change schedule
 @app.post('/schedule')
 def update_schedule():
     new_schedule = request.form
-=======
-    return redirect(f'search-profiles?name={faculty_dict["name"]}&_id={_id}')
->>>>>>> ethannixon-working-branch
