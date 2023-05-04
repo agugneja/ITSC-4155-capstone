@@ -8,17 +8,104 @@
   <h1 class="text-3xl text-white font-bold mb-4">Schedule</h1>
   <hr class="my-4">
   <div class="bg-white p-4 rounded-lg shadow-md">
-    <form class="mb-8">
-      <h2 class="text-lg font-bold mb-2">Repeat every...</h2>
+    <form method="post" class="mb-8">
+      <h2 class="text-lg font-bold mb-2">Repeat on...</h2>
 
       <div class="mb-4">
         <label class="block font-medium mb-2" for="months">Month(s)</label>
-        <input class="border-gray-400 border-2 py-2 px-3 w-full rounded" type="number" id="months" name="months" min="1" max="12">
+        <table class="border-gray-400 border-2 py-2 px-3 w-full rounded">
+          <tr>
+            <td><label><input type="checkbox" name="months" value="jan" class="hidden peer">
+                <div class="peer-checked:bg-green-500">Jan</div>
+              </label></td>
+            <td><label><input type="checkbox" name="months" value="feb" class="hidden peer">
+                <div class="peer-checked:bg-green-500">Feb</div>
+              </label></td>
+            <td><label><input type="checkbox" name="months" value="mar" class="hidden peer">
+                <div class="peer-checked:bg-green-500">Mar</div>
+              </label></td>
+            <td><label><input type="checkbox" name="months" value="apr" class="hidden peer">
+                <div class="peer-checked:bg-green-500">Apr</div>
+              </label></td>
+          </tr>
+          <tr>
+            <td><label><input type="checkbox" name="months" value="may" class="hidden peer">
+                <div class="peer-checked:bg-green-500">May</div>
+              </label></td>
+            <td><label><input type="checkbox" name="months" value="jun" class="hidden peer">
+                <div class="peer-checked:bg-green-500">Jun</div>
+              </label></td>
+            <td><label><input type="checkbox" name="months" value="jul" class="hidden peer">
+                <div class="peer-checked:bg-green-500">Jul</div>
+              </label></td>
+            <td><label><input type="checkbox" name="months" value="aug" class="hidden peer">
+                <div class="peer-checked:bg-green-500">Aug</div>
+              </label></td>
+          </tr>
+          <tr>
+            <td><label><input type="checkbox" name="months" value="sep" class="hidden peer">
+                <div class="peer-checked:bg-green-500">Sep</div>
+              </label></td>
+            <td><label><input type="checkbox" name="months" value="oct" class="hidden peer">
+                <div class="peer-checked:bg-green-500">Oct</div>
+              </label></td>
+            <td><label><input type="checkbox" name="months" value="nov" class="hidden peer">
+                <div class="peer-checked:bg-green-500">Nov</div>
+              </label></td>
+            <td><label><input type="checkbox" name="months" value="dec" class="hidden peer">
+                <div class="peer-checked:bg-green-500">Dec</div>
+              </label></td>
+          </tr>
+        </table>
+        <!-- <input class="border-gray-400 border-2 py-2 px-3 w-full rounded" type="number" id="months" name="months" min="1"
+          max="12"> -->
       </div>
 
       <div class="mb-4">
         <label class="block font-medium mb-2" for="days">Day(s)</label>
-        <input class="border-gray-400 border-2 py-2 px-3 w-full rounded" type="number" id="days" name="days" min="1" max="30">
+        <table class="border-gray-400 border-2 py-2 px-3 w-full rounded">
+          <tr>
+            <td><label><input type="checkbox" name="days" value="1" class="hidden peer"><div class="peer-checked:bg-green-500">1</div></label></td>
+            <td><label><input type="checkbox" name="days" value="2" class="hidden peer"><div class="peer-checked:bg-green-500">2</div></label></td>
+            <td><label><input type="checkbox" name="days" value="3" class="hidden peer"><div class="peer-checked:bg-green-500">3</div></label></td>
+            <td><label><input type="checkbox" name="days" value="4" class="hidden peer"><div class="peer-checked:bg-green-500">4</div></label></td>
+            <td><label><input type="checkbox" name="days" value="5" class="hidden peer"><div class="peer-checked:bg-green-500">5</div></label></td>
+            <td><label><input type="checkbox" name="days" value="6" class="hidden peer"><div class="peer-checked:bg-green-500">6</div></label></td>
+            <td><label><input type="checkbox" name="days" value="7" class="hidden peer"><div class="peer-checked:bg-green-500">7</div></label></td>
+            <td><label><input type="checkbox" name="days" value="8" class="hidden peer"><div class="peer-checked:bg-green-500">8</div></label></td>
+            </tr>
+            <tr>
+            <td><label><input type="checkbox" name="days" value="9" class="hidden peer"><div class="peer-checked:bg-green-500">9</div></label></td>
+            <td><label><input type="checkbox" name="days" value="10" class="hidden peer"><div class="peer-checked:bg-green-500">10</div></label></td>
+            <td><label><input type="checkbox" name="days" value="11" class="hidden peer"><div class="peer-checked:bg-green-500">11</div></label></td>
+            <td><label><input type="checkbox" name="days" value="12" class="hidden peer"><div class="peer-checked:bg-green-500">12</div></label></td>
+            <td><label><input type="checkbox" name="days" value="13" class="hidden peer"><div class="peer-checked:bg-green-500">13</div></label></td>
+            <td><label><input type="checkbox" name="days" value="14" class="hidden peer"><div class="peer-checked:bg-green-500">14</div></label></td>
+            <td><label><input type="checkbox" name="days" value="15" class="hidden peer"><div class="peer-checked:bg-green-500">15</div></label></td>
+            <td><label><input type="checkbox" name="days" value="16" class="hidden peer"><div class="peer-checked:bg-green-500">16</div></label></td>
+            </tr>
+            <tr>
+            <td><label><input type="checkbox" name="days" value="17" class="hidden peer"><div class="peer-checked:bg-green-500">17</div></label></td>
+            <td><label><input type="checkbox" name="days" value="18" class="hidden peer"><div class="peer-checked:bg-green-500">18</div></label></td>
+            <td><label><input type="checkbox" name="days" value="19" class="hidden peer"><div class="peer-checked:bg-green-500">19</div></label></td>
+            <td><label><input type="checkbox" name="days" value="20" class="hidden peer"><div class="peer-checked:bg-green-500">20</div></label></td>
+            <td><label><input type="checkbox" name="days" value="21" class="hidden peer"><div class="peer-checked:bg-green-500">21</div></label></td>
+            <td><label><input type="checkbox" name="days" value="22" class="hidden peer"><div class="peer-checked:bg-green-500">22</div></label></td>
+            <td><label><input type="checkbox" name="days" value="23" class="hidden peer"><div class="peer-checked:bg-green-500">23</div></label></td>
+            <td><label><input type="checkbox" name="days" value="24" class="hidden peer"><div class="peer-checked:bg-green-500">24</div></label></td>
+            </tr>
+            <tr>
+            <td><label><input type="checkbox" name="days" value="25" class="hidden peer"><div class="peer-checked:bg-green-500">25</div></label></td>
+            <td><label><input type="checkbox" name="days" value="26" class="hidden peer"><div class="peer-checked:bg-green-500">26</div></label></td>
+            <td><label><input type="checkbox" name="days" value="27" class="hidden peer"><div class="peer-checked:bg-green-500">27</div></label></td>
+            <td><label><input type="checkbox" name="days" value="28" class="hidden peer"><div class="peer-checked:bg-green-500">28</div></label></td>
+            <td><label><input type="checkbox" name="days" value="29" class="hidden peer"><div class="peer-checked:bg-green-500">29</div></label></td>
+            <td><label><input type="checkbox" name="days" value="30" class="hidden peer"><div class="peer-checked:bg-green-500">30</div></label></td>
+            <td><label><input type="checkbox" name="days" value="31" class="hidden peer"><div class="peer-checked:bg-green-500">31</div></label></td>
+            </tr>
+        </table>
+        <!-- <input class="border-gray-400 border-2 py-2 px-3 w-full rounded" type="number" id="days" name="days" min="1"
+          max="30"> -->
       </div>
 
       <h2 class="text-lg font-bold mb-2">Where to search</h2>
@@ -37,9 +124,6 @@
         <input type="checkbox" id="scholar" name="scholar" value="Scholar">
         <label class="ml-2" for="scholar">Google Scholar</label>
       </div>
-    </form>
-
-    <form>
       <h2 class="text-lg font-bold mb-2">Start date</h2>
       <input class="border-gray-400 border-2 py-2 px-3 w-full rounded mb-4" type="date" id="date">
 

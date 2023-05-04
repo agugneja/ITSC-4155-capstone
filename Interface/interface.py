@@ -46,7 +46,7 @@ def profile_search():
             # case insensitive search
             'name': {'$regex': re.escape(name), '$options': 'i'}})
         if profile is None:
-            flash(f'Faculty member "{name}" not found')
+            flash(f'Faculty member "{name}" not found', 'error')
 
     return render_template('profile.html', profile=profile)
 
@@ -122,4 +122,10 @@ def update():
 # Change schedule
 @app.post('/schedule')
 def update_schedule():
-    new_schedule = request.form
+    form_data = request.form.to_dict(flat=False)
+    months = form_data['months']
+    days = form_data['days']
+    
+    job = scheduler.add_job(months, days)
+    
+    return redirect('/schedule')
