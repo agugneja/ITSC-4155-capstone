@@ -2,7 +2,7 @@
 module.exports = {
   content: ["./templates/*.html"],
   theme: {
-    
+    mode: 'jit',
     extend: {
       fontFamily: {
         'oswald': ['Oswald', 'sans-serif']

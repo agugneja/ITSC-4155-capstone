@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 
+{# I just have this here because it makes it easier to iterate #}
+{% set THREE_LETTER_MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'] %}
+
 {% block title %}Schedule{% endblock %}
 
 {% block content %}
@@ -8,20 +11,50 @@
   <h1 class="text-3xl text-white font-bold mb-4">Schedule</h1>
   <hr class="my-4">
   <div class="bg-white p-4 rounded-lg shadow-md">
-    <form class="mb-8">
-      <h2 class="text-lg font-bold mb-2">Repeat every...</h2>
+    <form method="post" class="mb-8">
+      <h2 class="text-lg font-bold mb-2">Repeat on...</h2>
 
       <div class="mb-4">
         <label class="block font-medium mb-2" for="months">Month(s)</label>
-        <input class="border-gray-400 border-2 py-2 px-3 w-full rounded" type="number" id="months" name="months" min="1" max="12">
+        <table class="border-gray-400 border-2 py-2 px-3 w-full rounded">
+          {% for row in range(0, 3) %}
+          <tr>
+            {% for col in range(0, 4) %}
+            <td>
+              <label>
+                {% set month = THREE_LETTER_MONTHS[row * 4 + col] %}
+                {# TODO: This does not check integers, because of Jinja limitations, I might just convert to
+                three-letter str in interface.py #}
+                <input type="checkbox" name="months" value="{{ month }}" class="hidden peer" {{ 'checked' if month in months else None }}>
+                <div class="peer-checked:bg-green-500">{{month.capitalize()}}</div>
+              </label>
+            </td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </table>
       </div>
 
       <div class="mb-4">
         <label class="block font-medium mb-2" for="days">Day(s)</label>
-        <input class="border-gray-400 border-2 py-2 px-3 w-full rounded" type="number" id="days" name="days" min="1" max="30">
+        <table class="border-gray-400 border-2 py-2 px-3 w-full rounded">
+          {% for row in range(0, 5)%}
+          {# loop over columns until we have all 31 numbers #}
+          <tr>
+            {% for col in range(1, 8) if (row * 7 + col) <= 31 %} <td>
+              <label>
+                {% set day = row * 7 + col %}
+                <input type="checkbox" name="days" value="{{ day }}" class="hidden peer" {{ 'checked' if day in days else None }} >
+                <div class="peer-checked:bg-green-500">{{ day }}</div>
+              </label>
+              </td>
+              {% endfor %}
+          </tr>
+          {% endfor %}
+        </table>
       </div>
 
-      <h2 class="text-lg font-bold mb-2">Where to search</h2>
+      <!-- <h2 class="text-lg font-bold mb-2">Where to search</h2>
 
       <div class="mb-4">
         <input type="checkbox" id="directory" name="directory" value="Directory">
@@ -36,12 +69,9 @@
       <div class="mb-4">
         <input type="checkbox" id="scholar" name="scholar" value="Scholar">
         <label class="ml-2" for="scholar">Google Scholar</label>
-      </div>
-    </form>
-
-    <form>
+      </div> -->
       <h2 class="text-lg font-bold mb-2">Start date</h2>
-      <input class="border-gray-400 border-2 py-2 px-3 w-full rounded mb-4" type="date" id="date">
+      <input class="border-gray-400 border-2 py-2 px-3 w-full rounded mb-4" name="start_date" type="date" id="date" value="{{ start_date }}">
 
       <button class="bg-main-green hover:bg-green-700 text-white py-2 px-4 rounded" type="submit">Confirm</button>
     </form>
