@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, time
 from flask import Flask, render_template, url_for, send_file, make_response, Response, request, redirect, flash, session
 import csv
 import json
@@ -28,12 +28,21 @@ def index():
 def schedule():
     current_schedule = scheduler.get_job()
 
-    months = current_schedule['months']
-    days = current_schedule['days']
-    start_date_iso = current_schedule['start_date'].date().isoformat() if type(current_schedule['start_date']) == datetime else None
-    # next_fire_time is not important for this page
+    if current_schedule is not None:
+        months = current_schedule['months']
+        days = current_schedule['days']
 
-    return render_template('schedule.html', months=months, days=days, start_date=start_date_iso)
+        exec_time = current_schedule['exec_time']
+        exec_time_iso = exec_time.isoformat(
+            'minutes') if isinstance(exec_time, time) else None
+        
+        start_date = current_schedule['start_date']
+        start_date_iso = start_date.date().isoformat(
+            ) if isinstance(start_date, datetime) else None
+
+        return render_template('schedule.html', months=months, days=days, exec_time=exec_time_iso, start_date=start_date_iso)
+    else:
+        return render_template('schedule.html')
 
 
 @app.get('/manual-entry')
@@ -137,17 +146,46 @@ def update():
 @app.post('/schedule')
 def update_schedule():
     form_data = request.form.to_dict(flat=False)
-    months = form_data.get('months')
-    days = form_data.get('days')
-    start_date = form_data['start_date'][0]
-    
-    # Handle start_date not existing
-    if  start_date == '':
-        start_date = None
-    
-    print(form_data)
 
-    job = scheduler.add_job(months, days, start_date)
+    # Try to get months and days
+    try:
+        months = form_data['months']
+        days = form_data['days']
+    except KeyError as err:
+        if err.args:
+            flash(f'You must select at least one {err.args[0][:-1]}', 'error')
+        else:
+            flash('One or more fields are not filled out correctly', 'error')
+        return redirect('/schedule')
+
+    # Try to get time and start_time, these can be blank, or nonexistent
+    try:
+        start_date = form_data['start_date'][0]
+        if start_date == '':
+            start_date = None
+    except KeyError:
+        start_date = None
+    try:
+        exec_time = form_data['exec_time'][0]
+        if exec_time == '':
+            exec_time = None
+    except KeyError:
+        exec_time = None
+
+    # If time is not None, it should be valid
+    if exec_time is not None:
+        try:
+            exec_time = time.fromisoformat(exec_time)
+        except ValueError:
+            flash('Invalid time input', 'error')
+            return redirect('/schedule')
+
+    print('months: ', months)
+    print('days: ', days)
+    print('exec_time: ', exec_time)
+    print('start_date: ', start_date)
+
+    job = scheduler.update_job(months, days, exec_time,  start_date)
 
     if job is not None:
         flash('Job successfully added', 'message')
