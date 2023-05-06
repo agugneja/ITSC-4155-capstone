@@ -18,13 +18,17 @@
                 </a>
                 {% endif %}
             </div>
-
+            {% if (job is defined) and (next_scrape is defined) %}
             <div class="my-4">
                 <h2 class="font-bold">Current schedule:</h2>
-                <p class="text-gray-500">Repeat every X months and X days<br>
-                There is X month(s) and X day(s) remaining until the next update</p> <!--Placeholder until code is written-->
+                <p class="text-gray-500">Repeat on months: {{ job['months'] }}; on days: {{ job['days'] }}<br>
+                There is {{ next_scrape['months'] }} month(s),
+                {{ next_scrape['days'] }} day(s),
+                {{ next_scrape['hours'] }} hour(s),
+                and {{ next_scrape['minutes'] }} minute(s) remaining until the next update</p>
             </div>
-            
+            {% endif %}
+
             <div class="my-4">
                 {% if not scraper_running %}    
                 <form class="flex flex-col" method="post">

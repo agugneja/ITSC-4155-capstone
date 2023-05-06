@@ -1,5 +1,5 @@
-from datetime import datetime
-from flask import Flask, render_template, url_for, send_file, make_response, Response, request, redirect, flash, session
+from datetime import datetime, time
+from flask import Flask, render_template, make_response, Response, request, redirect, flash
 import csv
 import json
 from bson import json_util, ObjectId
@@ -8,7 +8,6 @@ import re
 
 from WebScraper.webscraper import main as scrape
 from Model import model
-from dataclasses import dataclass, asdict
 from Schedule import scheduler
 from WebScraper import webscraper
 from flask_sock import Sock
@@ -27,8 +26,12 @@ sock = Sock(app)
 
 @app.get('/')
 def index():
-    # current_schedule = scheduler.get_job()
-    last_updated = None
+    job = scheduler.get_job()
+    next_scrape = scheduler.get_next_fire_time_delta()
+
+    if None in (job, next_scrape):
+        flash('No job in database', 'error')
+        last_updated = None
     if webscraper.last_updated is not None:
         last_updated = webscraper.last_updated.astimezone(tzlocal.get_localzone())
         last_updated = last_updated.strftime('%b %w, %Y at %I:%M %p %Z')
@@ -50,7 +53,31 @@ def scraper_output(ws):
     # if webscraper stops running close connection
     ws.send('Web scraper finished! Redirecting...')
     ws.close()
+    else:
+        # Stringify months and days
+        month_str = job['months'][0].capitalize() if job['months'] != [] else None
+        for month in job['months'][1:]:
+            month_str += ', ' + month.capitalize()
+        day_str = str(job['days'][0]) if job['days'] != [] else None
+        for day in job['days'][1:]:
+            day_str += ', ' + str(day)
         
+        job_times = {
+            'months': month_str,
+            'days': day_str
+        }
+                
+        print(job_times)
+        
+        next_scrape_times = {
+            'months': next_scrape.months,
+            'days': next_scrape.days,
+            'hours': next_scrape.hours,
+            'minutes': next_scrape.minutes
+        }
+
+        return render_template('index.html', job=job_times, next_scrape=next_scrape_times)
+
 
 @app.get('/last_updated')
 def get_last_updated_time():
@@ -60,12 +87,21 @@ def get_last_updated_time():
 def schedule():
     current_schedule = scheduler.get_job()
 
-    months = current_schedule['months']
-    days = current_schedule['days']
-    start_date_iso = current_schedule['start_date'].date().isoformat() if type(current_schedule['start_date']) == datetime else None
-    # next_fire_time is not important for this page
+    if current_schedule is not None:
+        months = current_schedule['months']
+        days = current_schedule['days']
 
-    return render_template('schedule.html', months=months, days=days, start_date=start_date_iso)
+        exec_time = current_schedule['exec_time']
+        exec_time_iso = exec_time.isoformat(
+            'minutes') if isinstance(exec_time, time) else None
+
+        start_date = current_schedule['start_date']
+        start_date_iso = start_date.date().isoformat(
+        ) if isinstance(start_date, datetime) else None
+
+        return render_template('schedule.html', months=months, days=days, exec_time=exec_time_iso, start_date=start_date_iso)
+    else:
+        return render_template('schedule.html')
 
 
 @app.get('/manual-entry')
@@ -169,16 +205,46 @@ def update():
 @app.post('/schedule')
 def update_schedule():
     form_data = request.form.to_dict(flat=False)
-    months = form_data.get('months')
-    days = form_data.get('days')
-    start_date = form_data['start_date'][0]
-    # Handle start_date not existing
-    if  start_date == '':
-        start_date = None
-    
-    print(form_data)
 
-    job = scheduler.add_job(months, days, start_date)
+    # Try to get months and days
+    try:
+        months = form_data['months']
+        days = form_data['days']
+    except KeyError as err:
+        if err.args:
+            flash(f'You must select at least one {err.args[0][:-1]}', 'error')
+        else:
+            flash('One or more fields are not filled out correctly', 'error')
+        return redirect('/schedule')
+
+    # Try to get time and start_time, these can be blank, or nonexistent
+    try:
+        start_date = form_data['start_date'][0]
+        if start_date == '':
+            start_date = None
+    except KeyError:
+        start_date = None
+    try:
+        exec_time = form_data['exec_time'][0]
+        if exec_time == '':
+            exec_time = None
+    except KeyError:
+        exec_time = None
+
+    # If time is not None, it should be valid
+    if exec_time is not None:
+        try:
+            exec_time = time.fromisoformat(exec_time)
+        except ValueError:
+            flash('Invalid time input', 'error')
+            return redirect('/schedule')
+
+    print('months: ', months)
+    print('days: ', days)
+    print('exec_time: ', exec_time)
+    print('start_date: ', start_date)
+
+    job = scheduler.update_job(months, days, exec_time,  start_date)
 
     if job is not None:
         flash('Job successfully added', 'message')
