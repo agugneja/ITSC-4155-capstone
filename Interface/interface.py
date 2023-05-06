@@ -1,5 +1,5 @@
 from datetime import datetime, time
-from flask import Flask, render_template, url_for, send_file, make_response, Response, request, redirect, flash, session
+from flask import Flask, render_template, make_response, Response, request, redirect, flash
 import csv
 import json
 from bson import json_util, ObjectId
@@ -8,7 +8,6 @@ import re
 
 from WebScraper.webscraper import main as scrape
 from Model import model
-from dataclasses import dataclass, asdict
 from Schedule import scheduler
 
 
@@ -20,8 +19,36 @@ app.url_map.strict_slashes = False
 
 @app.get('/')
 def index():
-    # current_schedule = scheduler.get_job()
-    return render_template('index.html')
+    job = scheduler.get_job()
+    next_scrape = scheduler.get_next_fire_time_delta()
+
+    if None in (job, next_scrape):
+        flash('No job in database', 'error')
+        return render_template('index.html')
+    else:
+        # Stringify months and days
+        month_str = job['months'][0].capitalize() if job['months'] != [] else None
+        for month in job['months'][1:]:
+            month_str += ', ' + month.capitalize()
+        day_str = str(job['days'][0]) if job['days'] != [] else None
+        for day in job['days'][1:]:
+            day_str += ', ' + str(day)
+        
+        job_times = {
+            'months': month_str,
+            'days': day_str
+        }
+        
+        print(job_times)
+        
+        next_scrape_times = {
+            'months': next_scrape.months,
+            'days': next_scrape.days,
+            'hours': next_scrape.hours,
+            'minutes': next_scrape.minutes
+        }
+
+        return render_template('index.html', job=job_times, next_scrape=next_scrape_times)
 
 
 @app.get('/schedule')
@@ -35,10 +62,10 @@ def schedule():
         exec_time = current_schedule['exec_time']
         exec_time_iso = exec_time.isoformat(
             'minutes') if isinstance(exec_time, time) else None
-        
+
         start_date = current_schedule['start_date']
         start_date_iso = start_date.date().isoformat(
-            ) if isinstance(start_date, datetime) else None
+        ) if isinstance(start_date, datetime) else None
 
         return render_template('schedule.html', months=months, days=days, exec_time=exec_time_iso, start_date=start_date_iso)
     else:

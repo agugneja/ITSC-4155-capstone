@@ -8,11 +8,11 @@ from typing import Union
 import re
 from datetime import datetime, time
 from zoneinfo import ZoneInfo
+from dateutil.relativedelta import relativedelta
 
 # Get the database info from the model, and the scraper function from webscraper
 from Model.model import DB_NAME, client
 from WebScraper.webscraper import main as scrape
-
 
 # Initialize the scheduler
 jobstores = {
@@ -31,6 +31,7 @@ scheduler = BackgroundScheduler(
     jobstores=jobstores, executors=executors, job_defaults=job_defaults)
 scheduler.start()
 
+ZONE_INFO = ZoneInfo('America/New_York')
 
 def update_job(months: Union[int, str, list[Union[int, str]], None],
                days: Union[int, str, list[Union[int, str]], None],
@@ -117,11 +118,11 @@ def get_job() -> Union[dict, None]:
         try:
             months = [str(x) for x in fields['month'].expressions]
         except TypeError:
-            months = None
+            months = []
         try:
             days = [x.first for x in fields['day'].expressions]
         except (TypeError, AttributeError):
-            days = None
+            days = []
 
         # Get time as a time object
         try:
@@ -138,7 +139,28 @@ def get_job() -> Union[dict, None]:
                      'days': days,
                      'start_date': trigger.start_date,
                      'exec_time': exec_time,
-                     'next_fire_time': trigger.get_next_fire_time(None, datetime.now(ZoneInfo('America/New_York')))}
+                     'next_fire_time': trigger.get_next_fire_time(None, datetime.now(ZONE_INFO))}
         return job_attrs
     else:
         return None
+
+def get_next_fire_time_delta() -> Union[relativedelta, None]:
+    """Get the next fire time for the job.
+
+    Returns:
+        datetime: Returns the next time the scheduler will fire if job['0'] exists.
+        None: Returns None otherwise
+    """
+    
+    now = datetime.now(ZONE_INFO)
+    
+    try:
+        next_fire_time = scheduler.get_job('0').trigger.get_next_fire_time(previous_fire_time=None, now=now)
+        return relativedelta(next_fire_time, now)
+    except AttributeError as err:
+        if err.args == ("'NoneType' object has no attribute 'trigger'",):
+            # This just means that job['0'] does not exist
+            return None
+        else:
+            # Rethrow any other errors
+            raise err
