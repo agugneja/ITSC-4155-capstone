@@ -10,19 +10,51 @@ from WebScraper.webscraper import main as scrape
 from Model import model
 from dataclasses import dataclass, asdict
 from Schedule import scheduler
-
-
+from WebScraper import webscraper
+from flask_sock import Sock
+import asyncio
+from threading import Thread
+from WebScraper.liststream import liststream
+from datetime import timezone
+from zoneinfo import ZoneInfo
+import tzlocal
 app = Flask(__name__)
-app.debug = True
+# app.debug = True
 app.secret_key = "password"
 app.url_map.strict_slashes = False
 
+sock = Sock(app)
 
 @app.get('/')
 def index():
     # current_schedule = scheduler.get_job()
-    return render_template('index.html')
+    last_updated = None
+    if webscraper.last_updated is not None:
+        last_updated = webscraper.last_updated.astimezone(tzlocal.get_localzone())
+        last_updated = last_updated.strftime('%b %w, %Y at %I:%M %p %Z')
+    return render_template('index.html', scraper_running=webscraper.is_running, last_updated=last_updated)
 
+@app.post('/')
+def run_scraper():
+    task = Thread(target=webscraper._main)
+    task.start()
+    return redirect('/')
+
+@sock.route('/scraper_output')
+def scraper_output(ws):
+    liststream.reset_index()
+    while webscraper.is_running:
+        if liststream.index < len(liststream) - 1:
+            ws.send(liststream.readline())
+            
+    # if webscraper stops running close connection
+    ws.send('Web scraper finished! Redirecting...')
+    ws.close()
+        
+
+@app.get('/last_updated')
+def get_last_updated_time():
+    return json.dumps(webscraper.last_updated.isoformat())
 
 @app.get('/schedule')
 def schedule():
@@ -140,7 +172,6 @@ def update_schedule():
     months = form_data.get('months')
     days = form_data.get('days')
     start_date = form_data['start_date'][0]
-    
     # Handle start_date not existing
     if  start_date == '':
         start_date = None

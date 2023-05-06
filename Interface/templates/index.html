@@ -10,11 +10,13 @@
         <hr class="my-4">
         <div class="bg-white p-4 rounded-lg shadow-md">
             <div class="my-4">
+                {% if last_updated %}
                 <h2 class="font-bold">Database last updated:</h2>
-                <p class="text-gray-500">Month Date, Year at Time AM/PM</p> <!--Placeholder until code is written-->
+                <p class="text-gray-500">{{last_updated}}</p> <!--Placeholder until code is written-->
                 <a href="{{url_for('csv_download')}}">
                  <button type="button" class="bg-main-green hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4">Export CSV</button>
                 </a>
+                {% endif %}
             </div>
 
             <div class="my-4">
@@ -22,9 +24,10 @@
                 <p class="text-gray-500">Repeat every X months and X days<br>
                 There is X month(s) and X day(s) remaining until the next update</p> <!--Placeholder until code is written-->
             </div>
-
+            
             <div class="my-4">
-                <form class="flex flex-col">
+                {% if not scraper_running %}    
+                <form class="flex flex-col" method="post">
                     <h3 class="font-bold">Manual update</h3>
 
                     <label for="all" class="inline-flex items-center mt-2">
@@ -56,7 +59,34 @@
 
                     <button type="submit" class="bg-main-green hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4">Confirm</button>
                 </form>
-            </div>
+                {% else %}
+                <div class="text-white bg-stone-800 rounded-md border overflow-auto h-80 flex flex-col-reverse">
+                    <samp class="m-2 text-xs space-y-3 whitespace-pre-line" id="scraperOutput"></samp>
+                    <script>
+                        $(function (){
+
+                            const update_output = (new_text) => {
+                                $('#scraperOutput').html((i, oldHtml) => oldHtml + `<div>${new_text}</div>` )
+                            }
+
+                            const socket = new WebSocket(`ws://${location.host}/scraper_output`);
+
+                            socket.addEventListener('message', event => {
+                                update_output(event.data);
+                            })
+                            // wait 5 seconds and then refresh the page when the scraper finishes
+                            socket.addEventListener('close', event => {
+                                setTimeout(() => window.location.reload(), 500 )
+                            })
+                        });
+                        
+                    </script>
+                </div>
+                {% endif %}
+            </div>  
+            
+            
+
         </div>
     </div>
 </div>

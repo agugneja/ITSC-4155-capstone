@@ -1,14 +1,25 @@
 import requests
 import inspect
+from io import StringIO
 from . import chhs, education, engineering, liberalscience, misc
 from Model.model import FacultyProfile, update_by_name
 from .FacultyWebScraper import FacultyWebScraper
 from concurrent.futures import ThreadPoolExecutor
 import csv
+import sys
+from contextlib import redirect_stdout
+from .liststream import liststream_handler
+import logging
+from datetime import datetime, timezone
+
+is_running = False
+last_updated = datetime.now(timezone.utc)
 
 def main():
+    global is_running, last_updated
+    is_running = True
     # modules = [chhs, education, engineering, liberalscience, misc]
-    modules = [education]
+    modules = [chhs]
     departments = []
     for module in modules:
         for name, obj in inspect.getmembers(module, predicate=inspect.isclass):
@@ -39,6 +50,10 @@ def main():
             writer.writerow(row)
 
     update_by_name(profiles)
+    last_updated = datetime.utcnow()
+    is_running = False
 
+def _main():
+    main()
 if __name__ == '__main__':
     main()

@@ -6,7 +6,12 @@ from time import sleep
 from typing import Optional
 from Model.model import FacultyProfile
 from abc import ABC, abstractmethod
+import logging
+from .liststream import liststream_handler
 
+logger = logging.getLogger(__name__)
+logger.addHandler(liststream_handler)
+logger.setLevel(logging.INFO)
 class FacultyWebScraper(ABC):
     """Base class for all department web scrapers
        
@@ -29,7 +34,7 @@ class FacultyWebScraper(ABC):
             `list[str]`: a list of URLs that point to faculty profiles
         """
         URLs = []
-        soup = self.getSoup(directoryURL, retries=4)
+        soup = self.getSoup(directoryURL, retries=4, sleep_time=10)
         soupList = self.scrapeURLs(soup)
         for a_tag in soupList:
             href = a_tag.get("href")
@@ -58,8 +63,7 @@ class FacultyWebScraper(ABC):
                     email = self.getEmail(soup, rawHtml, url)
                     profiles.append(FacultyProfile(name=name, department=self.__class__.__name__, rawHtml=rawHtml, url=url, email=email))
                 except Exception as e:
-                    print(f"Something went wrong when visiting {url}:")
-                    print(e)
+                    logger.info(f"Something went wrong when visiting {url}:\n{e}")
 
         return profiles
     
@@ -81,15 +85,13 @@ class FacultyWebScraper(ABC):
                 html = requests.get(url).content
                 return BeautifulSoup(html, "lxml")
             except requests.ConnectionError as e:
-                print(f'An error occurred while fetching this page: {url}')
-                print(e)
+                logger.info(f'A connection error occurred while fetching this page: {url}\nRetrying in {sleep_time} seconds...')
                 sleep(sleep_time)
-                print(f'Retrying {url}')
+                logger.info(f'Retrying {url}')
                 times_retried += 1
                 sleep_time += 1
             except Exception as e:
-                print(f'An error occurred while fetching this page: {url}')
-                print(e)
+                logger.info(f'An error occurred while fetching this page: {url}\n{e}')
                 break
         
 
@@ -113,12 +115,12 @@ class FacultyWebScraper(ABC):
             if html is not None:
                 emails = self._findEmails(html)
                 if len(emails) == 0:
-                    print(f'no emails found for {url}')
+                    logger.info(f'no emails found for {url}')
                     return None
                 elif len(emails) == 1:
                     return emails.pop()
                 if html == profile_html:
-                    print(f'more than 1 email found for {url}')
+                    logger.info(f'more than 1 email found for {url}')
             
         return None
 
@@ -185,7 +187,7 @@ class FacultyWebScraper(ABC):
         and sets the facultyURLs and profile fields 
         """
 
-        print(f"Starting {self.__class__.__name__}")
+        logger.info(f"Starting {self.__class__.__name__}")
         self.facultyURLs = []
         for directoryURL in self.directoryURLs:
             self.facultyURLs += self.getFacultyURLs(self.baseURL, directoryURL)
