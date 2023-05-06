@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup, Tag
 from bs4 import ResultSet
 import requests
 import re
+from time import sleep
 from typing import Optional
 from Model.model import FacultyProfile
 from abc import ABC, abstractmethod
@@ -10,12 +11,10 @@ class FacultyWebScraper(ABC):
     """Base class for all department web scrapers
        
     ### Attributes:
-        `bad_urls (list[str])`: A list of urls that an exception when attempting to fetch
         `facultyURLs (list[str])`: A list of urls that point to the faculty profiles that will be scraped
         `profiles (list[FacultyProfile])`: a list of FacultyProfile objects that represent the scraped profiles
 
     """
-    bad_urls: list[str]
     facultyURLs: list[str]
     profiles: list[FacultyProfile]
 
@@ -30,7 +29,7 @@ class FacultyWebScraper(ABC):
             `list[str]`: a list of URLs that point to faculty profiles
         """
         URLs = []
-        soup = self.getSoup(directoryURL)
+        soup = self.getSoup(directoryURL, retries=4)
         soupList = self.scrapeURLs(soup)
         for a_tag in soupList:
             href = a_tag.get("href")
@@ -64,23 +63,35 @@ class FacultyWebScraper(ABC):
 
         return profiles
     
-    def getSoup(self, url: str) -> Optional[BeautifulSoup]:
-        """Creates a new object for a specified website
+    def getSoup(self, url: str, retries: int = 2, sleep_time: int = 3) -> Optional[BeautifulSoup]:
+        """Creates a new BeautifulSoup object for a specified website
 
         ### Args:
             `url (str)`: The URL for the website you need a `BeautifulSoup` object for
+            `retries (int)`: How many times to retry the url if a connection error occurs
+            `sleep_time (int): How long (in seconds) to sleep before retrying. This value increases by one each loop
 
         ### Returns:
             `Optional[BeautifulSoup]`: A new `BeautifulSoup` object for the website that the URL points to
             if no exception occurs, otherwise `None` 
         """
-        try:
-            html = requests.get(url).content
-            return BeautifulSoup(html, "lxml")
-        except Exception as e:
-            print(f'An error occurred while fetching this page: {url}')
-            print(e)
-            # self.bad_urls.append(url)
+        times_retried = 0
+        while times_retried < retries:
+            try:
+                html = requests.get(url).content
+                return BeautifulSoup(html, "lxml")
+            except requests.ConnectionError as e:
+                print(f'An error occurred while fetching this page: {url}')
+                print(e)
+                sleep(sleep_time)
+                print(f'Retrying {url}')
+                times_retried += 1
+                sleep_time += 1
+            except Exception as e:
+                print(f'An error occurred while fetching this page: {url}')
+                print(e)
+                break
+        
 
     def getEmail(self, entire_html: Tag, profile_html: Optional[Tag], url: str) -> Optional[str]:
         """Finds a single uncc email address from the page given
@@ -167,3 +178,16 @@ class FacultyWebScraper(ABC):
         """
         ...
     
+    def run(self):
+        """Acts as the main function for a class
+        
+        Runs the getFacultyURLs and getProfilePage methods 
+        and sets the facultyURLs and profile fields 
+        """
+
+        print(f"Starting {self.__class__.__name__}")
+        self.facultyURLs = []
+        for directoryURL in self.directoryURLs:
+            self.facultyURLs += self.getFacultyURLs(self.baseURL, directoryURL)
+
+        self.profiles = self.getProfilePage(self.facultyURLs)
