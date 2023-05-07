@@ -11,13 +11,16 @@
                         $('#_id_input').val(ui.item._id);
                         return false;
                     },
-                    {% if submit_on_select %}
+
                     select: (event, ui) => {
                         $('#member_input').val(ui.item.label);
+                        {% if submit_on_select %} 
                         $('#member_input').closest('form').submit();
+                        {% endif %}
+                        $('#member_input').trigger('input')
                         return false;
                     }
-                    {% endif %}
+
                 }).autocomplete("instance")._renderItem = (ul, item) => {
                     if (item.email !== null) {
                         return $( "<li>" )
@@ -32,6 +35,11 @@
             })
             .fail(() => {
                 alert("Sorry, something went wrong")
+            })
+            $('#member_input').on('input', () => {
+                if (!$('#member_input').val()) {
+                    $('#_id_input').val('');
+                }
             })
         }); 
     </script>
