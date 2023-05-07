@@ -15,6 +15,7 @@ import asyncio
 from threading import Thread
 from WebScraper.liststream import liststream
 from functools import wraps
+from time import sleep
 
 app = Flask(__name__)
 app.debug = True
@@ -33,10 +34,10 @@ def scraper_not_running(route_func):
         return route_func(*args, **kwargs)
     return wrapper
 
-# @app.errorhandler(404)
-# def page_not_found(e):
-#     flash('Page not found', 'error')
-#     return redirect('/')
+@app.errorhandler(404)
+def page_not_found(e):
+    flash('Page not found', 'error')
+    return redirect('/')
 
 @app.get('/')
 def index():
@@ -80,12 +81,11 @@ def run_scraper():
         task.start()
     else:
         _id = request.form.get('_id')
-        faculty_member = model.faculty_members.find_one({
-            '_id': ObjectId(_id)})
-        url = faculty_member['url']
-        department = faculty_member['department']
-        task = Thread(target=webscraper.update_single, args=[url, department])
-        task.start()
+        if faculty_member := model.faculty_members.find_one({'_id': ObjectId(_id)}):
+            url = faculty_member['url']
+            department = faculty_member['department']
+            task = Thread(target=webscraper.update_single, args=[url, department])
+            task.start()
     return redirect('/')
 
 @sock.route('/scraper_output')
@@ -100,6 +100,8 @@ def scraper_output(ws):
 
     # if webscraper stops running close connection
     ws.send('Web scraper finished! Redirecting...')
+    liststream.reset()
+    sleep(5)
     ws.close()
     
 
