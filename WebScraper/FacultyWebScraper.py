@@ -7,10 +7,12 @@ from Model.model import FacultyProfile
 from abc import ABC, abstractmethod
 import logging
 from .liststream import liststream_handler
+from time import sleep
 
 logger = logging.getLogger(__name__)
 logger.addHandler(liststream_handler)
 logger.setLevel(logging.INFO)
+
 class FacultyWebScraper(ABC):
     """Base class for all department web scrapers
        
