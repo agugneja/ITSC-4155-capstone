@@ -6,7 +6,6 @@ from bson import json_util, ObjectId
 from io import StringIO
 import re
 
-from WebScraper.webscraper import main as scrape
 from Model import model
 from Schedule import scheduler
 from WebScraper import webscraper
@@ -75,16 +74,18 @@ def index():
 @app.post('/')
 @scraper_not_running
 def run_scraper():
+    update_profiles = True if request.form.get('directory') == 'Directory' else False
+    update_contact_info = True if request.form.get('facstaff') == 'Facstaff' else False
     print(request.form.get('update'))
     if request.form.get('update') == 'All':
-        task = Thread(target=webscraper.main)
+        task = Thread(target=webscraper.main, args=[update_profiles, update_contact_info])
         task.start()
     else:
         _id = request.form.get('_id')
         if faculty_member := model.faculty_members.find_one({'_id': ObjectId(_id)}):
             url = faculty_member['url']
             department = faculty_member['department']
-            task = Thread(target=webscraper.update_single, args=[url, department])
+            task = Thread(target=webscraper.update_single, args=[url, department, update_contact_info])
             task.start()
     return redirect('/')
 
@@ -101,7 +102,7 @@ def scraper_output(ws):
     # if webscraper stops running close connection
     ws.send('Web scraper finished! Redirecting...')
     liststream.reset()
-    sleep(5)
+    sleep(2)
     ws.close()
     
 
