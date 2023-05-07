@@ -14,15 +14,29 @@ from flask_sock import Sock
 import asyncio
 from threading import Thread
 from WebScraper.liststream import liststream
-from datetime import timezone
-from zoneinfo import ZoneInfo
-import tzlocal
+from functools import wraps
+
 app = Flask(__name__)
-# app.debug = True
+app.debug = True
 app.secret_key = "password"
 app.url_map.strict_slashes = False
 
 sock = Sock(app)
+
+def scraper_not_running(route_func):
+    """Redirects to index page if scraper is running"""
+    @wraps(route_func)
+    def wrapper(*args, **kwargs):
+        if webscraper.is_running:
+            flash('That page cannot be accessed while the scraper is running', 'error')
+            return redirect('/')
+        return route_func(*args, **kwargs)
+    return wrapper
+
+# @app.errorhandler(404)
+# def page_not_found(e):
+#     flash('Page not found', 'error')
+#     return redirect('/')
 
 @app.get('/')
 def index():
@@ -31,28 +45,6 @@ def index():
 
     if None in (job, next_scrape):
         flash('No job in database', 'error')
-        last_updated = None
-    if webscraper.last_updated is not None:
-        last_updated = webscraper.last_updated.astimezone(tzlocal.get_localzone())
-        last_updated = last_updated.strftime('%b %w, %Y at %I:%M %p %Z')
-    return render_template('index.html', scraper_running=webscraper.is_running, last_updated=last_updated)
-
-@app.post('/')
-def run_scraper():
-    task = Thread(target=webscraper._main)
-    task.start()
-    return redirect('/')
-
-@sock.route('/scraper_output')
-def scraper_output(ws):
-    liststream.reset_index()
-    while webscraper.is_running:
-        if liststream.index < len(liststream) - 1:
-            ws.send(liststream.readline())
-            
-    # if webscraper stops running close connection
-    ws.send('Web scraper finished! Redirecting...')
-    ws.close()
     else:
         # Stringify months and days
         month_str = job['months'][0].capitalize() if job['months'] != [] else None
@@ -75,8 +67,41 @@ def scraper_output(ws):
             'hours': next_scrape.hours,
             'minutes': next_scrape.minutes
         }
+    last_updated = model.get_last_update_time().strftime('%b %w, %Y at %I:%M %p %Z')
+    return render_template('index.html', job=job_times, next_scrape=next_scrape_times, scraper_running=webscraper.is_running, last_updated=last_updated)
 
-        return render_template('index.html', job=job_times, next_scrape=next_scrape_times)
+
+@app.post('/')
+@scraper_not_running
+def run_scraper():
+    print(request.form.get('update'))
+    if request.form.get('update') == 'All':
+        task = Thread(target=webscraper.main)
+        task.start()
+    else:
+        _id = request.form.get('_id')
+        faculty_member = model.faculty_members.find_one({
+            '_id': ObjectId(_id)})
+        url = faculty_member['url']
+        department = faculty_member['department']
+        task = Thread(target=webscraper.update_single, args=[url, department])
+        task.start()
+    return redirect('/')
+
+@sock.route('/scraper_output')
+def scraper_output(ws):
+    liststream.reset_index()
+    while webscraper.is_running:
+        if liststream.index < len(liststream) - 1:
+            ws.send(liststream.readline())
+            
+    while(line := liststream.readline()):
+        ws.send(line)
+
+    # if webscraper stops running close connection
+    ws.send('Web scraper finished! Redirecting...')
+    ws.close()
+    
 
 
 @app.get('/last_updated')
@@ -84,6 +109,7 @@ def get_last_updated_time():
     return json.dumps(webscraper.last_updated.isoformat())
 
 @app.get('/schedule')
+@scraper_not_running
 def schedule():
     current_schedule = scheduler.get_job()
 
@@ -104,14 +130,18 @@ def schedule():
         return render_template('schedule.html')
 
 
-@app.get('/manual-entry')
-def manual_entry():
-    # repeated here instead of making a global so that it will update each
-    # time it's needed
-    return render_template('manual-entry.html')
+@app.get('/manual-entry/<_id>')
+@scraper_not_running
+def manual_entry(_id):
+    if faculty_member := model.faculty_members.find_one({'_id':ObjectId(_id)}):
+        return render_template('manual-entry.html', faculty_member=faculty_member, _id=_id)
+    
+    flash('Invalid faculty ID', 'error')
+    return redirect('/')
 
 
 @app.get('/search-profiles')
+@scraper_not_running
 def profile_search():
     name = request.args.get('name')
     _id = request.args.get('_id')
@@ -135,12 +165,14 @@ def get_profiles():
 
 
 @app.delete('/delete/<_id>')
+@scraper_not_running
 def delete_faculty_member(_id):
     model.faculty_members.delete_one({'_id': ObjectId(_id)})
     return Response(status=204)
 
 
 @app.get('/help')
+@scraper_not_running
 def help():
     return render_template('help.html')
 
@@ -164,7 +196,7 @@ def csv_download():
                         faculty_member.name, None, faculty_member.rawHtml])
 
     # Send a response
-    filename = 'example'
+    filename = 'webscraperoutput'
     response = make_response(csvString.getvalue())
     response.mimetype = 'text/csv'
     response.headers['Content-Disposition'] = f'attachment; filename={filename}.csv'
@@ -177,9 +209,8 @@ def csv_download():
 
 
 # Temp:
-@app.post('/manual-entry')
-def update():
-    _id = request.form.get('_id')
+@app.post('/manual-entry/<_id>')
+def update(_id):
     db_filter = {'_id': ObjectId(_id)}
 
     faculty_dict = {
@@ -197,7 +228,7 @@ def update():
             model.faculty_members.update_one(
                 db_filter, {'$set': {field: value if value != '' else None}})
 
-    return redirect(f'search-profiles?name={faculty_dict["name"]}&_id={_id}')
+    return redirect(f'/search-profiles?name={faculty_dict["name"]}&_id={_id}')
 
 # Change schedule
 
