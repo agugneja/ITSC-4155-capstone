@@ -91,7 +91,7 @@ def update_job(months: Union[int, str, list[Union[int, str]], None],
     try:
         return scheduler.reschedule_job(job_id='0', trigger=trigger)
     except JobLookupError:
-        return scheduler.add_job(func=scrape, trigger=trigger, id='0')
+        return scheduler.add_job(func=scrape, args=[True, False], trigger=trigger, id='0')
 
 
 def get_job() -> Union[dict, None]:
