@@ -1,6 +1,7 @@
 # Modified from https://stackoverflow.com/a/21341209
 from __future__ import annotations
 import sys, logging
+from typing import Optional
 
 class ListStream:
     def __init__(self) -> None:
@@ -10,10 +11,11 @@ class ListStream:
     def write(self, s) -> None:
         self.data.append(s)
 
-    def readline(self) -> str:
+    def readline(self) -> Optional[str]:
         if len(self.data) - 1 >= self._curr_index:
             self._curr_index += 1
             return self.data[self._curr_index - 1]
+        return None
         
     def reset_index(self) -> None:
         self._curr_index = 0
