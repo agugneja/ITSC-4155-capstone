@@ -11,12 +11,12 @@
   <h1 class="text-3xl text-white font-bold mb-4">Schedule</h1>
   <hr class="my-4">
   <div class="bg-white p-4 rounded-lg shadow-md">
-    <form method="post" class="mb-8">
+    <form method="post" class="flex flex-col">
       <h2 class="text-lg font-bold mb-2">Repeat on...</h2>
 
       <div class="mb-4">
         <label class="block font-medium mb-2" for="months">Month(s)</label>
-        <table class="border-gray-400 border-2 py-2 px-3 w-full rounded">
+        <table class="border-gray-400 border-2 border-separate py-2 px-3 w-full rounded">
           {% for row in range(0, 3) %}
           <tr>
             {% for col in range(0, 4) %}
@@ -26,7 +26,7 @@
                 {# TODO: This does not check integers, because of Jinja limitations, I might just convert to
                 three-letter str in interface.py #}
                 <input type="checkbox" name="months" value="{{ month }}" class="hidden peer" {{ 'checked' if month in months else None }}>
-                <div class="peer-checked:bg-green-500">{{month.capitalize()}}</div>
+                <div class="select-none peer-checked:bg-green-700 hover:bg-green-700 hover:bg-opacity-25 peer-checked:bg-opacity-50 rounded pl-1">{{month.capitalize()}}</div>
               </label>
             </td>
             {% endfor %}
@@ -35,17 +35,17 @@
         </table>
       </div>
 
-      <div class="mb-4">
+      <div class="mb-4 rounded-lg">
         <label class="block font-medium mb-2" for="days">Day(s)</label>
-        <table class="border-gray-400 border-2 py-2 px-3 w-full rounded">
+        <table class="border-gray-400 border-2 border-separate py-2 px-3 w-full rounded">
           {% for row in range(0, 5)%}
           {# loop over columns until we have all 31 numbers #}
-          <tr>
+          <tr class="justify-around">
             {% for col in range(1, 8) if (row * 7 + col) <= 31 %} <td>
               <label>
                 {% set day = row * 7 + col %}
                 <input type="checkbox" name="days" value="{{ day }}" class="hidden peer" {{ 'checked' if day in days else None }} >
-                <div class="peer-checked:bg-green-500">{{ day }}</div>
+                <div class="select-none hover:bg-green-700 hover:bg-opacity-25 peer-checked:bg-green-700 peer-checked:bg-opacity-50 rounded pl-1">{{ day }}</div>
               </label>
               </td>
               {% endfor %}
@@ -78,7 +78,7 @@
       <div class="text-sm mb-4">(First scrape will start on or after this date. Leave blank to start the schedule now)</div>
       <input class="border-gray-400 border-2 py-2 px-3 w-full rounded mb-4" name="start_date" type="date" id="date" value="{{ start_date }}">
 
-      <button class="bg-main-green hover:bg-green-700 text-white py-2 px-4 rounded" type="submit">Confirm</button>
+      <button class="bg-main-green enabled:hover:bg-green-700 disabled:opacity-75 text-white font-bold py-2 px-4 rounded mt-4" type="submit">Confirm</button>
     </form>
   </div>
 </div>
