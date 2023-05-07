@@ -2,7 +2,6 @@ from bs4 import BeautifulSoup, Tag
 from bs4 import ResultSet
 import requests
 import re
-from time import sleep
 from typing import Optional
 from Model.model import FacultyProfile
 from abc import ABC, abstractmethod
@@ -179,7 +178,13 @@ class FacultyWebScraper(ABC):
             `list[str]`: A list of <a> tags
         """
         ...
-    
+    def scrapeSingle(self, url) -> Optional[FacultyProfile]:
+        logger.info(f"Starting scrape for {url}...")
+        if profile := self.getProfilePage([url]):
+            logger.info(f"Finished scraping {url}...")
+            return profile[0]
+        return None
+            
     def run(self):
         """Acts as the main function for a class
         
@@ -187,9 +192,10 @@ class FacultyWebScraper(ABC):
         and sets the facultyURLs and profile fields 
         """
 
-        logger.info(f"Starting {self.__class__.__name__}")
+        logger.info(f"Starting {self.__class__.__name__}...")
         self.facultyURLs = []
         for directoryURL in self.directoryURLs:
             self.facultyURLs += self.getFacultyURLs(self.baseURL, directoryURL)
 
         self.profiles = self.getProfilePage(self.facultyURLs)
+        logger.info(f"Finished {self.__class__.__name__}!")
