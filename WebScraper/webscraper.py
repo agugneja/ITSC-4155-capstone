@@ -12,11 +12,14 @@ from .liststream import liststream_handler
 import logging
 from datetime import datetime, timezone
 from time import sleep
-is_running = False
+from .facstaff import scrape_all_faculty, scrape_facstaff_by_name, scrape_contact_info_by_email
 
-def main():
-    global is_running
-    is_running = True
+is_running = False
+logger = logging.getLogger(__name__)
+logger.addHandler(liststream_handler)
+logger.setLevel(logging.INFO)
+
+def scrape_department_profiles():
     # modules = [chhs, education, engineering, liberalscience, misc]
     modules = [education]
     departments = []
@@ -48,20 +51,45 @@ def main():
     #         writer.writerow(row)
 
     update_by_name(profiles)
-    update_last_update_time(datetime.utcnow())
-    is_running = False
 
-def update_single(url, department):
+def update_single(url: str, department: str, scrape_contact_info: bool):
     global is_running
     is_running = True
 
     for college in [chhs, education, engineering, liberalscience, misc]:
         if _class := getattr(college, department, None):
             department_class = _class
-
+    logger.info('Starting department profile scrape...')
     updated_profile = department_class().scrapeSingle(url)
+
+    if scrape_contact_info and updated_profile.email is not None:
+        logger.info('Starting contact info scrape...')
+        contact_info = scrape_contact_info_by_email(updated_profile.name[0], updated_profile.email)
+        print(contact_info)
+        # don't overwrite with None by accident 
+        if contact_info['tel']:
+            logger.info('Phone number found!')
+            updated_profile.tel = contact_info['tel']
+        if contact_info['address']:
+            logger.info('Address found!')
+            updated_profile.address = contact_info['address']
+    
     update_by_name([updated_profile]) 
     is_running = False
 
+def main(department_profiles: bool, contact_info: bool):
+    global is_running
+    is_running = True
+
+    if department_profiles:
+        logger.info('Starting department profile scrape...')
+        scrape_department_profiles()
+    if contact_info:
+        logger.info('Starting contact info scrape...')
+        scrape_all_faculty()
+
+    is_running = False
+    update_last_update_time(datetime.utcnow())
+
 if __name__ == '__main__':
-    main()
+    scrape_department_profiles()
