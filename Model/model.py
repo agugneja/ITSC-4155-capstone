@@ -2,6 +2,10 @@ from dataclasses import dataclass, asdict
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from . import constants
+from datetime import datetime, timezone
+import tzlocal
+from bson.codec_options import CodecOptions
+from typing import Optional
 
 
 # Constants
@@ -20,7 +24,7 @@ print("Successfully connected to MongoDB")
 # Define collections
 db = client[DB_NAME]
 faculty_members = db[COLLECTION_NAME]
-
+misc = db['misc'].with_options(codec_options=CodecOptions(tz_aware=True, tzinfo=tzlocal.get_localzone()))
 
 # Make the FacultyProfile dataclass
 @dataclass
@@ -55,7 +59,14 @@ def update_by_name(profiles: list[FacultyProfile]):
         faculty_members.replace_one(
             {'name': profile.name}, asdict(profile), upsert=True)
 
+def update_last_update_time(datetime: datetime):
+    misc.replace_one({'last_updated':{'$exists': True}}, {'last_updated':datetime}, upsert=True)
 
+def get_last_update_time() -> Optional[datetime]:
+    """Returns last update time as a datetime object converted to local timezone"""
+    if response := misc.find_one({'last_updated':{'$exists': True}}):
+        return response['last_updated']
+    return None
 # Dump entire database for the CSV
 # This is just to make sure only necessary data is gathered
 def csv_dump() -> list[FacultyProfile]:
