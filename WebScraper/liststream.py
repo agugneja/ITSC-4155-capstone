@@ -34,6 +34,10 @@ class ListStream:
     def __exit__(self, ext_type, exc_value, traceback) -> None:
         sys.stdout = sys.__stdout__  
 
+    def reset(self) -> None:
+        self.reset_index()
+        self.data = []
+        
     def flush(self) -> None:
         pass
 
