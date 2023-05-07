@@ -21,7 +21,7 @@
             {% if (job is defined) and (next_scrape is defined) %}
             <div class="my-4">
                 <h2 class="font-bold">Current schedule:</h2>
-                <p class="text-gray-500">Repeat on months: {{ job['months'] }}; on days: {{ job['days'] }}<br>
+                <p class="text-gray-500">Repeat on months: {{ job['months'] }}<br>Repeat on days: {{ job['days'] }}<br>
                 There {{'is' if next_scrape['months'] == 1 else 'are'}} {{ next_scrape['months'] }} month{{'' if next_scrape['months'] == 1 else 's'}},
                 {{ next_scrape['days'] }} day{{'' if next_scrape['days'] == 1 else 's'}},
                 {{ next_scrape['hours'] }} hour{{'' if next_scrape['hours'] == 1 else 's'}},
