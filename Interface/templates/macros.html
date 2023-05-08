@@ -48,11 +48,20 @@
                 if (!$('#member_input').val()) {
                     $('#_id_input').val('');
                 }
+                // Does math to keep autocomplete box the right size 
                 let top_of_footer = $('#footer').get(0).getBoundingClientRect().top;
                 let bottom_of_auto = $('#member_input').get(0).getBoundingClientRect().bottom;
                 let px = top_of_footer - bottom_of_auto;
                 let width = $('#member_input').get(0).offsetWidth;
+                // removes preexisting width and height classes before adding new ones
+                let classes_to_remove = $('.ui-autocomplete')
+                    .attr('class')
+                    .split(' ')
+                    .filter(x => x.startsWith('max-'))
+                    .join(' ');
+                $('.ui-autocomplete').removeClass(classes_to_remove);
                 $('.ui-autocomplete').addClass(`max-h-[${px-10}px] max-w-[${width}px] overflow-auto overflow-x-hidden`);
+            
             })
 
             
