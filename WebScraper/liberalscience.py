@@ -5,13 +5,9 @@ from .FacultyWebScraper import FacultyWebScraper
 
 class AfricanaStudies(FacultyWebScraper):
 
-    def run(self):
-        print("Starting Africana Studies Lib Science")
-        baseURL = "https://africana.charlotte.edu"
-        directoryURL = "https://africana.charlotte.edu/people/full-time-faculty"
-
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+    def __init__(self):
+        self.baseURL = "https://africana.charlotte.edu"
+        self.directoryURLs = ["https://africana.charlotte.edu/people/full-time-faculty"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'clas' in url:
@@ -32,13 +28,9 @@ class AfricanaStudies(FacultyWebScraper):
     
 class Anthropology(FacultyWebScraper):
 
-    def run(self):
-        print("Starting Antropology Lib Science")
-        baseURL = "https://anthropology.charlotte.edu"
-        directoryURL = "https://anthropology.charlotte.edu/people"
-        
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+    def __init__(self):
+        self.baseURL = "https://anthropology.charlotte.edu"
+        self.directoryURLs = ["https://anthropology.charlotte.edu/people"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("article", {"class": "node node-directory node-promoted clearfix"})
@@ -51,13 +43,9 @@ class Anthropology(FacultyWebScraper):
     
 class BiologicalSciences(FacultyWebScraper):
 
-    def run(self):
-        print("Starting Biological Lib Science")
-        baseURL = "https://biology.charlotte.edu"
-        directoryURL = "https://biology.charlotte.edu/directory/faculty"
-
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+    def __init__(self):
+        self.baseURL = "https://biology.charlotte.edu"
+        self.directoryURLs = ["https://biology.charlotte.edu/directory/faculty"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("article", {"class": "node node-directory node-promoted clearfix"})
@@ -70,13 +58,9 @@ class BiologicalSciences(FacultyWebScraper):
 
 class Chemistry(FacultyWebScraper):
 
-    def run(self):
-        print("Starting Chemistry Lib Science")
-        baseURL = "https://chemistry.charlotte.edu"
-        directoryURL = "https://chemistry.charlotte.edu/directory-grid/faculty"
-
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+    def __init__(self):
+        self.baseURL = "https://chemistry.charlotte.edu"
+        self.directoryURLs = ["https://chemistry.charlotte.edu/directory-grid/faculty"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("article", {"class": "node node-directory node-promoted clearfix"})
@@ -89,14 +73,10 @@ class Chemistry(FacultyWebScraper):
 
 class Communication(FacultyWebScraper):
 
-    def run(self):
-        print("Starting Communication Studies Lib Science")
-        directoryURL = "https://communication.charlotte.edu/people/full-time-faculty"
-        baseURL = "https://communication.charlotte.edu"
-    
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
-        
+    def __init__(self):
+        self.baseURL = "https://communication.charlotte.edu"
+        self.directoryURLs = ["https://communication.charlotte.edu/people/full-time-faculty"]
+
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'clas' in url:
             return soup.find("div", {"class":"entry-content"})       
@@ -116,13 +96,9 @@ class Communication(FacultyWebScraper):
     
 class CriminalJusticeAndCriminology(FacultyWebScraper):
 
-    def run(self):
-        print("Starting Criminal Justice Lib Science")
-        directoryURL = "https://criminaljustice.charlotte.edu/people/faculty"
-        baseURL = "https://criminaljustice.charlotte.edu"
-        
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+    def __init__(self):
+        self.baseURL = baseURL = "https://criminaljustice.charlotte.edu"
+        self.directoryURLs = ["https://criminaljustice.charlotte.edu/people/faculty"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'pages' in url:
@@ -140,14 +116,10 @@ class CriminalJusticeAndCriminology(FacultyWebScraper):
         return soup.find_all("a", {"class": "button button-gray"})
 
 class English(FacultyWebScraper):
-    
-    def run(self):
-        print("Starting English Lib Science")
-        directoryURL = "https://english.charlotte.edu/directory-list/professorial-faculty"
-        baseURL = "https://english.charlotte.edu"
-    
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+
+    def __init__(self):
+        self.baseURL = "https://english.charlotte.edu"
+        self.directoryURLs = ["https://english.charlotte.edu/directory-list/professorial-faculty"]
     
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'clas' in url:
@@ -165,14 +137,10 @@ class English(FacultyWebScraper):
         return soup.find_all("a", {"class": "button button-gray"})
 
 class Geography(FacultyWebScraper):
- 
-    def run(self):
-        print("Starting Geography and Earth Studies Lib Science")
-        directoryURL = "https://geoearth.charlotte.edu/directory-flip/full-time-faculty"
-        baseURL = "https://geoearth.charlotte.edu"
-    
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+
+    def __init__(self):
+        self.baseURL = "https://geoearth.charlotte.edu"
+        self.directoryURLs = ["https://geoearth.charlotte.edu/directory-flip/full-time-faculty"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'clas' in url:
@@ -193,13 +161,9 @@ class Geography(FacultyWebScraper):
     
 class GlobalStudies(FacultyWebScraper):
 
-    def run(self):
-        print("Starting Global Studies Lib Science")
-        directoryURL = "https://globalstudies.charlotte.edu/people"
-        baseURL = "https://globalstudies.charlotte.edu"
-    
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+    def __init__(self):
+        self.baseURL = "https://globalstudies.charlotte.edu"
+        self.directoryURLs = ["https://globalstudies.charlotte.edu/people"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'clas' in url:
@@ -220,13 +184,9 @@ class GlobalStudies(FacultyWebScraper):
     
 class History(FacultyWebScraper):
 
-    def run(self):
-        print("Starting History Lib Science")
-        directoryURL = "https://history.charlotte.edu/people/faculty"
-        baseURL = "https://history.charlotte.edu/people/faculty"
-      
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+    def __init__(self):
+        self.baseURL = "https://history.charlotte.edu"
+        self.directoryURLs = ["https://history.charlotte.edu/people/faculty/people"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'pages' in url:
@@ -236,7 +196,7 @@ class History(FacultyWebScraper):
     
     def getName(self, soup: BeautifulSoup, url: str) -> str:
         if 'pages' in url:
-            return soup.find("div",{'class':'page-title'}).getText().split(",")[0]
+            return soup.find("div",{'class':'name'}).getText().split(",")[0]
         else:
             return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
         
@@ -245,13 +205,9 @@ class History(FacultyWebScraper):
     
 class Languages(FacultyWebScraper):
 
-    def run(self):
-        print("Starting Languages Lib Science")
-        baseURL = "https://languages.charlotte.edu/"
-        directoryURL = "https://languages.charlotte.edu/people"
-
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+    def __init__(self):
+        self.baseURL = "https://languages.charlotte.edu/"
+        self.directoryURLs = ["https://languages.charlotte.edu/people"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("article", {"class": ["node node-directory clearfix", 
@@ -265,13 +221,9 @@ class Languages(FacultyWebScraper):
     
 class Mathematics(FacultyWebScraper):
 
-    def run(self):
-        print("Starting Mathematics Lib Science")
-        directoryURL = "https://math.charlotte.edu/directory-list/faculty"
-        baseURL = "https://math.charlotte.edu"
-
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+    def __init__(self):
+        self.baseURL = "https://math.charlotte.edu"
+        self.directoryURLs = ["https://math.charlotte.edu/directory-list/faculty"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'clas' in url:
@@ -290,13 +242,9 @@ class Mathematics(FacultyWebScraper):
     
 class Philosophy(FacultyWebScraper):
 
-    def run(self):
-        print("Starting Philosophy Lib Science")
-        directoryURL = "https://philosophy.charlotte.edu/directory-list/faculty"
-        baseURL = "https://philosophy.charlotte.edu"
-        
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+    def __init__(self):
+        self.baseURL = "https://philosophy.charlotte.edu"
+        self.directoryURLs = ["https://philosophy.charlotte.edu/directory-list/faculty"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'pages' in url:
@@ -315,13 +263,9 @@ class Philosophy(FacultyWebScraper):
     
 class Physics(FacultyWebScraper):
 
-    def run(self):
-        print("Starting Physics Lib Science")
-        baseURL = "https://physics.charlotte.edu/"
-        directoryURL = "https://physics.charlotte.edu/people"
-
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+    def __init__(self):
+        self.baseURL = "https://physics.charlotte.edu/"
+        self.directoryURLs = ["https://physics.charlotte.edu/people"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("article", {"class": "node node-directory node-promoted clearfix"})
@@ -334,13 +278,9 @@ class Physics(FacultyWebScraper):
     
 class PoliticalScience(FacultyWebScraper):
 
-    def run(self):
-        print("Starting Political Science")
-        directoryURL = "https://politicalscience.charlotte.edu/directory-list/full-time-faculty"
-        baseURL = "https://politicalscience.charlotte.edu/"
-    
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+    def __init__(self):
+        self.baseURL = "https://politicalscience.charlotte.edu/"
+        self.directoryURLs = ["https://politicalscience.charlotte.edu/directory-list/full-time-faculty"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'clas' in url:
@@ -359,13 +299,9 @@ class PoliticalScience(FacultyWebScraper):
     
 class PsychologicalScience(FacultyWebScraper):
 
-    def run(self):
-        print("Starting Global Studies Lib Science")
-        directoryURL = "https://psych.charlotte.edu/people"
-        baseURL = "https://psych.charlotte.edu"
-    
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+    def __init__(self):
+        self.baseURL = "https://psych.charlotte.edu"
+        self.directoryURLs = ["https://psych.charlotte.edu/people"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'clas' in url:
@@ -394,13 +330,9 @@ class PsychologicalScience(FacultyWebScraper):
     
 class ReligiousStudies(FacultyWebScraper):
 
-    def run(self):
-        print("Starting Religious Studies Lib Science")
-        directoryURL = "https://religiousstudies.charlotte.edu/directory/faculty-and-staff"
-        baseURL = "https://religiousstudies.charlotte.edu"
-    
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+    def __init__(self):
+        self.baseURL = "https://religiousstudies.charlotte.edu"
+        self.directoryURLs = ["https://religiousstudies.charlotte.edu/directory/faculty-and-staff"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'clas' in url:
@@ -421,13 +353,9 @@ class ReligiousStudies(FacultyWebScraper):
 
 class Sociology(FacultyWebScraper):
 
-    def run(self):
-        print("Starting Sociology Lib Science")
-        directoryURL = "https://sociology.charlotte.edu/directory-list/full-time-faculty"
-        baseURL = "https://sociology.charlotte.edu"
-    
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+    def __init__(self):
+        self.baseURL = "https://sociology.charlotte.edu"
+        self.directoryURLs = ["https://sociology.charlotte.edu/directory-list/full-time-faculty"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'clas' in url:
@@ -446,13 +374,9 @@ class Sociology(FacultyWebScraper):
     
 class Writing(FacultyWebScraper):
 
-    def run(self):
-        print("Starting Writing Lib Science")
-        directoryURL = "https://writing.charlotte.edu/directory-grid/faculty"
-        baseURL = "https://writing.charlotte.edu"
-
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+    def __init__(self):
+        self.baseURL = "https://writing.charlotte.edu"
+        self.directoryURLs = ["https://writing.charlotte.edu/directory-grid/faculty"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'clas' in url:

@@ -12,30 +12,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-    <script>
-        /** @type {import('tailwindcss').Config} */
-        tailwind.config = {
-            content: ["./templates/*.html"],
-            theme: {
-                mode: 'jit',
-                extend: {
-                    fontFamily: {
-                        'oswald': ['Oswald', 'sans-serif']
-                    },
-                    colors: {
-                        "main-green": "#005035",
-                        "gold1": " #a49665",
-                        "darker-green": "#233a30",
-                        "gold2": "#ad9651",
-                        "main-gray": "#222",
-                        "main-gold": "#a49665"
-                    }
-                },
-            },
-            plugins: [],
-        }
-    </script>
-    <script src="https://cdn.tailwindcss.com"></script>
     <title>{% block title %}{% endblock %} - Faculty Connections</title>
     <link rel="icon" type="image/x-icon"
         href="https://directory.charlotte.edu/sites/all/themes/epsilon-theme-drupal7/favicon.ico">
@@ -45,6 +21,34 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"/> -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        /** @type {import('tailwindcss').Config} */
+        tailwind.config = {
+        mode: "jit",
+        content: ["./templates/*.html"],
+        theme: {
+            
+            extend: {
+            fontFamily: {
+                'oswald': ['Oswald', 'sans-serif']
+            },
+            colors: {
+                "main-green": "#005035",
+                "gold1":" #a49665",
+                "darker-green": "#233a30",
+                "gold2": "#ad9651",
+                "main-gray": "#222",
+                "main-gold": "#a49665"
+            }
+            },
+        },
+        plugins: [],
+        }
+
+    </script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
 </head>
 
 <body class="bg-main-green flex flex-col h-screen">
@@ -57,7 +61,7 @@
             <li><a href="/">Home</a></li>
             <li><a href="/search-profiles">Search Profiles</a></li>
             <li><a href="/schedule">Schedule</a></li>
-            <li><a href="/manual-entry">Manual Entry</a></li>
+            <!-- <li><a href="/manual-entry">Manual Entry</a></li> -->
             <li><a href="/help">Help</a></li>
 
         </ul>
@@ -84,7 +88,7 @@
         {% block content %}
         {% endblock %}
     </main>
-    <footer class="bg-white p-2 text-center relative bottom-0 w-screen">
+    <footer id="footer" class="bg-white p-2 text-center relative bottom-0 w-screen">
         <small>ITSC 4155 Team 15</small>
     </footer>
 </body>

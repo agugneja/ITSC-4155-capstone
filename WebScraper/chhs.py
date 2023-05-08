@@ -3,15 +3,10 @@ from typing import Optional
 from .FacultyWebScraper import FacultyWebScraper
 
 class ApplPhysHlthClinSciAndKinesiology(FacultyWebScraper):
-        
-    def run(self):
-        print("ApplPhysHlthClinSciAndKinesiology CHHS")
-        baseURL = "https://aphcs.charlotte.edu"
-        directoryURL = "https://aphcs.charlotte.edu/directory"
-        self.bad_urls = []
-   
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+
+    def __init__(self):
+        self.baseURL = "https://aphcs.charlotte.edu"
+        self.directoryURLs = ["https://aphcs.charlotte.edu/directory"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("article", {"class":"node node-directory node-promoted clearfix"})
@@ -24,14 +19,9 @@ class ApplPhysHlthClinSciAndKinesiology(FacultyWebScraper):
 
 class CHHS(FacultyWebScraper):
 
-    def run(self):
-        print("Starting CHHS")
-        baseURL = "https://health.charlotte.edu"
-        directoryURL = "https://health.charlotte.edu/about-college/faculty-and-staff?items_per_page=All"
-        self.bad_urls = []
-
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+    def __init__(self):
+        self.baseURL = "https://health.charlotte.edu"
+        self.directoryURLs = ["https://health.charlotte.edu/about-college/faculty-and-staff?items_per_page=All"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("article", {"class":"node node-directory node-promoted clearfix"})
@@ -44,14 +34,9 @@ class CHHS(FacultyWebScraper):
 
 class PublicHealthSciences(FacultyWebScraper):
 
-    def run(self):
-        print("Starting Health Sciences CHSS")
-        baseURL = "https://publichealth.charlotte.edu"
-        directoryURL = "https://publichealth.charlotte.edu/directory/3"
-        self.bad_urls = []
-
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+    def __init__(self):
+        self.baseURL = "https://publichealth.charlotte.edu"
+        self.directoryURLs = ["https://publichealth.charlotte.edu/directory/3"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("article", {"class":"node node-directory node-promoted clearfix"})
@@ -64,14 +49,9 @@ class PublicHealthSciences(FacultyWebScraper):
     
 class SchoolOfNursing(FacultyWebScraper):
 
-    def run(self):
-        print("Starting Nursing CHHS")
-        baseURL = "https://nursing.charlotte.edu"
-        directoryURL = "https://nursing.charlotte.edu/about-us/faculty-and-staff"
-        self.bad_urls = []
-
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+    def __init__(self):
+        self.baseURL = "https://nursing.charlotte.edu"
+        self.directoryURLs = ["https://nursing.charlotte.edu/about-us/faculty-and-staff"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("article", {"class":"node node-directory node-promoted clearfix"})
@@ -83,15 +63,10 @@ class SchoolOfNursing(FacultyWebScraper):
         return soup.find_all("a",{"class":"button button-gray"})
 
 class SchoolOfSocialWork(FacultyWebScraper):
-
-    def run(self):
-        print("Starting Social Work CHHS")
-        baseURL = "https://socialwork.charlotte.edu"
-        directoryURL = "https://socialwork.charlotte.edu/about-us/faculty-and-staff-directory"
-        self.bad_urls = []
-
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+    
+    def __init__(self):
+        self.baseURL = "https://socialwork.charlotte.edu"
+        self.directoryURLs = ["https://socialwork.charlotte.edu/about-us/faculty-and-staff-directory"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("article", {"class":"node node-directory node-promoted clearfix"})

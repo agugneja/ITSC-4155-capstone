@@ -5,13 +5,9 @@ from .FacultyWebScraper import FacultyWebScraper
 
 class Counseling(FacultyWebScraper):
 
-    def run(self):
-        print("Starting Counseling Education")
-        baseURL = "https://counseling.charlotte.edu"
-        directoryURL = "https://counseling.charlotte.edu/directory-list"
-    
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+    def __init__(self):
+        self.baseURL = "https://counseling.charlotte.edu"
+        self.directoryURLs = ["https://counseling.charlotte.edu/directory-list"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("article")
@@ -24,13 +20,9 @@ class Counseling(FacultyWebScraper):
 
 class EducationLeadership(FacultyWebScraper):
 
-    def run(self):
-        print("Starting Leadership Education")
-        baseURL = "https://edld.charlotte.edu"
-        directoryURL = "https://edld.charlotte.edu/directory-list"
-        
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+    def __init__(self):
+        self.baseURL = "https://edld.charlotte.edu"
+        self.directoryURLs = ["https://edld.charlotte.edu/directory-list"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("article")
@@ -43,13 +35,9 @@ class EducationLeadership(FacultyWebScraper):
 
 class K12(FacultyWebScraper):
 
-    def run(self):
-        print("Starting K12 Education")
-        baseURL = "https://mdsk.charlotte.edu"
-        directoryURL = "https://mdsk.charlotte.edu/directory-list"
-
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+    def __init__(self):
+        self.baseURL = "https://mdsk.charlotte.edu"
+        self.directoryURLs = ["https://mdsk.charlotte.edu/directory-list"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("article")
@@ -62,13 +50,9 @@ class K12(FacultyWebScraper):
 
 class ReadingAndElementaryEducation(FacultyWebScraper):
 
-    def run(self):
-        print("Starting Reading Education")
-        baseURL = "https://reel.charlotte.edu"
-        directoryURL = "https://reel.charlotte.edu/directory-list/faculty"
-        
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+    def __init__(self):
+        self.baseURL = "https://reel.charlotte.edu"
+        self.directoryURLs = ["https://reel.charlotte.edu/directory-list/faculty"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("article")
@@ -81,13 +65,9 @@ class ReadingAndElementaryEducation(FacultyWebScraper):
 
 class SchoolAndCommunityPartnerships(FacultyWebScraper):
 
-    def run(self):
-        print("Starting Community Education")
-        baseURL = "https://osacp.charlotte.edu"
-        directoryURL = "https://osacp.charlotte.edu/directory-flip"
-     
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+    def __init__(self):
+        self.baseURL = "https://osacp.charlotte.edu"
+        self.directoryURLs = ["https://osacp.charlotte.edu/directory-flip"]
 
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("article")
@@ -100,13 +80,9 @@ class SchoolAndCommunityPartnerships(FacultyWebScraper):
 
 class SpecialEdAndChildDev(FacultyWebScraper):
 
-    def run(self):
-        print("Starting Special Education")
-        baseURL = "https://spcd.charlotte.edu"
-        directoryURL = "https://spcd.charlotte.edu/directory-table"
-        
-        self.facultyURLs = self.getFacultyURLs(baseURL, directoryURL)
-        self.profiles = self.getProfilePage(self.facultyURLs)
+    def __init__(self):
+        self.baseURL = "https://spcd.charlotte.edu"
+        self.directoryURLs = ["https://spcd.charlotte.edu/directory-table"]
     
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         return soup.find("article")

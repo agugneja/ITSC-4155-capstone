@@ -1,23 +1,33 @@
 {% macro autocomplete_faculty_search_bar(submit_on_select, classes) %}
-    <input type="text" id="member_input" name="name" class="{{classes}}">
+    <input type="text" id="member_input" name="name" class="{{classes}} disabled:bg-gray-300">
     <input type="hidden" id="_id_input" name="_id">
-    <script>
+    <script>   
         $(function () {
             $.getJSON('/faculty-profiles').done((result) => {
                 $('#member_input').autocomplete({
-                    source: result.map(x => ({label:x.name, name:x.name, email:x.email, _id:x._id.$oid})),
+                    source: function (request, response) {
+                        let members = result.map(x => ({label:x.name, name:x.name, email:x.email, _id:x._id.$oid}))
+                        let any_name_starts_with = (name, term) => name && name.toLowerCase().split(' ').some(n => n.startsWith(term.toLowerCase()));
+                        let email_starts_with = (email, term) => email && email.startsWith(term.toLowerCase());
+                        let filtered_members = members.filter(x => any_name_starts_with(x.name, request.term) || email_starts_with(x.email, request.term))
+                        response(filtered_members);
+                    },
                     autoFocus: true,
                     focus: (event, ui) => {
                         $('#_id_input').val(ui.item._id);
                         return false;
                     },
-                    {% if submit_on_select %}
+
                     select: (event, ui) => {
                         $('#member_input').val(ui.item.label);
+                        {% if submit_on_select %} 
                         $('#member_input').closest('form').submit();
+                        {% endif %}
+                        $('#member_input').trigger('input')
+                        $('#member_input').blur();
                         return false;
                     }
-                    {% endif %}
+
                 }).autocomplete("instance")._renderItem = (ul, item) => {
                     if (item.email !== null) {
                         return $( "<li>" )
@@ -33,6 +43,28 @@
             .fail(() => {
                 alert("Sorry, something went wrong")
             })
+            
+            $('#member_input').on('input', () => {
+                if (!$('#member_input').val()) {
+                    $('#_id_input').val('');
+                }
+                // Does math to keep autocomplete box the right size 
+                let top_of_footer = $('#footer').get(0).getBoundingClientRect().top;
+                let bottom_of_auto = $('#member_input').get(0).getBoundingClientRect().bottom;
+                let px = top_of_footer - bottom_of_auto;
+                let width = $('#member_input').get(0).offsetWidth;
+                // removes preexisting width and height classes before adding new ones
+                let classes_to_remove = $('.ui-autocomplete')
+                    .attr('class')
+                    .split(' ')
+                    .filter(x => x.startsWith('max-'))
+                    .join(' ');
+                $('.ui-autocomplete').removeClass(classes_to_remove);
+                $('.ui-autocomplete').addClass(`max-h-[${px-10}px] max-w-[${width}px] overflow-auto overflow-x-hidden`);
+            
+            })
+
+            
         }); 
     </script>
 {% endmacro %}

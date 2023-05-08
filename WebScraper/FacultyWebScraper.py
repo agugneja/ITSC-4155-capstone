@@ -5,17 +5,22 @@ import re
 from typing import Optional
 from Model.model import FacultyProfile
 from abc import ABC, abstractmethod
+import logging
+from .liststream import liststream_handler
+from time import sleep
+
+logger = logging.getLogger(__name__)
+logger.addHandler(liststream_handler)
+logger.setLevel(logging.INFO)
 
 class FacultyWebScraper(ABC):
     """Base class for all department web scrapers
        
     ### Attributes:
-        `bad_urls (list[str])`: A list of urls that an exception when attempting to fetch
         `facultyURLs (list[str])`: A list of urls that point to the faculty profiles that will be scraped
         `profiles (list[FacultyProfile])`: a list of FacultyProfile objects that represent the scraped profiles
 
     """
-    bad_urls: list[str]
     facultyURLs: list[str]
     profiles: list[FacultyProfile]
 
@@ -30,7 +35,7 @@ class FacultyWebScraper(ABC):
             `list[str]`: a list of URLs that point to faculty profiles
         """
         URLs = []
-        soup = self.getSoup(directoryURL)
+        soup = self.getSoup(directoryURL, retries=4, sleep_time=10)
         soupList = self.scrapeURLs(soup)
         for a_tag in soupList:
             href = a_tag.get("href")
@@ -59,28 +64,37 @@ class FacultyWebScraper(ABC):
                     email = self.getEmail(soup, rawHtml, url)
                     profiles.append(FacultyProfile(name=name, department=self.__class__.__name__, rawHtml=rawHtml, url=url, email=email))
                 except Exception as e:
-                    print(f"Something went wrong when visiting {url}:")
-                    print(e)
+                    logger.info(f"Something went wrong when visiting {url}:\n{e}")
 
         return profiles
     
-    def getSoup(self, url: str) -> Optional[BeautifulSoup]:
-        """Creates a new object for a specified website
+    def getSoup(self, url: str, retries: int = 2, sleep_time: int = 3) -> Optional[BeautifulSoup]:
+        """Creates a new BeautifulSoup object for a specified website
 
         ### Args:
             `url (str)`: The URL for the website you need a `BeautifulSoup` object for
+            `retries (int)`: How many times to retry the url if a connection error occurs
+            `sleep_time (int): How long (in seconds) to sleep before retrying. This value increases by one each loop
 
         ### Returns:
             `Optional[BeautifulSoup]`: A new `BeautifulSoup` object for the website that the URL points to
             if no exception occurs, otherwise `None` 
         """
-        try:
-            html = requests.get(url).content
-            return BeautifulSoup(html, "lxml")
-        except Exception as e:
-            print(f'An error occurred while fetching this page: {url}')
-            print(e)
-            # self.bad_urls.append(url)
+        times_retried = 0
+        while times_retried < retries:
+            try:
+                html = requests.get(url).content
+                return BeautifulSoup(html, "lxml")
+            except requests.ConnectionError as e:
+                logger.info(f'A connection error occurred while fetching this page: {url}\nRetrying in {sleep_time} seconds...')
+                sleep(sleep_time)
+                logger.info(f'Retrying {url}')
+                times_retried += 1
+                sleep_time += 1
+            except Exception as e:
+                logger.info(f'An error occurred while fetching this page: {url}\n{e}')
+                break
+        
 
     def getEmail(self, entire_html: Tag, profile_html: Optional[Tag], url: str) -> Optional[str]:
         """Finds a single uncc email address from the page given
@@ -102,12 +116,12 @@ class FacultyWebScraper(ABC):
             if html is not None:
                 emails = self._findEmails(html)
                 if len(emails) == 0:
-                    print(f'no emails found for {url}')
+                    logger.info(f'no emails found for {url}')
                     return None
                 elif len(emails) == 1:
                     return emails.pop()
                 if html == profile_html:
-                    print(f'more than 1 email found for {url}')
+                    logger.info(f'more than 1 email found for {url}')
             
         return None
 
@@ -166,4 +180,24 @@ class FacultyWebScraper(ABC):
             `list[str]`: A list of <a> tags
         """
         ...
-    
+    def scrapeSingle(self, url) -> Optional[FacultyProfile]:
+        logger.info(f"Starting scrape for {url}...")
+        if profile := self.getProfilePage([url]):
+            logger.info(f"Finished scraping {url}...")
+            return profile[0]
+        return None
+            
+    def run(self):
+        """Acts as the main function for a class
+        
+        Runs the getFacultyURLs and getProfilePage methods 
+        and sets the facultyURLs and profile fields 
+        """
+
+        logger.info(f"Starting {self.__class__.__name__}...")
+        self.facultyURLs = []
+        for directoryURL in self.directoryURLs:
+            self.facultyURLs += self.getFacultyURLs(self.baseURL, directoryURL)
+
+        self.profiles = self.getProfilePage(self.facultyURLs)
+        logger.info(f"Finished {self.__class__.__name__}!")
