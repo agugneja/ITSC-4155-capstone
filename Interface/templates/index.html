@@ -57,6 +57,7 @@
                             });
                             $('#all').click(() => {
                                 $('#member_input').prop('disabled',true);
+                                $('#formSubmit').prop('disabled', false);
                             });
                             $('#member_input').on('input',() => {
                                 if ($('#_id_input').val()) {

@@ -5,7 +5,13 @@
         $(function () {
             $.getJSON('/faculty-profiles').done((result) => {
                 $('#member_input').autocomplete({
-                    source: result.map(x => ({label:x.name, name:x.name, email:x.email, _id:x._id.$oid})),
+                    source: function (request, response) {
+                        let members = result.map(x => ({label:x.name, name:x.name, email:x.email, _id:x._id.$oid}))
+                        let any_name_starts_with = (name, term) => name && name.toLowerCase().split(' ').some(n => n.startsWith(term.toLowerCase()));
+                        let email_starts_with = (email, term) => email && email.startsWith(term.toLowerCase());
+                        let filtered_members = members.filter(x => any_name_starts_with(x.name, request.term) || email_starts_with(x.email, request.term))
+                        response(filtered_members);
+                    },
                     autoFocus: true,
                     focus: (event, ui) => {
                         $('#_id_input').val(ui.item._id);
@@ -42,7 +48,14 @@
                 if (!$('#member_input').val()) {
                     $('#_id_input').val('');
                 }
+                let top_of_footer = $('#footer').get(0).getBoundingClientRect().top;
+                let bottom_of_auto = $('#member_input').get(0).getBoundingClientRect().bottom;
+                let px = top_of_footer - bottom_of_auto;
+                let width = $('#member_input').get(0).offsetWidth;
+                $('.ui-autocomplete').addClass(`max-h-[${px-10}px] max-w-[${width}px] overflow-auto overflow-x-hidden`);
             })
+
+            
         }); 
     </script>
 {% endmacro %}
