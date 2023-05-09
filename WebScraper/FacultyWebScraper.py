@@ -60,8 +60,8 @@ class FacultyWebScraper(ABC):
             if soup := self.getSoup(url):
                 try:
                     rawHtml = self.getRawHtml(soup, url)
-                    name = self.getName(soup, url)
-                    email = self.getEmail(soup, rawHtml, url)
+                    name = self.getName(soup, url).__str__().strip()
+                    email = self.getEmail(soup, rawHtml, url).__str__().strip()
                     profiles.append(FacultyProfile(name=name, department=self.__class__.__name__, rawHtml=rawHtml, url=url, email=email))
                 except Exception as e:
                     logger.info(f"Something went wrong when visiting {url}:\n{e}")
