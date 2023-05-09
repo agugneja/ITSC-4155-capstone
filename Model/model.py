@@ -36,6 +36,7 @@ class FacultyProfile():
     email: str = None
     address: str = None
     url: str = None
+    scholar_url: str = None
 
     # Explicit type cast to exclude casting None to str
     def __setattr__(self, __name: str, __value) -> None:
