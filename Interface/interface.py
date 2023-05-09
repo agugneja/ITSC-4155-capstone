@@ -83,7 +83,8 @@ def run_scraper():
     update_scholar = True if request.form.get('scholar') == 'Scholar' else False
     print(request.form.get('update'))
     if request.form.get('update') == 'All':
-        task = Thread(target=webscraper.main, args=[update_profiles, update_contact_info, update_scholar])
+        task = Thread(
+            target=webscraper.main, args=[update_profiles, update_contact_info, update_scholar])
         task.start()
     else:
         _id = request.form.get('_id')
