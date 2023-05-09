@@ -1,3 +1,4 @@
+from concurrent.futures import ThreadPoolExecutor
 from bs4 import BeautifulSoup
 import requests
 import json
@@ -5,6 +6,7 @@ from Model.model import faculty_members
 import logging
 from .liststream import liststream_handler
 from typing import Optional
+
 
 
 
@@ -17,11 +19,14 @@ def scrape_all_faculty() -> None:
     """Scrapes contact info for all faculty and then updates the database"""
     emails = [faculty['email'] for faculty in faculty_members.find({"email":{"$exists":"true"}})]
     faculty = []
+
     alphabet = 'abcdefghijklmnopqrstuvwxyz'
-    for letter in alphabet:
-        faculty += scrape_facstaff_by_name(letter, emails)
-    for info in faculty:
-        faculty_members.find_one_and_update({'email':info['email']}, {'$set':{'tel':info['tel'], 'address':info['address']}})
+    with ThreadPoolExecutor(max_workers=15) as p:
+        faculty = p.map(lambda letter: scrape_facstaff_by_name(letter, emails), alphabet)
+    
+    for lst in faculty:
+        for info in lst:
+            faculty_members.find_one_and_update({'email':info['email']}, {'$set':{'tel':info['tel'], 'address':info['address']}})
 
 def scrape_facstaff_by_name(fname: str, emails: list[str]) -> list[dict[str, str]]:
     """Returns all contact info for names starting with fname"""
