@@ -68,6 +68,7 @@ def get_last_update_time() -> Optional[datetime]:
     if response := misc.find_one({'last_updated':{'$exists': True}}):
         return response['last_updated']
     return None
+
 # Dump entire database for the CSV
 # This is just to make sure only necessary data is gathered
 def csv_dump() -> list[FacultyProfile]:
