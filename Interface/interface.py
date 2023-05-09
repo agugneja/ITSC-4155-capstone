@@ -67,7 +67,7 @@ def index():
             'hours': next_scrape.hours,
             'minutes': next_scrape.minutes
         }
-    last_updated = model.get_last_update_time().strftime('%b %w, %Y at %I:%M %p %Z')
+    last_updated = model.get_last_update_time().strftime('%b %d, %Y at %I:%M %p %Z')
     return render_template('index.html', job=job_times, next_scrape=next_scrape_times, scraper_running=webscraper.is_running, last_updated=last_updated)
 
 
@@ -76,16 +76,17 @@ def index():
 def run_scraper():
     update_profiles = True if request.form.get('directory') == 'Directory' else False
     update_contact_info = True if request.form.get('facstaff') == 'Facstaff' else False
+    update_scholar = True if request.form.get('scholar') == 'Scholar' else False
     print(request.form.get('update'))
     if request.form.get('update') == 'All':
-        task = Thread(target=webscraper.main, args=[update_profiles, update_contact_info])
+        task = Thread(target=webscraper.main, args=[update_profiles, update_contact_info, update_scholar])
         task.start()
     else:
         _id = request.form.get('_id')
         if faculty_member := model.faculty_members.find_one({'_id': ObjectId(_id)}):
             url = faculty_member['url']
             department = faculty_member['department']
-            task = Thread(target=webscraper.update_single, args=[url, department, update_contact_info])
+            task = Thread(target=webscraper.update_single, args=[url, department, update_profiles, update_contact_info, update_scholar])
             task.start()
     return redirect('/')
 
