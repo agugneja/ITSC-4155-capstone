@@ -8,8 +8,11 @@
                     source: function (request, response) {
                         let members = result.map(x => ({label:x.name, name:x.name, email:x.email, _id:x._id.$oid}))
                         let any_name_starts_with = (name, term) => name && name.toLowerCase().split(' ').some(n => n.startsWith(term.toLowerCase()));
+                        let full_name_starts_with = (name, term) => name.toLowerCase().startsWith(term.toLowerCase());
                         let email_starts_with = (email, term) => email && email.startsWith(term.toLowerCase());
-                        let filtered_members = members.filter(x => any_name_starts_with(x.name, request.term) || email_starts_with(x.email, request.term))
+                        let filtered_members = members.filter(x => full_name_starts_with(x.name, request.term)
+                            || any_name_starts_with(x.name, request.term) 
+                            || email_starts_with(x.email, request.term));
                         response(filtered_members);
                     },
                     autoFocus: true,
