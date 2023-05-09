@@ -121,6 +121,12 @@
                 <p class="block font-medium mb-2">{{ profile['tel'] }}</p>
             </div>
             {% endif %}
+            {% if profile['scholar_url'] %}
+            <div>
+                <h2 class="text-lg font-bold">Google Scholar Profile</h2>
+                <p class="block font-medium mb-2">{{ profile['scholar_url'] }}</p>
+            </div>
+            {% endif %}
 
 
         </div>
