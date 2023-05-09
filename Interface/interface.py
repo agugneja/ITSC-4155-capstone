@@ -23,6 +23,7 @@ app.url_map.strict_slashes = False
 
 sock = Sock(app)
 
+
 def scraper_not_running(route_func):
     """Redirects to index page if scraper is running"""
     @wraps(route_func)
@@ -33,10 +34,12 @@ def scraper_not_running(route_func):
         return route_func(*args, **kwargs)
     return wrapper
 
+
 @app.errorhandler(404)
 def page_not_found(e):
     flash('Page not found', 'error')
     return redirect('/')
+
 
 @app.get('/')
 def index():
@@ -47,20 +50,21 @@ def index():
         flash('No job in database', 'error')
     else:
         # Stringify months and days
-        month_str = job['months'][0].capitalize() if job['months'] != [] else None
+        month_str = job['months'][0].capitalize(
+        ) if job['months'] != [] else None
         for month in job['months'][1:]:
             month_str += ', ' + month.capitalize()
         day_str = str(job['days'][0]) if job['days'] != [] else None
         for day in job['days'][1:]:
             day_str += ', ' + str(day)
-        
+
         job_times = {
             'months': month_str,
             'days': day_str
         }
-                
+
         print(job_times)
-        
+
         next_scrape_times = {
             'months': next_scrape.months,
             'days': next_scrape.days,
@@ -90,14 +94,15 @@ def run_scraper():
             task.start()
     return redirect('/')
 
+
 @sock.route('/scraper_output')
 def scraper_output(ws):
     liststream.reset_index()
     while webscraper.is_running:
         if liststream.index < len(liststream) - 1:
             ws.send(liststream.readline())
-            
-    while(line := liststream.readline()):
+
+    while (line := liststream.readline()):
         ws.send(line)
 
     # if webscraper stops running close connection
@@ -105,12 +110,12 @@ def scraper_output(ws):
     liststream.reset()
     sleep(2)
     ws.close()
-    
 
 
 @app.get('/last_updated')
 def get_last_updated_time():
     return json.dumps(webscraper.last_updated.isoformat())
+
 
 @app.get('/schedule')
 @scraper_not_running
@@ -137,9 +142,9 @@ def schedule():
 @app.get('/manual-entry/<_id>')
 @scraper_not_running
 def manual_entry(_id):
-    if faculty_member := model.faculty_members.find_one({'_id':ObjectId(_id)}):
+    if faculty_member := model.faculty_members.find_one({'_id': ObjectId(_id)}):
         return render_template('manual-entry.html', faculty_member=faculty_member, _id=_id)
-    
+
     flash('Invalid faculty ID', 'error')
     return redirect('/')
 
@@ -183,36 +188,54 @@ def help():
 
 @app.get('/csvdownload')
 def csv_download():
+
+    csv_type = request.args.get('for')
+
+    # Default to wordpress
+    if not csv_type:
+        csv_type = 'wordpress'
+    elif csv_type not in ['wordpress', 'contact_info']:
+        flash('Invalid export format', 'error')
+        return redirect('back')
+
+    for_wordpress = csv_type == 'wordpress'
+
+    projection = ['url', 'name', 'rawHtml'] if for_wordpress else [
+        'name', 'tel', 'email', 'address']
+
     # Make a bunch of objects
-    faculty_members = model.csv_dump()
+    faculty_members = model.csv_dump(projection=projection)
 
     # This is needed because CSV needs to think it's outputting to a file
     csvString = StringIO()
 
     # Initialize a CSV writer
     writer = csv.writer(csvString, quoting=csv.QUOTE_NONNUMERIC)
-    writer.writerow(['site', 'type', 'action', 'title', 'excerpt', 'content', 'date', 'author', 'slug',
-                    'status', 'menu-order', 'password', 'categories', 'tags', 'taxonomy-{name}', 'meta-{name}'])
+
+    if for_wordpress:
+        writer.writerow(['site', 'type', 'action', 'title', 'excerpt', 'content', 'date', 'author', 'slug',
+                         'status', 'menu-order', 'password', 'categories', 'tags', 'taxonomy-{name}', 'meta-{name}'])
+    else:
+        writer.writerow(['Name', 'Phone #', 'Email', 'Address'])
 
     # Fill the CSV
-    for faculty_member in faculty_members:
-        writer.writerow([faculty_member.url, 'post', 'update',
-                        faculty_member.name, None, faculty_member.rawHtml])
+    if for_wordpress:
+        for faculty_member in faculty_members:
+            writer.writerow([faculty_member.url, 'post', 'update',
+                            faculty_member.name, None, faculty_member.rawHtml])
+    else:
+        for faculty_member in faculty_members:
+            writer.writerow([faculty_member.name, faculty_member.tel,
+                            faculty_member.email, faculty_member.address])
 
     # Send a response
-    filename = 'webscraperoutput'
+    filename = 'webscraperoutput' if for_wordpress else 'Contact Info'
     response = make_response(csvString.getvalue())
     response.mimetype = 'text/csv'
     response.headers['Content-Disposition'] = f'attachment; filename={filename}.csv'
     return response
 
-    # return send_file('static/example.csv',
-    #     mimetype='text/csv',
-    #     download_name='example.csv',
-    #     as_attachment=True)
 
-
-# Temp:
 @app.post('/manual-entry/<_id>')
 def update(_id):
     db_filter = {'_id': ObjectId(_id)}
