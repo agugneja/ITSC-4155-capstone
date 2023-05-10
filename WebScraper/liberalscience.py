@@ -2,6 +2,7 @@
 from bs4 import BeautifulSoup, ResultSet, Tag
 from typing import Optional
 from .FacultyWebScraper import FacultyWebScraper
+import re
 
 class AfricanaStudies(FacultyWebScraper):
 
@@ -86,11 +87,21 @@ class Communication(FacultyWebScraper):
             return soup.find("section", {"class":"col-sm-9"})
                     
     def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
-         if 'clas' in url:
-            return soup.find("div",{'class':'name'}).getText().split(",")[0]
-         else:
-            return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
+        if 'clas' in url:
+            name = soup.find("div",{'class':'name'}).getText()
+        else:
+            name = soup.find("h1",{'class':'page-header'}).getText()
                     
+        if ',' in name:
+            if re.match('ph\.?d\.?', name.lower()):
+                name = name.split(',')[0]
+            else:
+                name = name.split(",")
+                name.reverse()
+                name = ' '.join([string.strip() for string in name])
+        
+        return name
+            
     def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.find_all("a", {"class": "button button-gray"})
     
@@ -253,10 +264,18 @@ class Philosophy(FacultyWebScraper):
             return soup.find("div", {"class":"col-sm-9"})
                     
     def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
-         if 'pages' in url:
-            return soup.find("div",{'class':'page-title'}).getText().split(",")[0]
-         else:
-            return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
+        if 'pages' in url:
+            name = soup.find("div",{'class':'name'}).getText()
+        else:
+            name = soup.find("h1",{'class':'page-header'}).getText()
+       
+        # reverse comma seperated "last, first" formatted name
+        if ',' in name:
+            name = name.split(",")
+            name.reverse()
+            name = ' '.join([string.strip() for string in name])
+
+        return name
                     
     def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.find_all("a", {"class": "button button-gray"})#]
@@ -313,7 +332,7 @@ class PsychologicalScience(FacultyWebScraper):
                     
     def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
         if 'clas' in url:
-            name = soup.find("div",{'class':'name'}).getText().split(",")[0]
+            name = soup.find("div",{'class':'name'}).getText()
         else:
             name = soup.find("h1",{'class':'page-header'}).getText()
         
