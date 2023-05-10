@@ -78,9 +78,9 @@
                         });
                     } );
                     </script>
-                <div id="trash-dialog" title="Delete faculty member?">
+                <div id="trash-dialog" title="Delete faculty member?" hidden>
                     <p><span style="float:left; margin:12px 12px 20px 0;"></span>The database entry for {{profile['name']}} will be permanently deleted.</p>
-                    </div>
+                </div>
                 {% endif %}
                 
             </div>
@@ -124,7 +124,7 @@
             {% if profile['scholar_url'] %}
             <div>
                 <h2 class="text-lg font-bold">Google Scholar Profile</h2>
-                <p class="block font-medium mb-2">{{ profile['scholar_url'] }}</p>
+                <a class="block font-medium mb-2 underline hover:text-blue-800" href="{{ profile['scholar_url'] }}">Profile Found</a>
             </div>
             {% endif %}
 
