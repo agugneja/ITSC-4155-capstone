@@ -5,15 +5,14 @@ from . import chhs, education, engineering, liberalscience, misc
 from Model.model import FacultyProfile, update_by_name, update_last_update_time, faculty_members
 from .FacultyWebScraper import FacultyWebScraper
 from concurrent.futures import ThreadPoolExecutor
-import csv
-import sys
 from contextlib import redirect_stdout
 from .liststream import liststream_handler
 import logging
 from datetime import datetime, timezone
 from time import sleep
 from .facstaff import scrape_all_faculty, scrape_facstaff_by_name, scrape_contact_info_by_email
-from .google_scholar import grab_profile_by_publisher_name, scrape_all_scholar_profiles
+from .google_scholar import grab_profile_by_publisher_name, scrape_all_scholar_profiles, insert_scholar_url_into_html
+from bs4 import BeautifulSoup
 
 is_running = False
 logger = logging.getLogger(__name__)
@@ -21,8 +20,8 @@ logger.addHandler(liststream_handler)
 logger.setLevel(logging.INFO)
 
 def scrape_department_profiles():
-    # modules = [chhs, education, engineering, liberalscience, misc]
-    modules = [education]
+    modules = [chhs, education, engineering, liberalscience, misc]
+    # modules = [education]
     departments = []
     for module in modules:
         for name, obj in inspect.getmembers(module, predicate=inspect.isclass):
@@ -79,9 +78,11 @@ def update_single(url: str, department: str, scrape_departments: bool, scrape_co
             logger.info('Address found!')
             profile.address = contact_info['address']
     
-    if scrape_scholar and (scholar_url := grab_profile_by_publisher_name(profile.name)):
-            logger.info('Starting Google Scholar profile scrape...\n=========================================')
+    if scrape_scholar:
+        logger.info('Starting Google Scholar profile scrape...\n=========================================')
+        if scholar_url := grab_profile_by_publisher_name(profile.name):
             profile.scholar_url = scholar_url
+            profile.rawHtml = insert_scholar_url_into_html(BeautifulSoup(profile.rawHtml, 'lxml'), scholar_url)
             
     update_by_name([profile]) 
     is_running = False
