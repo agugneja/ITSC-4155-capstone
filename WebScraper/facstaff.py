@@ -117,6 +117,7 @@ def scrape_contact_info_by_email(fname, email) -> Optional[dict[str,str]]:
         soup = BeautifulSoup(response, 'lxml')
         if profile := find_profile_by_email(soup, email):
             return profile
+    logger.info(f'Finished with {fname.upper()}!')
     return None
 
 def find_profile_by_email(soup, email) -> Optional[dict[str,str]]:
