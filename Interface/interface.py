@@ -5,7 +5,8 @@ import json
 from bson import json_util, ObjectId
 from io import StringIO
 import re
-
+from bs4 import BeautifulSoup
+from WebScraper.google_scholar import insert_scholar_url_into_html
 from Model import model
 from Schedule import scheduler
 from WebScraper import webscraper
@@ -72,7 +73,9 @@ def index():
             'minutes': next_scrape.minutes
         }
     last_updated = model.get_last_update_time().strftime('%b %d, %Y at %I:%M %p %Z')
-    return render_template('index.html', job=job_times, next_scrape=next_scrape_times, scraper_running=webscraper.is_running, last_updated=last_updated)
+    num_faculty = model.faculty_members.count_documents({})
+    return render_template('index.html', job=job_times, next_scrape=next_scrape_times, 
+        scraper_running=webscraper.is_running, last_updated=last_updated , num_faculty=num_faculty)
 
 
 @app.post('/')
@@ -109,7 +112,7 @@ def scraper_output(ws):
     # if webscraper stops running close connection
     ws.send('Web scraper finished! Redirecting...')
     liststream.reset()
-    sleep(2)
+    sleep(3)
     ws.close()
 
 
@@ -177,8 +180,12 @@ def get_profiles():
 @app.delete('/delete/<_id>')
 @scraper_not_running
 def delete_faculty_member(_id):
-    model.faculty_members.delete_one({'_id': ObjectId(_id)})
-    return Response(status=204)
+    if _id == "all_entries":
+        model.faculty_members.delete_many({})
+        return Response(status=204)
+    else:
+        model.faculty_members.delete_one({'_id': ObjectId(_id)})
+        return Response(status=204)
 
 
 @app.get('/help')
@@ -248,9 +255,14 @@ def update(_id):
         'tel': request.form.get('number'),
         'email': request.form.get('email'),
         'address': request.form.get('location'),
+        'scholar_url': request.form.get('scholar'),
         'url': request.form.get('url')
     }
 
+    if faculty_dict['scholar_url']:
+        faculty_dict['rawHtml'] = insert_scholar_url_into_html(
+                BeautifulSoup(faculty_dict['rawHtml'], 'lxml'), faculty_dict['scholar_url'])
+        
     for field, value in faculty_dict.items():
         if value is not None:
             model.faculty_members.update_one(
