@@ -5,7 +5,8 @@ import json
 from bson import json_util, ObjectId
 from io import StringIO
 import re
-
+from bs4 import BeautifulSoup
+from WebScraper.google_scholar import insert_scholar_url_into_html
 from Model import model
 from Schedule import scheduler
 from WebScraper import webscraper
@@ -71,29 +72,29 @@ def index():
             'hours': next_scrape.hours,
             'minutes': next_scrape.minutes
         }
-    last_updated = model.get_last_update_time().strftime('%b %w, %Y at %I:%M %p %Z')
-    return render_template('index.html', job=job_times, next_scrape=next_scrape_times, scraper_running=webscraper.is_running, last_updated=last_updated)
+    last_updated = model.get_last_update_time().strftime('%b %d, %Y at %I:%M %p %Z')
+    num_faculty = model.faculty_members.count_documents({})
+    return render_template('index.html', job=job_times, next_scrape=next_scrape_times, 
+        scraper_running=webscraper.is_running, last_updated=last_updated , num_faculty=num_faculty)
 
 
 @app.post('/')
 @scraper_not_running
 def run_scraper():
-    update_profiles = True if request.form.get(
-        'directory') == 'Directory' else False
-    update_contact_info = True if request.form.get(
-        'facstaff') == 'Facstaff' else False
+    update_profiles = True if request.form.get('directory') == 'Directory' else False
+    update_contact_info = True if request.form.get('facstaff') == 'Facstaff' else False
+    update_scholar = True if request.form.get('scholar') == 'Scholar' else False
     print(request.form.get('update'))
     if request.form.get('update') == 'All':
-        task = Thread(target=webscraper.main, args=[
-                      update_profiles, update_contact_info])
+        task = Thread(
+            target=webscraper.main, args=[update_profiles, update_contact_info, update_scholar])
         task.start()
     else:
         _id = request.form.get('_id')
         if faculty_member := model.faculty_members.find_one({'_id': ObjectId(_id)}):
             url = faculty_member['url']
             department = faculty_member['department']
-            task = Thread(target=webscraper.update_single, args=[
-                          url, department, update_contact_info])
+            task = Thread(target=webscraper.update_single, args=[url, department, update_profiles, update_contact_info, update_scholar])
             task.start()
     return redirect('/')
 
@@ -111,7 +112,7 @@ def scraper_output(ws):
     # if webscraper stops running close connection
     ws.send('Web scraper finished! Redirecting...')
     liststream.reset()
-    sleep(2)
+    sleep(3)
     ws.close()
 
 
@@ -179,8 +180,12 @@ def get_profiles():
 @app.delete('/delete/<_id>')
 @scraper_not_running
 def delete_faculty_member(_id):
-    model.faculty_members.delete_one({'_id': ObjectId(_id)})
-    return Response(status=204)
+    if _id == "all_entries":
+        model.faculty_members.delete_many({})
+        return Response(status=204)
+    else:
+        model.faculty_members.delete_one({'_id': ObjectId(_id)})
+        return Response(status=204)
 
 
 @app.get('/help')
@@ -250,9 +255,14 @@ def update(_id):
         'tel': request.form.get('number'),
         'email': request.form.get('email'),
         'address': request.form.get('location'),
+        'scholar_url': request.form.get('scholar'),
         'url': request.form.get('url')
     }
 
+    if faculty_dict['scholar_url']:
+        faculty_dict['rawHtml'] = insert_scholar_url_into_html(
+                BeautifulSoup(faculty_dict['rawHtml'], 'lxml'), faculty_dict['scholar_url'])
+        
     for field, value in faculty_dict.items():
         if value is not None:
             model.faculty_members.update_one(

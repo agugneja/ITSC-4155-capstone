@@ -12,7 +12,7 @@ class Civil(FacultyWebScraper):
         return soup.find("article", {"class": "node node-directory node-promoted clearfix"})
 
     def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
-        return soup.find("h1",{'class':'page-header'}).getText()
+        return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
     
     def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.find_all("a", {"class": "button button-green button-small"})
@@ -59,7 +59,7 @@ class Electrical(FacultyWebScraper):
         return soup.find("article", {"class": "node node-directory node-promoted clearfix"})
 
     def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
-        return soup.find("h1",{'class':'page-header'}).getText()
+        return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
     
     def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.find_all("a", {"class": "button button-green button-small"})
@@ -74,7 +74,7 @@ class EngineeringTech(FacultyWebScraper):
         return soup.find("article", {"class": "node node-directory node-promoted clearfix"})
 
     def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
-        return soup.find("h1",{'class':'page-header'}).getText()
+        return soup.find("h1",{'class':'page-header'}).getText().split(",")[0]
     
     def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.find_all("a", {"class": "button button-green button-small"})
@@ -136,7 +136,7 @@ class StudentDevelopment(FacultyWebScraper):
         return soup.find("article", {"class": "node node-directory node-promoted clearfix"})
 
     def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
-        return soup.find("h1", {'class': 'page-header'}).getText()
+        return soup.find("h1", {'class': 'page-header'}).getText().split(",")[0].split(';')[0]
     
     def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.find_all("a", {"class": "button button-gray"})
@@ -151,7 +151,7 @@ class Systems(FacultyWebScraper):
         return soup.find("article", {"class": "node node-directory node-promoted clearfix"})
 
     def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
-        return soup.find("h1", {'class': 'page-header'}).getText()
+        return soup.find("h1", {'class': 'page-header'}).getText().split(",")[0]
     
     def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.find_all("a", {"class": "button button-green button-small"})

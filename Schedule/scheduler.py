@@ -1,6 +1,7 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.jobstores.mongodb import MongoDBJobStore
-from apscheduler.executors.pool import ProcessPoolExecutor
+# from apscheduler.executors.pool import ProcessPoolExecutor
+from apscheduler.executors.pool import ThreadPoolExecutor
 from apscheduler.triggers.cron import CronTrigger
 from apscheduler.job import Job
 from apscheduler.jobstores.base import JobLookupError
@@ -20,7 +21,7 @@ jobstores = {
 }
 executors = {
     # I think making max_workers = 1 still allows multiple threads
-    'default': ProcessPoolExecutor(max_workers=1)
+    'default': ThreadPoolExecutor(max_workers=1)
 }
 job_defaults = {
     'coalesce': True,
@@ -91,7 +92,7 @@ def update_job(months: Union[int, str, list[Union[int, str]], None],
     try:
         return scheduler.reschedule_job(job_id='0', trigger=trigger)
     except JobLookupError:
-        return scheduler.add_job(func=scrape, kwargs={'department_profiles': True, 'contact_info': False}, trigger=trigger, id='0')
+        return scheduler.add_job(func=scrape, trigger=trigger, id='0')
 
 
 def get_job() -> Union[dict, None]:

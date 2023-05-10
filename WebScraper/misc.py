@@ -58,10 +58,10 @@ class DataScience(FacultyWebScraper):
         self.directoryURLs = ["https://datascience.charlotte.edu/directory/faculty"]
     
     def getRawHtml(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
-        return soup.find("article", {"class":"node node-directory node-promoted clearfix"})
+        return soup.find("article")
 
     def getName(self, soup: BeautifulSoup, url: str) -> Optional[Tag]:
-        return soup.find("h1",{'class':'page-header'}).getText()
+        return soup.find("h1",{'class':'page-header'}).getText().split(',')[0]
     
     def scrapeURLs(self, soup: BeautifulSoup) -> ResultSet:
         return soup.find_all("a",{"class":"thumbnail-link"})

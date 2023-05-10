@@ -49,7 +49,8 @@ class FacultyProfile():
     def __setattr__(self, __name: str, __value) -> None:
         if __value is not None:
             try:
-                __value = str(__value)
+                # strip leading and trailing whitespace and remove reduntant spaces
+                __value = ' '.join(str(__value).strip().split())
             except ValueError as e:
                 print("Error while casting: " + e)
         elif __name == 'name':
@@ -61,10 +62,17 @@ class FacultyProfile():
 
 def update_by_name(profiles: list[FacultyProfile]):
     # For each profile, upsert that profile into the database
+    blacklist = ['unc', 'college', "faculty", 'about', 'directory', 
+        'pages', 'laboratory', 'contact', 'info', 'information', 'office']
     for profile in profiles:
         # Replace the faculty member in the database with the new profile
-        faculty_members.replace_one(
-            {'name': profile.name}, asdict(profile), upsert=True)
+        if len(profile.name.split()) > 1 and not any([name.lower() in blacklist for name in profile.name.split()]):
+            faculty_members.replace_one(
+                {'name': profile.name}, asdict(profile), upsert=True)
+        else:
+            if not profile.rawHtml:
+                print(f'warning, {profile.url} has no profile content')
+            print(f'filtered out {profile.url}')
 
 
 def update_last_update_time(datetime: datetime):
@@ -77,6 +85,7 @@ def get_last_update_time() -> Optional[datetime]:
     if response := misc.find_one({'last_updated': {'$exists': True}}):
         return response['last_updated']
     return None
+
 
 
 # Dump entire database for the CSV

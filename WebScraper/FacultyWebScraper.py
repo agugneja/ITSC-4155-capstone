@@ -64,7 +64,10 @@ class FacultyWebScraper(ABC):
                     email = self.getEmail(soup, rawHtml, url)
                     profiles.append(FacultyProfile(name=name, department=self.__class__.__name__, rawHtml=rawHtml, url=url, email=email))
                 except Exception as e:
-                    logger.info(f"Something went wrong when visiting {url}:\n{e}")
+                    if "'NoneType' object has no attribute 'getText'" in str(e):
+                        logger.info(f"{url} could not be scraped properly")
+                    else:
+                        logger.info(f"Something went wrong when visiting {url}:\n{e}")
 
         return profiles
     
@@ -116,12 +119,12 @@ class FacultyWebScraper(ABC):
             if html is not None:
                 emails = self._findEmails(html)
                 if len(emails) == 0:
-                    logger.info(f'no emails found for {url}')
+                    logger.info(f'No emails found for {url}')
                     return None
                 elif len(emails) == 1:
                     return emails.pop()
                 if html == profile_html:
-                    logger.info(f'more than 1 email found for {url}')
+                    logger.info(f'More than 1 email found for {url}')
             
         return None
 

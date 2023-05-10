@@ -60,7 +60,10 @@
         <input type="tel" value="{{ faculty_member['tel'] if faculty_member and faculty_member['tel'] else ''}}" id="number" name="number" class="border-2 px-4 py-2 rounded-lg border-gray-400 w-half">
 
         <label for="location" class="block mb-1 font-semibold mt-2">Location</label>
-        <input type="text" value="{{ faculty_member['address'] if faculty_member and faculty_member['address'] else ''}}" id="location" name="location" class="border-2 px-4 py-2 rounded-lg border-gray-400 w-half">
+        <textarea type="text" id="location" name="location" class="border-2 px-4 py-2 rounded-lg border-gray-400 w-half">{{ faculty_member['address'] if faculty_member and faculty_member['address'] else ''}}</textarea>
+
+        <label for="scholar" class="block mb-1 font-semibold mt-2">Google Scholar Profile URL</label>
+        <input type="text" value="{{ faculty_member['scholar_url'] if faculty_member and faculty_member['scholar_url'] else ''}}" id="scholar" name="scholar" class="border-2 px-4 py-2 rounded-lg border-gray-400 w-half">
 
         <label for="url" class="block mb-1 font-semibold">URL</label>
         <input type="text" value="{{ faculty_member['url'] if faculty_member and faculty_member['url'] else ''}}" id="url" name="url" class="border-2 px-4 py-2 rounded-lg border-gray-400 w-half" required><br><br>
