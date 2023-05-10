@@ -87,7 +87,7 @@ def update_single(url: str, department: str, scrape_departments: bool, scrape_co
     update_by_name([profile]) 
     is_running = False
 
-def main(department_profiles: bool, contact_info: bool, google_scholar: bool):
+def main(department_profiles: bool = True, contact_info: bool = True, google_scholar: bool = False):
     global is_running
     is_running = True
 
