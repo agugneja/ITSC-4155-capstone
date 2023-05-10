@@ -1,11 +1,16 @@
 from dataclasses import dataclass, asdict
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-from . import constants
 from datetime import datetime
 import tzlocal
 from bson.codec_options import CodecOptions
 from typing import Optional
+
+# Make sure constants.py exists
+try:
+    from . import constants
+except ImportError as err:
+    raise SystemExit('You must have constants.py in the Model folder. This file is not included in the GitHub repository because it contains an API key')
 
 
 # Constants
