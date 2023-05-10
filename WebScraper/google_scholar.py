@@ -4,6 +4,8 @@ from .liststream import liststream_handler
 import logging 
 from time import sleep
 from random import randint, random
+from bs4 import BeautifulSoup
+
 logger = logging.getLogger(__name__)
 logger.addHandler(liststream_handler)
 logger.setLevel(logging.INFO)
@@ -14,9 +16,10 @@ def grab_profile_by_publisher_name(publisher_name):
         if 'UNC Charlotte' in author['affiliation'] or author['email_domain'] == '@uncc.edu':
             logger.info(f'Google Scholar profile for {publisher_name} found!')
             return f'https://scholar.google.com/citations?hl=en&user={author["scholar_id"]}'
-        else:
-            logger.info(f'No Google Scholar profile found for {publisher_name}')
-            return None
+        
+    logger.info(f'No Google Scholar profile found for {publisher_name}')
+    return None
+
 
 def scrape_all_scholar_profiles():
     members = [FacultyProfile(**member) for member in faculty_members.find({'department': {'$exists':True}}, {'_id':False})]
@@ -24,10 +27,19 @@ def scrape_all_scholar_profiles():
     for member in members:
         if scholar_url := grab_profile_by_publisher_name(member.name):
             member.scholar_url = scholar_url
+            member.rawHtml = insert_scholar_url_into_html(BeautifulSoup(member.rawHtml, 'lxml'), scholar_url)
         # random_sleep()
     
     update_by_name([members])
     
+def insert_scholar_url_into_html(soup: BeautifulSoup, scholar_url):
+    soup.append(BeautifulSoup(f'<div id="google_scholar_profile_link"><a href="{scholar_url}">Google Scholar Profile</a></div>'))
+    if not (scholar_div := soup.find('div', {'id':'google_scholar_profile_link'})):
+        soup.insert(BeautifulSoup(f'<div id="google_scholar_profile_link"><a href="{scholar_url}">Google Scholar Profile</a></div>'))
+    else:
+        scholar_div.replace_with(BeautifulSoup(f'<div id="google_scholar_profile_link"><a href="{scholar_url}">Google Scholar Profile</a></div>'))
+    return soup
+
 def random_sleep():
     sleep(random())
 
