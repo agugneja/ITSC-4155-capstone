@@ -12,6 +12,7 @@ Run `python app.py` in the root folder after installing all the requirements.
 - Python 3
 - PIP
 - The required packages: `pip install -r requirements.txt`
+- Login / API key for MongoDB Atlas cloud database should be placed in a file called `constants.py` in `/Model`
 
 ## Team 15 Members
 - [@agugneja](https://github.com/agugneja)
