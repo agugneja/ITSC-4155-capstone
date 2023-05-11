@@ -229,7 +229,7 @@ def csv_download():
     # Fill the CSV
     if for_wordpress:
         for faculty_member in faculty_members:
-            writer.writerow([faculty_member.url, 'post', 'update',
+            writer.writerow([faculty_member.url, 'post', 'replace',
                             faculty_member.name, None, faculty_member.rawHtml])
     else:
         for faculty_member in faculty_members:
@@ -260,9 +260,10 @@ def update(_id):
     }
 
     if faculty_dict['scholar_url']:
-        faculty_dict['rawHtml'] = insert_scholar_url_into_html(
-                BeautifulSoup(faculty_dict['rawHtml'], 'lxml'), faculty_dict['scholar_url'])
-        
+        print(faculty_dict['rawHtml'])
+        faculty_dict['rawHtml'] = str(insert_scholar_url_into_html(
+                BeautifulSoup(faculty_dict['rawHtml'], 'lxml'), faculty_dict['scholar_url']))
+    
     for field, value in faculty_dict.items():
         if value is not None:
             model.faculty_members.update_one(

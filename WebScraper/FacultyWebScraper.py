@@ -63,6 +63,7 @@ class FacultyWebScraper(ABC):
                     name = self.getName(soup, url)
                     email = self.getEmail(soup, rawHtml, url)
                     profiles.append(FacultyProfile(name=name, department=self.__class__.__name__, rawHtml=rawHtml, url=url, email=email))
+                    logger.info(f"{url} succesfully scraped!")
                 except Exception as e:
                     if "'NoneType' object has no attribute 'getText'" in str(e):
                         logger.info(f"{url} could not be scraped properly")

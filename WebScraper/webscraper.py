@@ -21,13 +21,13 @@ logger.setLevel(logging.INFO)
 
 def scrape_department_profiles():
     modules = [chhs, education, engineering, liberalscience, misc]
-    # modules = [education]
+    # modules = [misc.cci]
     departments = []
     for module in modules:
         for name, obj in inspect.getmembers(module, predicate=inspect.isclass):
             if obj is not FacultyWebScraper and issubclass(obj, FacultyWebScraper):
                 departments.append(obj)
-    
+    departments = [education.K12]
     department_objects = [x() for x in departments]
     with ThreadPoolExecutor(max_workers=15) as p:
         p.map(lambda x: x.run(), department_objects)
