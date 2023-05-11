@@ -4,7 +4,7 @@ from .liststream import liststream_handler
 import logging 
 from time import sleep
 from random import randint, random
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
 logger = logging.getLogger(__name__)
 logger.addHandler(liststream_handler)
@@ -33,11 +33,13 @@ def scrape_all_scholar_profiles():
     update_by_name([members])
     
 def insert_scholar_url_into_html(soup: BeautifulSoup, scholar_url):
-    soup.append(BeautifulSoup(f'<div id="google_scholar_profile_link"><a href="{scholar_url}">Google Scholar Profile</a></div>'))
+    new_tag = BeautifulSoup(f'<div id="google_scholar_profile_link"><a href="{scholar_url}">Google Scholar Profile</a></div>','lxml').html.body.div
     if not (scholar_div := soup.find('div', {'id':'google_scholar_profile_link'})):
-        soup.insert(BeautifulSoup(f'<div id="google_scholar_profile_link"><a href="{scholar_url}">Google Scholar Profile</a></div>'))
+        print('made new')
+        soup.append(new_tag)
     else:
-        scholar_div.replace_with(BeautifulSoup(f'<div id="google_scholar_profile_link"><a href="{scholar_url}">Google Scholar Profile</a></div>'))
+        print('replaced')
+        scholar_div.replaceWith(new_tag)
     return soup
 
 def random_sleep():

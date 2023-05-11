@@ -31,6 +31,7 @@
 
         <label for="profile" class="block mb-1 font-semibold mt-2">Profile HTML</label>
         
+        <textarea id="profile" name="profile" hidden></textarea>
         <div class="relative h-max mb-2 rounded" id="editor">{{ faculty_member['rawHtml'] if faculty_member and faculty_member['rawHtml'] else ''}}</div>
         <style type="text/css" media="screen">
           #editor {
@@ -48,6 +49,12 @@
           editor.setTheme("ace/theme/monokai");
           editor.session.setMode("ace/mode/html");
           editor.session.setValue(html_beautify(editor.session.getValue()));
+          editor.session.on("change", function () {
+            $('#profile').text(editor.session.getValue());
+          });
+          $(function() {
+            $('#profile').text(editor.session.getValue())
+          });
       </script>
         <!-- <textarea id="profile" name="profile" rows="4" cols="20" class="border-2 px-4 py-2 rounded-lg border-gray-400 w-half" required>
           {{ faculty_member['rawHtml'] if faculty_member and faculty_member['rawHtml'] else ''}}
